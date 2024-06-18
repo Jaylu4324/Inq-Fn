@@ -27,7 +27,7 @@ function App() {
    <Route path='/dashBoard/einquiries' element={<Eventi/>}/>
    <Route path='/dashBoard/Old' element={<Old/>}/>
    <Route path='/dashBoard/Batches' element={<Batches/>}/>
-   <Route path='/dashBoard/Add Course' element={<Addcourse/>}/>
+   <Route path='/dashBoard/AddCourse' element={<Addcourse/>}/>
    <Route path='/dashBoard/Batch-For-Course' element={<Batchcourse/>}/>
 
    <Route path='/dashBoard/Completedcourse' element={<Completedcourse/>}/>

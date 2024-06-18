@@ -381,6 +381,7 @@ function Eventi() {
                 onChange={(e) => {
                   handleparent(e);
                 }}
+                
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Status"
