@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import Drawer from '@mui/material/Drawer';
+
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
@@ -16,21 +17,16 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { BrowserRouter as Router,Routes,Route,Link} from "react-router-dom";
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 import MailIcon from '@mui/icons-material/Mail';
-import Accordion from '@mui/material/Accordion';
-import AccordionActions from '@mui/material/AccordionActions';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Button from '@mui/material/Button';
-
 
 export default function ButtonAppBar() {
   
   const [open, setOpen] = React.useState(false);
   const Nav=useNavigate("")
+
     let arr=["/dashBoard/AddCourse","/dashBoard/CourInq",'/dashBoard/Batch-For-Course',"/dashBoard/Invoice","/dashBoard/Studentdetails","/dashBoard/Completedcourse"]
   let arr1=["/dashBoard/Events","/dashBoard/einquiries","/dashBoard/Batches","/dashBoard/Old"]
 
@@ -39,8 +35,66 @@ export default function ButtonAppBar() {
   };
 
   const DrawerList = (
-    <Box sx={{width: 250 }} role="presentation">
-   <Accordion>
+    <Box sx={{width: 250 }} role="presentation" 
+    
+
+
+    >
+
+<SimpleTreeView>
+      <TreeItem itemId="charts-community" label="Dashboard" />
+        
+    
+        <TreeItem itemId="grid" label="Courses" 
+    >
+        <List>
+         {['Add Course','Course-Inquiries','Add Batches-Course', 'Invoice', 'Student Details','Completed-courses'].map(
+           (text, index) => (
+             <ListItem key={text} disablePadding onClick={()=>{Nav(`${arr[index]}`)}}>
+               <ListItemButton onClick={()=>{
+      setOpen(false)
+    }}
+
+    >
+                 <ListItemIcon>
+                   {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                 </ListItemIcon>
+                 <ListItemText primary={text} />
+               </ListItemButton>
+            </ListItem>
+           )
+         )}
+       </List>
+     
+          
+        </TreeItem>
+        <TreeItem itemId="pickers" label="Events">
+        <List>
+      {[ 'Events','Event Inquiries','Add Batches-Events','Completed Events'].map(
+           (text, index) => (
+             <ListItem key={text} disablePadding onClick={()=>{Nav(`${arr1[index]}`)}}>
+               <ListItemButton onClick={()=>{
+      setOpen(false)
+    }}
+    >
+                 <ListItemIcon>
+                   {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                 </ListItemIcon>
+                 <ListItemText primary={text} />
+               </ListItemButton>
+             </ListItem>
+           )
+         )}
+       </List>
+      
+        </TreeItem>
+        
+      
+      </SimpleTreeView>
+
+
+
+   {/* <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1-content"
@@ -94,7 +148,7 @@ export default function ButtonAppBar() {
       </Accordion>
  
       <Divider />
-      
+       */}
     </Box>
   );
 

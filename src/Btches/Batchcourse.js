@@ -335,10 +335,11 @@ function Batches() {
                         onClick={() => {
                           console.log("row")
 
-                          setData({ ...row });
+                          setData({ ...row }); 
                           setId(row._id);
                           console.log("rwow", arr)
                           // setData({...row,StuName:[...data.StuName]})
+
                           // console.log(...data.StuName,...arr)
                           console.log("wdfd", row, "arr", ...arr)
                           setarr([...row.StuName, ...arr])
