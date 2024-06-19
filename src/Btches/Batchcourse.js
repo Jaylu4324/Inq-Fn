@@ -99,6 +99,7 @@ function Batches() {
   const [course, setcoursearr] = React.useState([]);
   const [confirm, setconfirm] = React.useState([]);
   React.useEffect(() => {
+    
     axios
       .get("http://localhost:5000/batchEvent/DisplayBevent")
       .then((data) => {
@@ -111,8 +112,9 @@ function Batches() {
       });
 
     if (parent._id) {
+      console.log(parent)
       axios
-        .get(`http://localhost:5000/inquiry/Confirm?id=${parent._id}`)
+        .get(`http://localhost:5000/inquiry/getisAdded?id=${parent._id}`)
         .then((data) => {
           setarr(data.data.data);
         })
@@ -312,7 +314,7 @@ function Batches() {
                         </TableRow>
                       ))}
                     </TableCell>
-                    {/* <TableCell align="center">
+                    <TableCell align="center">
                       {row.EventId.Days &&
                         row.EventId.Days.map((data) => (
                           <TableRow>
@@ -320,23 +322,23 @@ function Batches() {
                           </TableRow>
                         ))}
                     </TableCell>
-                     */}
+                    
                     <TableCell align="center">
-                      {/* <TableRow>
+                      <TableRow>
                         <TableCell align="center">
 
                           {row.EventId.StartDate && row.EventId.StartDate.split("T")[0]}
                         </TableCell>
-                      </TableRow> */}
+                      </TableRow>
                     </TableCell>
                     <TableCell align="center">
-                      {/* <TableRow>
+                      <TableRow>
                         <TableCell align="center">
                           {row.EventId.BatchTime && row.EventId.BatchTime.split("T")[1]
                             .split(".")[0]
                             .slice(0, 5)}
                         </TableCell>
-                      </TableRow> */}
+                      </TableRow>
                     </TableCell>
 
                     <TableCell>
@@ -368,7 +370,7 @@ function Batches() {
                           console.log(row._id);
                           axios
                             .delete(
-                              `http://localhost:5000/Batch/Delete?id=${row._id}`
+                              `http://localhost:5000/regBatch/Delete?id=${row._id}`
                             )
                             .then((data) => {
                               console.log("delet", data);
