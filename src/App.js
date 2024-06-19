@@ -14,10 +14,13 @@ import Completedcourse from './course/Completedcourse'
 import {BrowserRouter,Routes,Route} from"react-router-dom"
 import Batchcourse from './Btches/Batchcourse'
 import CourInq from './Inquiries/CourInq'
+import Login from "./Login/Login"
 function App() {
   return (
     <BrowserRouter>
     <Routes>
+      
+<Route path='/' element={<Login/>}/>      
 <Route path='/dashBoard' element={<Navbar/>}>
 <Route path='/dashBoard/' element={<>hello</>}/>
   <Route path='/dashBoard/Invoice' element={<Invoice/>}/>
