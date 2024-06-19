@@ -91,42 +91,45 @@ function Batches() {
   const [arr1, seteventarr] = React.useState([]);
   const [confirm, setconfirm] = React.useState([]);
   React.useEffect(() => {
+    
+    axios
+      .get("http://localhost:5000/event/Displayevent")
+      .then((data) => {
+        seteventarr(data.data.data);
+    console.log('first api')
+        console.log("arr is set ", arr);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      
+      if (parent._id) {
+        axios
+          .get(`http://localhost:5000/Batch/Display?id=${parent._id}`)
+          .then((data) => {
+            console.log(data.data.data);
+      console.log('second api')
+            maparr(data.data.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
     if (parent._id) {
       axios
         .get(`http://localhost:5000/Eventinquiry/getisAdded?id=${parent._id}`)
 
         .then((data) => {
           console.log(data);
+console.log('thid api')
 
           setarr(data.data.data);
 
-          console.log("confirm batches is set");
+          console.log("confirm batches is set",data.data.data);
         })
         .catch((err) => {
           console.log(err);
         });
     }
-    axios
-      .get("http://localhost:5000/event/Displayevent")
-      .then((data) => {
-        seteventarr(data.data.data);
-
-        console.log("arr is set ", arr);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    if (parent._id) {
-      axios
-        .get(`http://localhost:5000/Batch/Display?id=${parent._id}`)
-        .then((data) => {
-          console.log(data.data.data);
-
-          maparr(data.data.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
 
     }
   }, [parent._id, update]);
@@ -560,15 +563,6 @@ function Batches() {
                       EventId: parent._id,
                     })
                     .then((data1) => {
-
-
-
-
-
-
-
-
-
 
                       console.log(arr);
 

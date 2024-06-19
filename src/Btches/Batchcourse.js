@@ -4,7 +4,16 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 
-import { Box, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, FilledInput } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+  FilledInput,
+} from "@mui/material";
 import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -14,7 +23,6 @@ import TableRow from "@mui/material/TableRow";
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
-
 
 import axios from "axios";
 import Paper from "@mui/material/Paper";
@@ -91,16 +99,6 @@ function Batches() {
   const [course, setcoursearr] = React.useState([]);
   const [confirm, setconfirm] = React.useState([]);
   React.useEffect(() => {
-    if (parent._id) {
-      axios
-      .get(`http://localhost:5000/inquiry/Confirm?id=${parent._id}`)
-      .then((data) => {
-        setarr(data.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
     axios
       .get("http://localhost:5000/batchEvent/DisplayBevent")
       .then((data) => {
@@ -111,18 +109,33 @@ function Batches() {
       .catch((err) => {
         console.log(err);
       });
+
     if (parent._id) {
       axios
-        .get(`http://localhost:5000/Batch/Display?id=${parent._id}`)
+        .get(`http://localhost:5000/inquiry/Confirm?id=${parent._id}`)
         .then((data) => {
-          console.log(data.data.data);
+          setarr(data.data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    if (parent._id) {
+      axios
+        .get(`http://localhost:5000/regBatch/Display?id=${parent._id}`)
+        .then((data) => {
+          console.log(data);
+          
+          console.log(parent._id)
+          
+          console.log('last display data:',data.data.data);
 
           maparr(data.data.data);
         })
         .catch((err) => {
           console.log(err);
         });
-
     }
   }, [parent._id, update]);
 
@@ -135,12 +148,11 @@ function Batches() {
         StuName: [],
       }));
     }
-    setId("")
+    setId("");
 
-    setData({ StuName: [] })
+    setData({ StuName: [] });
     setopen(false);
     doupdate(!update);
-
   };
 
   const handleparent = (e) => {
@@ -158,20 +170,17 @@ function Batches() {
     },
   };
   const handleChange = (event) => {
-    const { target: { value } } = event;
+    const {
+      target: { value },
+    } = event;
     const newStuNames = value.map((item, index) => {
       const [FullName, Contact, _id] = item.split("-");
 
-
       return { FullName, Contact, _id };
     });
-    let s = newStuNames.length - 1
+    let s = newStuNames.length - 1;
 
-
-
-
-
-    console.log("ah", newStuNames)
+    console.log("ah", newStuNames);
     setData((prevData) => ({
       ...prevData,
       StuName: newStuNames,
@@ -181,14 +190,13 @@ function Batches() {
   // console.log(data.StuName)
 
   const renderSelectedValue = (selected) => {
-
     if (selected.length === 0) {
       return <em>Placeholder</em>;
     } else if (selected.length > 0) {
       const selectedNames = selected.map((val) =>
         val.split("-").slice(0, 2).join("-")
       );
-      return selectedNames.join(", ")
+      return selectedNames.join(", ");
     }
   };
   console.log(confirm);
@@ -200,11 +208,11 @@ function Batches() {
           <Button
             variant="outlined"
             onClick={() => {
-              setarr([...arr])
-              console.log(arr)
+              setarr([...arr]);
+              console.log(arr);
 
               setopen(true);
-              setData({ StuName: [] })
+              setData({ StuName: [] });
               setId("");
             }}
           >
@@ -216,7 +224,7 @@ function Batches() {
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">
             {" "}
-            Select Event Type
+            Select Course
           </InputLabel>
           <Select
             onChange={(e) => {
@@ -226,7 +234,7 @@ function Batches() {
             id="demo-simple-select"
             label="Status"
             variant="filled"
-          // sx={{fullWidth}}
+            // sx={{fullWidth}}
           >
             {course &&
               course.map((row) => (
@@ -250,11 +258,11 @@ function Batches() {
                     <TableCell align="center">
                       {row.EndtDate && row.EndtDate.split("T")[0]}
                     </TableCell>
-                    <TableCell align="center">
-                      {row.Days.map((val) => (
+                    {/* <TableCell align="center">
+                      {row.Days && row.Days.map((val) => (
                         <TableCell align="center">{val}</TableCell>
                       ))}
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell align="center">
                       {row.BatchTime && convertToIST(row.BatchTime)}
                     </TableCell>
@@ -304,7 +312,7 @@ function Batches() {
                         </TableRow>
                       ))}
                     </TableCell>
-                    <TableCell align="center">
+                    {/* <TableCell align="center">
                       {row.EventId.Days &&
                         row.EventId.Days.map((data) => (
                           <TableRow>
@@ -312,37 +320,39 @@ function Batches() {
                           </TableRow>
                         ))}
                     </TableCell>
+                     */}
                     <TableCell align="center">
-                      <TableRow>
+                      {/* <TableRow>
                         <TableCell align="center">
-                          {row.EventId.StartDate.split("T")[0]}
+
+                          {row.EventId.StartDate && row.EventId.StartDate.split("T")[0]}
                         </TableCell>
-                      </TableRow>
+                      </TableRow> */}
                     </TableCell>
                     <TableCell align="center">
-                      <TableRow>
+                      {/* <TableRow>
                         <TableCell align="center">
-                          {row.EventId.BatchTime.split("T")[1]
+                          {row.EventId.BatchTime && row.EventId.BatchTime.split("T")[1]
                             .split(".")[0]
                             .slice(0, 5)}
                         </TableCell>
-                      </TableRow>
+                      </TableRow> */}
                     </TableCell>
 
                     <TableCell>
                       <Button
                         variant="contained"
                         onClick={() => {
-                          console.log("row")
+                          console.log("row");
 
-                          setData({ ...row }); 
+                          setData({ ...row });
                           setId(row._id);
-                          console.log("rwow", arr)
+                          console.log("rwow", arr);
                           // setData({...row,StuName:[...data.StuName]})
 
                           // console.log(...data.StuName,...arr)
-                          console.log("wdfd", row, "arr", ...arr)
-                          setarr([...row.StuName, ...arr])
+                          console.log("wdfd", row, "arr", ...arr);
+                          setarr([...row.StuName, ...arr]);
 
                           setopen(true);
                         }}
@@ -399,7 +409,6 @@ function Batches() {
             </Table>
           </TableContainer>
         </Box>
-      
       </Box>
 
       <Dialog open={open}>
@@ -416,14 +425,16 @@ function Batches() {
                     labelId="demo-multiple-checkbox-label"
                     id="demo-multiple-checkbox"
                     multiple
-                    value={data.StuName && data.StuName.map(
-                      (item) => `${item.FullName}-${item.Contact}-${item._id}`
-                    )}
+                    value={
+                      data.StuName &&
+                      data.StuName.map(
+                        (item) => `${item.FullName}-${item.Contact}-${item._id}`
+                      )
+                    }
                     onChange={handleChange}
-                  
                     sx={{ width: 530 }}
                     fullWidth
-                    input={<FilledInput/>}
+                    input={<FilledInput />}
                     renderValue={renderSelectedValue}
                     MenuProps={MenuProps}
                   >
@@ -434,14 +445,14 @@ function Batches() {
                       >
                         <Checkbox
                           checked={
-                            data.StuName && data.StuName.findIndex(
+                            data.StuName &&
+                            data.StuName.findIndex(
                               (item) =>
                                 item.Contact == name.Contact &&
                                 item.FullName == name.FullName &&
                                 item._id == name._id
                             ) > -1
                           }
-                         
                         />
                         <ListItemText
                           primary={`${name.FullName}  ${name.Contact}`}
@@ -449,7 +460,6 @@ function Batches() {
                       </MenuItem>
                     ))}
                   </Select>
-
                 </FormControl>
               </Box>
             </Grid>
@@ -467,12 +477,15 @@ function Batches() {
               onClick={() => {
                 if (id) {
                   axios
-                    .post(`http://localhost:5000/Batch/Update?id=${id}`, {...data,EventId:parent._id})
+                    .post(`http://localhost:5000/Batch/Update?id=${id}`, {
+                      ...data,
+                      EventId: parent._id,
+                    })
                     .then((data) => {
                       console.log(arr);
                       setId("");
                       setData({ StuName: [] });
-                      console.log(data.StuName)
+                      console.log(data.StuName);
                       setopen(false);
                       doupdate(!update);
                     })
@@ -480,21 +493,22 @@ function Batches() {
                       console.log(err);
                     });
                 } else {
+                  
                   axios
-                    .post("http://localhost:5000/Batch/addbatch", {
+                    .post("http://localhost:5000/regBatch/addbatch", {
                       ...data,
                       EventId: parent._id,
                     })
                     .then((data1) => {
-
                       console.log(arr);
 
                       setopen(false);
                       setId("");
-                      setData({ StuName: [] })
+                      setData({ StuName: [] });
                       doupdate(!update);
-
+                      console.log(data1);
                     })
+
                     .catch((err) => {
                       console.log(err);
                     });
