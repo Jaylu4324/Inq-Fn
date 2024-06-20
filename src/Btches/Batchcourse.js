@@ -87,11 +87,13 @@ function Batches() {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-      // hour12: false // 24-hour format
+      hour12: false // 24-hour format
+
     };
 
     return new Intl.DateTimeFormat("en-US", options).format(date);
   }
+
   const [update, doupdate] = React.useState(false);
   const [open, setopen] = React.useState(false);
   const [arr, setarr] = React.useState([]);
@@ -334,9 +336,7 @@ function Batches() {
                     <TableCell align="center">
                       <TableRow>
                         <TableCell align="center">
-                          {row.EventId.BatchTime && row.EventId.BatchTime.split("T")[1]
-                            .split(".")[0]
-                            .slice(0, 5)}
+                          {row.EventId.BatchTime && convertToIST(row.EventId.BatchTime)}
                         </TableCell>
                       </TableRow>
                     </TableCell>
@@ -391,7 +391,7 @@ function Batches() {
                         onClick={() => {
                           axios
                             .post(
-                              `http://localhost:5000/Batch/isCompleted?id=${row._id}`
+                              `http://localhost:5000/regBatch/isCompleted?id=${row._id}`
                             )
                             .then((data) => {
                               doupdate(!update);
@@ -479,7 +479,7 @@ function Batches() {
               onClick={() => {
                 if (id) {
                   axios
-                    .post(`http://localhost:5000/Batch/Update?id=${id}`, {
+                    .post(`http://localhost:5000/regBatch/Update?id=${id}`, {
                       ...data,
                       EventId: parent._id,
                     })

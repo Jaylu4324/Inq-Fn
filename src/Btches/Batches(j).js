@@ -80,6 +80,7 @@ function Batches() {
       minute: "2-digit",
       second: "2-digit",
       // hour12: false // 24-hour format
+      
     };
 
     return new Intl.DateTimeFormat("en-US", options).format(date);

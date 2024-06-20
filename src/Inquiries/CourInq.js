@@ -207,6 +207,21 @@ if(parent._id){
   };
   // console.log('parent data:',parent);
 
+  function convertToIST(utcDateStr) {
+    const date = new Date(utcDateStr);
+
+    const options = {
+      timeZone: "Asia/Kolkata",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false // 24-hour format
+
+    };
+
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  }
+  
   return (
     <React.Fragment>
       <Grid container spacing={2} justifyContent="center">
@@ -414,7 +429,7 @@ if(parent._id){
                           {row.StartDate && row.StartDate.split("T")[0]}
                         </TableCell>
                         <TableCell align="center">
-                          {row.BatchTime && row.BatchTime.split("T")[1]}
+                          {row.BatchTime && convertToIST(row.BatchTime)}
                         </TableCell>
                       </TableRow>
                     </MenuItem>
