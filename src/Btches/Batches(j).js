@@ -91,6 +91,8 @@ function Batches() {
   const [map, maparr] = React.useState([]);
   const [arr1, seteventarr] = React.useState([]);
   const [confirm, setconfirm] = React.useState([]);
+  const[alertMsg,setAlertMsg]=React.useState("");
+
   React.useEffect(() => {
     
     axios
@@ -129,6 +131,16 @@ console.log('thid api')
         })
         .catch((err) => {
           console.log(err);
+          if(err.response.data){
+            // setAlertMsg(err.response.data.error.details[0].message)
+            setAlertMsg({
+              open:true,
+              message:err.response.data.error.details[0].message
+            })
+          setTimeout(()=>{
+            setAlertMsg("");
+          },3000)
+          }
         });
     }
 

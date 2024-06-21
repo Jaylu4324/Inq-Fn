@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import dayjs from "dayjs";
+import Alert from '@mui/material/Alert';
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -103,6 +104,8 @@ function Eventi() {
   const [reject, setReject] = React.useState([]);
   const [confirm, setconfirm] = React.useState([]);
   const [update, doUpdate] = React.useState(false);
+  const[alertMsg,setAlertMsg]=React.useState("");
+
 
   const [id, setId] = React.useState();
   const handleChange = (e, type) => {
@@ -117,6 +120,16 @@ function Eventi() {
         })
         .catch((err) => {
           console.log(err);
+          if(err.response.data){
+            setAlertMsg({
+              open:true,
+              message:err.response.data.error.details[0].message
+            })
+            // setAlertMsg(err.response.data.error.details[0].message)
+          setTimeout(()=>{
+            setAlertMsg("");
+          },3000)
+          }
         });
     } else {
       axios
@@ -131,6 +144,16 @@ function Eventi() {
         })
         .catch((err) => {
           console.log(err);
+          if(err.response.data){
+            setAlertMsg({
+              open:true,
+              message:err.response.data.error.details[0].message
+            })
+            
+          setTimeout(()=>{
+            setAlertMsg("");
+          },3000)
+          }
         });
     }
     handleClose();
@@ -157,6 +180,16 @@ function Eventi() {
         })
         .catch((err) => {
           console.log(err);
+          if(err.response.data){
+            setAlertMsg({
+              open:true,
+              message:err.response.data.error.details[0].message
+            })
+            // setAlertMsg(err.response.data.error.details[0].message)
+          setTimeout(()=>{
+            setAlertMsg("");
+          },3000)
+          }
         });
       axios
         .get(`http://localhost:5000/Eventinquiry/Reject?id=${parent._id}`)
@@ -167,6 +200,16 @@ function Eventi() {
         })
         .catch((err) => {
           console.log(err);
+          if(err.response.data){
+            setAlertMsg({
+              open:true,
+              message:err.response.data.error.details[0].message
+            })
+            // setAlertMsg(err.response.data.error.details[0].message)
+          setTimeout(()=>{
+            setAlertMsg("");
+          },3000)
+          }
         });
       axios
         .get(`http://localhost:5000/Eventinquiry/Confirm?id=${parent._id}`)
@@ -177,6 +220,16 @@ function Eventi() {
         })
         .catch((err) => {
           console.log(err);
+          if(err.response.data){
+            setAlertMsg({
+              open:true,
+              message:err.response.data.error.details[0].message
+            })
+            // setAlertMsg(err.response.data.error.details[0].message)
+          setTimeout(()=>{
+            setAlertMsg("");
+          },3000)
+          }
         });
     }
   }, [update, parent._id]);
@@ -236,6 +289,8 @@ function Eventi() {
 
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
+        {alertMsg.open && (<Alert severity="error" sx={{zIndex:9999}}>{alertMsg.message}</Alert>)}
+
           <TextField
             id="outlined-basic"
             label="Full Name"

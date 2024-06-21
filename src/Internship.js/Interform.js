@@ -2,6 +2,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
+import Alert from '@mui/material/Alert';
 import dayjs from "dayjs";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -53,6 +54,7 @@ function Interform() {
   const [arr, setarr] = React.useState([]);
   const [id, setid] = React.useState();
   const [update, doUpdate] = React.useState(false);
+  const [alertMsg,setAlertMsg]=React.useState({open:false,message:""});
 
   const handleChange = (e, type) => {
     if (type == "TypeOfPayment" && e.target.value == "Free") {
@@ -80,6 +82,16 @@ function Interform() {
         })
         .catch((err) => {
           console.log(err);
+          if(err.response.data){
+            // setAlertMsg(err.response.data.error.details[0].message)
+            setAlertMsg({
+              open:true,
+              message:err.response.data.error.details[0].message
+            })
+          setTimeout(()=>{
+            setAlertMsg("");
+          },3000)
+          }
         });
     } else {
       console.log(data);
@@ -93,6 +105,16 @@ function Interform() {
         })
         .catch((err) => {
           console.log(err);
+          if(err.response.data){
+            setAlertMsg({
+              open:true,
+              message:err.response.data.error.details[0].message
+            })
+            // setAlertMsg(err.response.data.error.details[0].message)
+          setTimeout(()=>{
+            setAlertMsg("");
+          },3000)
+          }
         });
     }
   };
@@ -173,6 +195,8 @@ function Interform() {
       <Dialog open={open}>
         <DialogContent>
           <Box sx={{ minWidth: 120, mb: 2 }}>
+            {alertMsg.open && (<Alert severity="error" sx={{zIndex:9999}}>{alertMsg.message}</Alert>)}
+          
             <FormControl variant="filled" sx={{ minWidth: 500 }}>
               <InputLabel id="demo-simple-select-label">Course</InputLabel>
               <Select
