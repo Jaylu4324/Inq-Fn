@@ -38,6 +38,8 @@ import Stack from '@mui/material/Stack';
 
 
 export default function FormDialog() {
+  const[coursearr,setcoursearr]=React.useState([])
+   
   const[arr,setArr]=React.useState([])
   const [update,doUpdate]=React.useState(false)
   const [severity, setSeverity] = React.useState('success');
@@ -45,6 +47,17 @@ export default function FormDialog() {
 const[alertopen,setalertopen]=React.useState(false)
 
   React.useEffect(()=>{
+    axios.get('http://localhost:5000/batchEvent/DisplayBevent')
+.then((data)=>{
+
+setcoursearr(data.data.data)
+console.log('arr is set')
+})
+.catch((err)=>{
+  console.log(err)
+})
+console.log(coursearr)
+
     axios.get('http://localhost:5000/invoice/Display')
     .then((data)=>{
       setArr(data.data.data)
@@ -98,6 +111,21 @@ doUpdate(!update)
     
 setOpen(false)
   }
+  function convertToIST(utcDateStr) {
+    const date = new Date(utcDateStr);
+
+    const options = {
+      timeZone: "Asia/Kolkata",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false // 24-hour format
+
+    };
+
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  }
+  
   return (
         <React.Fragment>
      
@@ -123,17 +151,6 @@ setOpen(false)
             fullWidth
             sx={{ mb: 2 }}
           />
-          <TextField
-            id="outlined-basic"
-            label="Amount"
-
-            value={data.Amount}
-
-            variant="filled"
-            onChange={(e)=>{handleChange(e,'Amount')}}
-            fullWidth
-            sx={{ mb: 2 }}
-          />
 
           {/* <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} /> */}
           <Box sx={{ mb: 2 }} >
@@ -145,26 +162,7 @@ setOpen(false)
               </DemoContainer>
             </LocalizationProvider>
           </Box>
-          <Box sx={{ minWidth: 120, mb: 2 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Course</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Course"
-                variant="filled"
-            value={data.Course}
-                onChange={(e)=>{handleChange(e,'Course')}}
-              >
-                <MenuItem value={"React"}>React</MenuItem>
-                <MenuItem value={"Node"}>Node</MenuItem>
-                <MenuItem value={"AWS"}>AWS</MenuItem>
-                <MenuItem value={"C"}>C</MenuItem>
-                <MenuItem value={"C++"}>C++</MenuItem>
-                <MenuItem value={"Python"}>Python</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
+         
           <Box sx={{ minWidth: 120, mb: 2 }}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">
@@ -195,26 +193,7 @@ sx={{mt:2}}
           />  </FormControl>
           </Box>
       
-          <TextField
-            id="outlined-basic"
-            label="Total Amount"
-            variant="filled"
-            value={data.Total}
-
-            onChange={(e)=>{handleChange(e,'Total')}}
-            fullWidth
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            id="outlined-basic"
-            label="Remaining Amount"
-            variant="filled"
-            value={data.Remaining}
-
-            onChange={(e)=>{handleChange(e,'Remaining')}}
-            fullWidth
-            sx={{ mb: 2 }}
-          />
+          
           
         </DialogContent>
         <DialogActions>
@@ -229,6 +208,54 @@ sx={{mt:2}}
             </Alert>
         </DialogActions>
       </Dialog>
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={11}>
+          <Box sx={{ my: 3 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                {" "}
+                Select Course
+              </InputLabel>
+              <Select
+              // onChange={(e) => {
+              //   handleparent(e);
+              // }}
+              
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Status"
+                variant="filled"
+
+                // sx={{fullWidth}}
+              >
+                {coursearr &&
+                  coursearr.map((row) => (
+                    <MenuItem value={row}>
+                      <TableRow
+                        key={row.name}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell align="center">{row.Course}</TableCell>
+                        <TableCell align="center">{row.Amount}</TableCell>
+
+                        <TableCell align="center">{row.Days}</TableCell>
+
+                        <TableCell align="center">
+                          {row.StartDate && row.StartDate.split("T")[0]}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.BatchTime && convertToIST(row.BatchTime)}
+                        </TableCell>
+                      </TableRow>
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </Grid>
+      </Grid>
 
 <Box sx={{mx:2}}>
 

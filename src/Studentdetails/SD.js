@@ -51,7 +51,9 @@ function SD() {
   });
   const [arr, setarr] = React.useState([]);
   const [update, doupdate] = React.useState(false);
-
+  const[coursearr,setcoursearr]=React.useState([])
+  const [parent, setParent] = React.useState({});
+  
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -88,7 +90,10 @@ function SD() {
     let val = typeof value === "string" ? value.split(",") : value;
     setData({ ...data, course: val });
   };
-
+  const handleparent = (e) => {
+    setParent({ ...e.target.value });
+  };
+console.log(parent)
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -106,15 +111,28 @@ function SD() {
     setData({ ...data, [type]: e.target.value });
   };
   React.useEffect(() => {
+    axios.get('http://localhost:5000/batchEvent/DisplayBevent')
+    .then((data)=>{
+    
+    setcoursearr(data.data.data)
+    console.log('arr is set')
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+    console.log(coursearr)
+    if(parent._id){
     axios
-      .get("http://localhost:5000/student/allStuden")
+      .get(`http://localhost:5000/student/allStuden?id=${parent._id}`)
       .then((data) => {
         setarr(data.data.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [update]);
+    }
+  }, [parent,update]);
+
   // console.log('data received',arr)
 
   //   useEffect(()=>{
@@ -134,7 +152,7 @@ function SD() {
         });
     } else {
       axios
-        .post("http://localhost:5000/student/stuadd", data)
+        .post("http://localhost:5000/student/stuadd",{...data,CourseId:parent._id})
         .then((data) => {
           console.log("data posted", data);
           doupdate(!update);
@@ -421,6 +439,55 @@ function SD() {
           </Button>
         </DialogActions>
       </Dialog>
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={11}>
+          <Box sx={{ my: 3 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                {" "}
+                Select Course
+              </InputLabel>
+              <Select
+              onChange={(e) => {
+                handleparent(e);
+              }}
+              
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Status"
+                variant="filled"
+
+                // sx={{fullWidth}}
+              >
+                {coursearr &&
+                  coursearr.map((row) => (
+                    <MenuItem value={row}>
+                      <TableRow
+                        key={row.name}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell align="center">{row.Course}</TableCell>
+                        <TableCell align="center">{row.Amount}</TableCell>
+
+                        <TableCell align="center">{row.Days}</TableCell>
+
+                        <TableCell align="center">
+                          {row.StartDate && row.StartDate.split("T")[0]}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.BatchTime && convertToIST(row.BatchTime)}
+                        </TableCell>
+                      </TableRow>
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </Grid>
+      </Grid>
+
       <box sx={{ mx: 2 }}>
         <TableContainer>
           <Table sx={{ minWidth: 650, mx: 3 }} aria-label="simple table">

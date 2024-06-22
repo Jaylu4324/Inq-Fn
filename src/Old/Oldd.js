@@ -25,6 +25,7 @@ function convertToIST(utcDateStr) {
 }
 
    const[arr,setarr]=React.useState([])
+
    const[update,doupdate]=React.useState(false)
    React.useEffect(()=>{
 axios.get(('http://localhost:5000/event/Completedevent'))
@@ -36,6 +37,7 @@ console.log('arr is set')
 .catch((err)=>{
   console.log(err)
 })
+
    },[update])
   return (
 <>

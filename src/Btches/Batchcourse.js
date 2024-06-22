@@ -72,6 +72,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 function Batches() {
   const [parent, setParent] = React.useState({});
+  
   const [data, setData] = React.useState({ StuName: [] });
   const [id, setId] = React.useState("");
   const [value, setValue] = React.useState(0);
