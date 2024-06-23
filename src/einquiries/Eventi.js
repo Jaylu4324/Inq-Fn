@@ -117,6 +117,7 @@ function Eventi() {
         .post(`http://localhost:5000/Eventinquiry/Update?id=${id}`, data)
         .then((data) => {
           doUpdate(!update);
+          handleClose();
         })
         .catch((err) => {
           console.log(err);
@@ -140,7 +141,8 @@ function Eventi() {
         .then((data) => {
           console.log(data);
           doUpdate(!update);
-          setOpen(false);
+       
+          handleClose();
         })
         .catch((err) => {
           console.log(err);
@@ -156,7 +158,7 @@ function Eventi() {
           }
         });
     }
-    handleClose();
+   
   };
   React.useEffect(() => {
     axios
@@ -180,16 +182,7 @@ function Eventi() {
         })
         .catch((err) => {
           console.log(err);
-          if(err.response.data){
-            setAlertMsg({
-              open:true,
-              message:err.response.data.error.details[0].message
-            })
-            // setAlertMsg(err.response.data.error.details[0].message)
-          setTimeout(()=>{
-            setAlertMsg("");
-          },3000)
-          }
+    
         });
       axios
         .get(`http://localhost:5000/Eventinquiry/Reject?id=${parent._id}`)
@@ -200,16 +193,7 @@ function Eventi() {
         })
         .catch((err) => {
           console.log(err);
-          if(err.response.data){
-            setAlertMsg({
-              open:true,
-              message:err.response.data.error.details[0].message
-            })
-            // setAlertMsg(err.response.data.error.details[0].message)
-          setTimeout(()=>{
-            setAlertMsg("");
-          },3000)
-          }
+      
         });
       axios
         .get(`http://localhost:5000/Eventinquiry/Confirm?id=${parent._id}`)
@@ -407,7 +391,7 @@ function Eventi() {
           />
           <Button
             onClick={() => {
-              setOpen(!open);
+             handleClose()
             }}
             sx={{ ml: 45 }}
           >
