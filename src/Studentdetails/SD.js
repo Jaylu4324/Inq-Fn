@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import { Box, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, FilledInput } from '@mui/material';
+import Alert from "@mui/material/Alert";
 
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -53,6 +54,12 @@ function SD() {
   const [update, doupdate] = React.useState(false);
   const[coursearr,setcoursearr]=React.useState([])
   const [parent, setParent] = React.useState({});
+  const [alertSuccess, setAlertSuccess] = React.useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
+  
   
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -146,6 +153,14 @@ console.log(parent)
         .then((data) => {
           console.log(data);
           doupdate(!update);
+          setAlertSuccess({
+            open: true,
+            message: "Updated Successfully",
+            severity: "success",
+          });
+          setTimeout(()=>{
+            setAlertSuccess("");
+          },3000);
         })
         .catch((err) => {
           console.log(err);
@@ -156,6 +171,14 @@ console.log(parent)
         .then((data) => {
           console.log("data posted", data);
           doupdate(!update);
+          setAlertSuccess({
+            open: true,
+            message: "Added Successfully",
+            severity: "success",
+          });
+          setTimeout(()=>{
+            setAlertSuccess("");
+          },3000);
         })
         .catch((err) => {
           console.log(err);
@@ -184,6 +207,14 @@ console.log(parent)
       .then((data) => {
         console.log("data deleted", data);
         doupdate(!update);
+        setAlertSuccess({
+          open: true,
+          message: "Deleted Successfully",
+          severity: "success",
+        });
+        setTimeout(()=>{
+          setAlertSuccess("");
+        },3000);
       })
       .catch((err) => {
         console.log(err);
@@ -439,6 +470,12 @@ console.log(parent)
           </Button>
         </DialogActions>
       </Dialog>
+      {alertSuccess.open  ? (
+        <Alert>{alertSuccess.message}</Alert>
+      ) : (
+        <div></div>
+      )}
+
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={11}>
           <Box sx={{ my: 3 }}>

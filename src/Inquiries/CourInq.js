@@ -24,6 +24,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
+import Alert from "@mui/material/Alert";
 
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -89,6 +90,11 @@ function Form1() {
   const handleChange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
   };
+  const [alertSuccess, setAlertSuccess] = React.useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
 
   const handleopen = () => {
     setOpen(!open);
@@ -166,6 +172,14 @@ if(parent._id){
           setOpen(false);
           setData({});
           setId();
+          setAlertSuccess({
+            open: true,
+            message: "Updated Successfully",
+            severity: "success",
+          });
+          setTimeout(()=>{
+            setAlertSuccess("");
+          },3000);
           console.log("data is upfated", data1);
           // doUpdate(!update)
         })
@@ -183,7 +197,14 @@ if(parent._id){
           setOpen(false);
           setData({});
           setId();
-
+          setAlertSuccess({
+            open: true,
+            message: "Added Successfully",
+            severity: "success",
+          });
+          setTimeout(()=>{
+            setAlertSuccess("");
+          },3000);
           console.log("data posted", data);
           console.log(parent._id)
         })
@@ -391,6 +412,13 @@ if(parent._id){
         </DialogContent>
         <DialogActions></DialogActions>
       </Dialog>
+
+      {alertSuccess.open  ? (
+        <Alert>{alertSuccess.message}</Alert>
+      ) : (
+        <div></div>
+      )}
+
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={11}>
           <Box sx={{ mt: 2 }}>
@@ -550,6 +578,7 @@ if(parent._id){
                           setData(row);
                           setId(row._id);
                           setOpen(true);
+                          
                         }}
                         variant="contained"
                       >

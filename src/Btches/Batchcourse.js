@@ -19,7 +19,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-
+import Alert from "@mui/material/Alert";
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -101,6 +101,11 @@ function Batches() {
   const [map, maparr] = React.useState([]);
   const [course, setcoursearr] = React.useState([]);
   const [confirm, setconfirm] = React.useState([]);
+  const [alertSuccess, setAlertSuccess] = React.useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
   React.useEffect(() => {
     
     axios
@@ -376,6 +381,14 @@ function Batches() {
                             .then((data) => {
                               console.log("delet", data);
                               doupdate(!update);
+                              setAlertSuccess({
+                                open: true,
+                                message: "Deleted Successfully",
+                                severity: "success",
+                              });
+                              setTimeout(()=>{
+                                setAlertSuccess("");
+                              },3000);
                             })
                             .catch((err) => {
                               console.log(err);
