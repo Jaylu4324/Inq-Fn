@@ -48,6 +48,11 @@ export default function FormDialog() {
   const handleparent = (e) => {
     setParent({ ...e.target.value });
   };
+  const [alertSuccess, setAlertSuccess] = React.useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
 
   React.useEffect(() => {
     axios
@@ -108,6 +113,14 @@ export default function FormDialog() {
         .post(`http://localhost:5000/invoice/Update?id=${id}`,data)
         .then((data) => {
           doUpdate(!update);
+          setAlertSuccess({
+            open: true,
+            message: "Updated Successfully",
+            severity: "success",
+          });
+          setTimeout(()=>{
+            setAlertSuccess("");
+          },3000);
           console.log(data);
         })
         .catch((err) => {
@@ -119,6 +132,14 @@ export default function FormDialog() {
         .post("http://localhost:5000/invoice/addinfo", data)
         .then((data) => {
           doUpdate(!update);
+          setAlertSuccess({
+            open: true,
+            message: "Added Successfully",
+            severity: "success",
+          });
+          setTimeout(()=>{
+            setAlertSuccess("");
+          },3000);
           console.log("data post api ", data);
         })
         .catch((err) => {
@@ -280,6 +301,11 @@ const[value,setvalue]=React.useState('kalpshah')
           
         </DialogActions>
       </Dialog>
+      {alertSuccess.open  ? (
+        <Alert>{alertSuccess.message}</Alert>
+      ) : (
+        <div></div>
+      )}
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={11}>
           <Box sx={{ my: 3 }}>
@@ -388,6 +414,14 @@ const[value,setvalue]=React.useState('kalpshah')
                           )
                           .then((data) => {
                             doUpdate(!update);
+                            setAlertSuccess({
+                              open: true,
+                              message: "Deleted Successfully",
+                              severity: "success",
+                            });
+                            setTimeout(()=>{
+                              setAlertSuccess("");
+                            },3000);
                             console.log(data);
                           })
                           .catch((err) => {

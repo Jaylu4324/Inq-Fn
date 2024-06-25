@@ -116,6 +116,14 @@ const handlesubmit=()=>{
     setopen(false)
     setdata({})
     setid(null)
+    setAlertSuccess({
+      open: true,
+      message: "Added Successfully",
+      severity: "success",
+    });
+    setTimeout(()=>{
+      setAlertSuccess("");
+    },3000);
     console.log(data)
   })
 .catch((err)=>{
@@ -309,6 +317,14 @@ console.log(data.StartDate)
                 setopen(true)
                 setdata(row)
                 setid(row._id)
+                setAlertSuccess({
+                  open: true,
+                  message: "Updated Successfully",
+                  severity: "success",
+                });
+                setTimeout(()=>{
+                  setAlertSuccess("");
+                },3000);
                }}
               >
               Edit
@@ -324,6 +340,14 @@ console.log(data.StartDate)
                   axios.delete(`http://localhost:5000/batchEvent/DeleteBevent?id=${row._id}`)
                   .then((data)=>{
                     doUpdate(!update)
+                    setAlertSuccess({
+                      open: true,
+                      message: "Deleted Successfully",
+                      severity: "success",
+                    });
+                    setTimeout(()=>{
+                      setAlertSuccess("");
+                    },3000);
                       console.log('data delted',data)
                   })
                   .catch((err)=>{
