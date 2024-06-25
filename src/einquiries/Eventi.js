@@ -111,6 +111,7 @@ function Eventi() {
   const[alertSuccess,setAlertSuccess]=React.useState({
     open:false
 ,message:"",  severity:""});
+ const[deleteId,setDeleteId]=React.useState("");
 
 
   const [id, setId] = React.useState();
@@ -586,34 +587,7 @@ function Eventi() {
                   </Button>
                 </TableCell>
 
-
-                <Dialog
-                    open={true}
-                    onClose={handleClose1}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                  >
-                    <DialogTitle id="alert-dialog-title">
-                      {"Delete Event"}
-                    </DialogTitle>
-                    <DialogContent>
-                      <DialogContentText id="alert-dialog-description">
-                              Are you confirm to delete?
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={handleClose1}>Cancel</Button>
-                      <Button onClick={()=>{
-                        // axios.post(`http://localhost:5000/Eventinquiry/RejectedInquiry?id=${row._id}`)
-                        // handleClose1()
-                        setOpen1(true);
-
-
-                        }} >
-                        Confirm
-                      </Button>
-                    </DialogActions>
-                  </Dialog>      
+    
 
                 <TableCell>
                   <Button
@@ -719,16 +693,19 @@ function Eventi() {
                     variant="contained"
                     color="error"
                     onClick={() => {
-                      axios.delete(`http://localhost:5000/Eventinquiry/Delete?id=${parent._id}`)
+                      // axios.delete(`http://localhost:5000/Eventinquiry/Delete?id=${parent._id}`)
 
 
-                      .then((data)=>{
-                        console.log(data)
-                        doUpdate(!update) 
-                      })
-                        .catch((err)=>{
-                          console.log(err)
-                        })
+                      // .then((data)=>{
+                      //   console.log(data)
+                      //   doUpdate(!update) 
+                      // })
+                      //   .catch((err)=>{
+                      //     console.log(err)
+                      //   })
+                      
+                      handleClickOpen1()
+                      setDeleteId(row._id);
                       
                     }}
                   >
@@ -799,6 +776,39 @@ function Eventi() {
           
         </CustomTabPanel>
       </Box>
+      
+                <Dialog
+                    open={open1} 
+                    onClose={handleClose1}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {"Delete Event"}
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                              Are you confirm to delete?
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleClose1}>Cancel</Button>
+                      <Button onClick={()=>{
+                        axios.delete(`http://localhost:5000/Eventinquiry/Delete?id=${deleteId}`)
+                         .then((data)=>{
+                         console.log(data)
+                        doUpdate(!update) 
+                       })
+                         .catch((err)=>{
+                         console.log(err)
+                         })
+                      
+                        handleClose1()
+                               }} >
+                        Confirm
+                      </Button>
+                    </DialogActions>
+                  </Dialog>  
     </React.Fragment>
   );
 }
