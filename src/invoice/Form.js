@@ -149,6 +149,8 @@ export default function FormDialog() {
   }
   console.log("NORMAL data", arr);
 console.log(id)
+const[value,setvalue]=React.useState('kalpshah')
+
   return (
     <React.Fragment>
       <Grid container spacing={2} justifyContent="center">
@@ -162,7 +164,7 @@ console.log(id)
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
           <Box>
-            <FormControl sx={{ width: 560, mt: 3 }}>
+            <FormControl sx={{my: 2 }} fullWidth>
               <InputLabel id="demo-multiple-checkbox-label">
                 Select Students
               </InputLabel>
@@ -170,6 +172,8 @@ console.log(id)
               <Select
                 labelId="demo-multiple-checkbox-label"
                 disabled={id==undefined?false:true}
+                  // value={id!==undefined?value:null}
+
                 id="demo-multiple-checkbox"
                 onChange={(e) => {
                   handleChange(e, "stuId");
@@ -178,9 +182,11 @@ console.log(id)
                 fullWidth
                 input={<FilledInput />}
               >
+
+                
                 {stuarr &&
                   stuarr.map((row) => (
-                    <MenuItem value={row._id}>
+                    <MenuItem  key={row._id} value={row._id}>
                       <TableCell align="center">{row.Name}</TableCell>
                       <TableCell align="center">{row.Contact}</TableCell>
                       <TableCell align="center">{row.Rfees}</TableCell>
@@ -188,13 +194,14 @@ console.log(id)
                     </MenuItem>
                   ))}
               </Select>
+
             </FormControl>
           </Box>
 
           <TextField
             id="outlined-basic"
             type="Number"
-            label="amount"
+            label="Amount"
             variant="filled"
             value={data.Amount}
             onChange={(e) => {
@@ -267,13 +274,10 @@ console.log(id)
             onClick={() => {
               AddorUpdate("data captured", console.log(message));
             }}
-            autoFocus
           >
             Submit
           </Button>
-          <Alert severity="success" alertopen={alertopen}>
-            {message}
-          </Alert>
+          
         </DialogActions>
       </Dialog>
       <Grid container spacing={2} justifyContent="center">
@@ -442,13 +446,11 @@ console.log(id)
                           headers: ["Field", "Value"],
                           body: [
                             ["Invoice ID", row._id],
-                            ["Date", row.invoiceDate],
+                            ["Date", row.invoiceDate && row.invoiceDate.split('T')[0]],
                             ["Student Name", row.stuId.Name],
                             ["Course Name", row.stuId.course],
-                            ["Payment Method", row.TypeOfPayment],
-                            ["Description", row.Description],
-                            ["Total Amount", row.stuId.Tfees],
-                            ["Remaining Amount", row.stuId.Rfees],
+                            ["Payment Method", row.TypeOfPayment]
+                            
                           ],
                         };
 
