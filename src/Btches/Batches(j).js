@@ -21,6 +21,7 @@ import Paper from "@mui/material/Paper";
 
 import PropTypes from "prop-types";
 import Typography from "@mui/material/Typography";
+import Alert from '@mui/material/Alert';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -92,6 +93,9 @@ function Batches() {
   const [arr1, seteventarr] = React.useState([]);
   const [confirm, setconfirm] = React.useState([]);
   const[alertMsg,setAlertMsg]=React.useState("");
+  const[alertSuccess,setAlertSuccess]=React.useState({
+    open:false,message:"",severity:"",
+  })
 
   React.useEffect(() => {
     
@@ -596,6 +600,11 @@ console.log('thid api')
           </DialogActions>
         </DialogContent>
       </Dialog>
+      {alertSuccess.open  ? (
+        <Alert>{alertSuccess.message}</Alert>
+      ) : (
+        <div></div>
+      )}
     </>
   );
 }

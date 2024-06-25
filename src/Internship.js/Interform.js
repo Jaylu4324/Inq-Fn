@@ -2,16 +2,27 @@ import React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import dayjs from "dayjs";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { Box, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, FilledInput } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+  FilledInput,
+} from "@mui/material";
 
 import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
@@ -43,7 +54,6 @@ function convertToIST(utcDateStr) {
 }
 
 function Interform() {
-  
   const [open, setopen] = React.useState(false);
   const [data, setdata] = React.useState({
     StartDate: dayjs(),
@@ -54,7 +64,21 @@ function Interform() {
   const [arr, setarr] = React.useState([]);
   const [id, setid] = React.useState();
   const [update, doUpdate] = React.useState(false);
-  const [alertMsg,setAlertMsg]=React.useState({open:false,message:""});
+  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
+  const [open1, setOpen1] = React.useState(false);
+  const [alertSuccess, setAlertSuccess] = React.useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
+
+  const handleClickOpen1 = () => {
+    setOpen1(true);
+  };
+
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
 
   const handleChange = (e, type) => {
     if (type == "TypeOfPayment" && e.target.value == "Free") {
@@ -77,20 +101,28 @@ function Interform() {
           handleClose();
 
           doUpdate(!update);
+          setAlertSuccess({
+            open: true,
+            message: "Updated Successfully",
+            severity: "success",
+          });
+          setTimeout(()=>{
+            setAlertSuccess("");
+          },3000);
 
           console.log("data is updated", data);
         })
         .catch((err) => {
           console.log(err);
-          if(err.response.data){
+          if (err.response.data) {
             // setAlertMsg(err.response.data.error.details[0].message)
             setAlertMsg({
-              open:true,
-              message:err.response.data.error.details[0].message
-            })
-          setTimeout(()=>{
-            setAlertMsg("");
-          },3000)
+              open: true,
+              message: err.response.data.error.details[0].message,
+            });
+            setTimeout(() => {
+              setAlertMsg("");
+            }, 3000);
           }
         });
     } else {
@@ -99,21 +131,35 @@ function Interform() {
         .post(`http://localhost:5000/event/addevent`, data)
         .then((data) => {
           doUpdate(!update);
+          setAlertSuccess({
+            open: true,
+            message: "Added Successfully",
+            severity: "success",
+          });
+          setTimeout(()=>{
+            setAlertSuccess("");
+          },3000);
+          console.log("Alert State is changed");
           handleClose();
+          // handledelete(row);
+          // setAlertMsg({
+          //   open:true,
+          //   message:"Data Added Successfully"
+          // })
 
           console.log("data posted", data);
         })
         .catch((err) => {
           console.log(err);
-          if(err.response.data){
+          if (err.response.data) {
             setAlertMsg({
-              open:true,
-              message:err.response.data.error.details[0].message
-            })
+              open: true,
+              message: err.response.data.error.details[0].message,
+            });
             // setAlertMsg(err.response.data.error.details[0].message)
-          setTimeout(()=>{
-            setAlertMsg("");
-          },3000)
+            setTimeout(() => {
+              setAlertMsg("");
+            }, 3000);
           }
         });
     }
@@ -159,17 +205,24 @@ function Interform() {
       });
   }, [update]);
 
-  // React.useEffect(()=>{
-  //   console.log(data)
-
-  // },[data])
+  // React.useEffect(() => {
+  //   console.log("Testing alert");
+  // }, alertSuccess);
 
   const handledelete = (row) => {
     axios
       .delete(`http://localhost:5000/event/Deleteevent?id=${row._id}`)
       .then((data) => {
         doUpdate(!update);
-
+        setAlertSuccess({
+          open: true,
+          message: "Deleted Successfully",
+          severity: "error",
+        });
+        setTimeout(()=>{
+          setAlertSuccess("");
+        },3000);
+        console.log("Alert State is changed");
         console.log("data deleted", data);
       })
       .catch((err) => {
@@ -195,8 +248,12 @@ function Interform() {
       <Dialog open={open}>
         <DialogContent>
           <Box sx={{ minWidth: 120, mb: 2 }}>
-            {alertMsg.open && (<Alert severity="error" sx={{zIndex:9999}}>{alertMsg.message}</Alert>)}
-          
+            {alertMsg.open && (
+              <Alert severity="error" sx={{ zIndex: 9999 }}>
+                {alertMsg.message}
+              </Alert>
+            )}
+
             <FormControl variant="filled" sx={{ minWidth: 500 }}>
               <InputLabel id="demo-simple-select-label">Course</InputLabel>
               <Select
@@ -285,8 +342,7 @@ function Interform() {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="Start Date"
-                  slotProps={{ textField: { variant: 'filled' } }}
-          
+                  slotProps={{ textField: { variant: "filled" } }}
                   defaultValue={id ? dayjs(data.StartDate) : null}
                   sx={{ width: 500 }}
                   onChange={(val) => {
@@ -301,10 +357,8 @@ function Interform() {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="End Date"
-                  slotProps={{ textField: { variant: 'filled' } }}
-          
+                  slotProps={{ textField: { variant: "filled" } }}
                   defaultValue={id ? dayjs(data.EndtDate) : null}
-
                   sx={{ width: 500 }}
                   onChange={(val) => {
                     setdata({ ...data, EndtDate: val });
@@ -323,7 +377,7 @@ function Interform() {
                 value={data.Days || []}
                 onChange={handleChange1}
                 sx={{ width: 500 }}
-                input={<FilledInput/>}
+                input={<FilledInput />}
                 renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
               >
@@ -344,8 +398,7 @@ function Interform() {
               <DemoContainer components={["TimePicker"]} fullWidth>
                 <TimePicker
                   label="Batch Timings"
-                  slotProps={{ textField: { variant: 'filled' } }}
-          
+                  slotProps={{ textField: { variant: "filled" } }}
                   sx={{ width: 500 }}
                   defaultValue={id ? dayjs(data.BatchTime) : null}
                   fullWidth
@@ -377,7 +430,12 @@ function Interform() {
           </DialogActions>
         </DialogContent>
       </Dialog>
-
+      {alertSuccess.open  ? (
+        <Alert>{alertSuccess.message}</Alert>
+      ) : (
+        <div></div>
+      )}
+      {/* {setAlertSuccess.open && (<Alert severity={alertSuccess.severity}>{alertSuccess.message}</Alert>)} */}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -439,12 +497,40 @@ function Interform() {
                     Edit
                   </Button>
                 </TableCell>
+                <Dialog
+                  open={open1}
+                  onClose={handleClose1}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {"Delete Event"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Are you confirm to delete?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose1}>Cancel</Button>
+                    <Button
+                      onClick={() => {
+                        handleClose1();
+                        handledelete(row);
+                      }}
+                      autoFocus
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
                 <TableCell>
                   <Button
                     variant="contained"
                     color="error"
                     onClick={() => {
-                      handledelete(row);
+                      // handledelete(row);
+                      handleClickOpen1();
                     }}
                   >
                     Delete
@@ -473,7 +559,6 @@ function Interform() {
                     Completed
                   </Button>
                 </TableCell>
-                
               </TableRow>
             ))}
         </Table>

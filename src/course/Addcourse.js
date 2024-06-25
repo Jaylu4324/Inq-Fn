@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import dayjs from "dayjs";
+import Alert from '@mui/material/Alert';
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -36,7 +37,9 @@ function Addcourse() {
   const [update, doUpdate] = React.useState(false);
   const [arr, setarr] = React.useState([]);
   const[id,setid]=React.useState(0)
-
+  const[alertSuccess,setAlertSuccess]=React.useState({
+    open:false,message:"",severity:"",
+  })
 
   const [data, setdata] = React.useState({
     StartDate: dayjs(''),
@@ -251,6 +254,11 @@ console.log(data.StartDate)
               </DialogActions>
               </DialogContent>
               </Dialog>
+              {alertSuccess.open  ? (
+        <Alert>{alertSuccess.message}</Alert>
+      ) : (
+        <div></div>
+      )}
               
               <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">

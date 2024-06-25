@@ -6,6 +6,8 @@ import dayjs from "dayjs";
 import Alert from '@mui/material/Alert';
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -105,9 +107,22 @@ function Eventi() {
   const [confirm, setconfirm] = React.useState([]);
   const [update, doUpdate] = React.useState(false);
   const[alertMsg,setAlertMsg]=React.useState("");
+  const [open1, setOpen1] = React.useState(false);
+  const[alertSuccess,setAlertSuccess]=React.useState({
+    open:false
+,message:"",  severity:""});
 
 
   const [id, setId] = React.useState();
+
+  const handleClickOpen1 = () => {
+    setOpen1(true);
+  };
+
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
+
   const handleChange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
   };
@@ -117,6 +132,14 @@ function Eventi() {
         .post(`http://localhost:5000/Eventinquiry/Update?id=${id}`, data)
         .then((data) => {
           doUpdate(!update);
+          setAlertSuccess({
+            open: true,
+            message: "Updated Successfully",
+            severity: "success",
+          });
+          setTimeout(()=>{
+            setAlertSuccess("");
+          },3000);
           handleClose();
         })
         .catch((err) => {
@@ -141,6 +164,14 @@ function Eventi() {
         .then((data) => {
           console.log(data);
           doUpdate(!update);
+          setAlertSuccess({
+            open: true,
+            message: "Added Successfully",
+            severity: "success",
+          });
+          setTimeout(()=>{
+            setAlertSuccess("");
+          },3000);
        
           handleClose();
         })
@@ -401,6 +432,7 @@ function Eventi() {
             autoFocus
             onClick={() => {
               handlesubmit();
+              
             }}
           >
             Submit
@@ -408,6 +440,11 @@ function Eventi() {
         </DialogContent>
         <DialogActions></DialogActions>
       </Dialog>
+      {alertSuccess.open  ? (
+        <Alert>{alertSuccess.message}</Alert>
+      ) : (
+        <div></div>
+      )}
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={11}>
           <Box sx={{ mt: 2 }}>
@@ -549,11 +586,41 @@ function Eventi() {
                   </Button>
                 </TableCell>
 
+
+                <Dialog
+                    open={true}
+                    onClose={handleClose1}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {"Delete Event"}
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                              Are you confirm to delete?
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleClose1}>Cancel</Button>
+                      <Button onClick={()=>{
+                        // axios.post(`http://localhost:5000/Eventinquiry/RejectedInquiry?id=${row._id}`)
+                        // handleClose1()
+                        setOpen1(true);
+
+
+                        }} >
+                        Confirm
+                      </Button>
+                    </DialogActions>
+                  </Dialog>      
+
                 <TableCell>
                   <Button
                     variant="contained"
                     color="error"
                     onClick={() => {
+                      
                       axios.post(`http://localhost:5000/Eventinquiry/RejectedInquiry?id=${row._id}`)
 
 
@@ -646,6 +713,8 @@ function Eventi() {
                         {row.Description}
                       </TableCell>
                       <TableCell>
+
+              
                   <Button
                     variant="contained"
                     color="error"
@@ -655,7 +724,7 @@ function Eventi() {
 
                       .then((data)=>{
                         console.log(data)
-                        doUpdate(!update)
+                        doUpdate(!update) 
                       })
                         .catch((err)=>{
                           console.log(err)
