@@ -170,7 +170,6 @@ export default function FormDialog() {
   }
   console.log("NORMAL data", arr);
 console.log(id)
-const[value,setvalue]=React.useState('kalpshah')
 
   return (
     <React.Fragment>
@@ -409,8 +408,8 @@ const[value,setvalue]=React.useState('kalpshah')
                       color="error"
                       onClick={() => {
                         axios
-                          .delete(
-                            `http://localhost:5000/invoice/Delete?id=${row._id}`
+                          .post(
+                            `http://localhost:5000/invoice/Delete?id=${row._id}`,row
                           )
                           .then((data) => {
                             doUpdate(!update);
@@ -465,83 +464,85 @@ const[value,setvalue]=React.useState('kalpshah')
                         );
 
                         // Title
-                        doc.setFont("helvetica", "bold");
-                        doc.setFontSize(24);
-                        doc.setTextColor(0, 0, 110);
-                        doc.text(
-                          "Invoice",
-                          doc.internal.pageSize.width / 2,
-                          40,
-                          { align: "center" }
-                        );
+                        doc.setFont('helvetica', 'bold');
+    doc.setFontSize(24);
+    doc.setTextColor(0, 0, 110);
+    doc.text('Fees Receipt'.toUpperCase(), doc.internal.pageSize.width / 2, 40, { align: 'center' });
 
-                        // Create a table with 2 columns and 8 rows
-                        const table = {
-                          headers: ["Field", "Value"],
-                          body: [
-                            ["Invoice ID", row._id],
-                            ["Date", row.invoiceDate && row.invoiceDate.split('T')[0]],
-                            ["Student Name", row.stuId.Name],
-                            ["Course Name", row.stuId.course],
-                            ["Payment Method", row.TypeOfPayment]
-                            
-                          ],
-                        };
+    // Create a table with 2 columns and 8 rows
+    const table = {
+        headers: ['Field', 'Value'],
+        body: [
+            ['Invoice ID', row.invoiceId],
+            ['Date', row.invoiceDate && row.invoiceDate.split('T')[0]],
+            ['Student Name',row.stuId.Name && row.stuId.Name],
+            ['Course Name', row.stuId.course && row.stuId.course ],
+            ['Payment Method', row.TypeOfPayment],
+            ['Paid Amount',row.Amount]
+           
+        ],
+    };
 
-                        // Add the table to the PDF with borders and colors
-                        doc.autoTable({
-                          startY: 60,
-                          head: [table.headers],
-                          body: table.body,
-                          theme: "striped",
-                          styles: {
-                            cellPadding: 3,
-                            fontSize: 10,
-                            valign: "middle",
-                            halign: "center",
-                            fontStyle: "normal",
-                            lineWidth: 0.1,
-                          },
-                          headStyles: {
-                            fillColor: [255, 255, 255],
-                            textColor: [0, 0, 110],
-                            fontStyle: "bold",
-                          },
-                          columnStyles: {
-                            0: {
-                              cellWidth: 40,
-                            },
-                            1: {
-                              cellWidth: "auto",
-                            },
-                          },
-                        });
+    // Add the table to the PDF with borders and colors
+    doc.autoTable({
+        startY: 60,
+        head: [table.headers],
+        body: table.body,
+        theme: 'striped',
+        styles: {
+            cellPadding: 3,
+            fontSize: 10,
+            valign: 'middle',
+            halign: 'center',
+            fontStyle: 'normal',
+            lineWidth: 0.1,
+        },
+        headStyles: {
+            fillColor: [255, 255, 255],
+            textColor: [0, 0, 110],
+            fontStyle: 'bold',
+        },
+        columnStyles: {
+            0: {
+                cellWidth: 40,
+            },
+            1: {
+                cellWidth: 'auto',
+            },
+        },
+    });
 
-                        // Add footer
-                        const footerText = [
-                          "Email - info@technishal.com",
-                          "Contact Number - +91 9313386475",
-                          "Address - H-1210, Titanium City Center Business Park, Nr. Prahlad Nagar Rd, Jodhpur Village, Ahmedabad, Gujarat 380015.",
-                        ];
-                        doc.setFontSize(10);
-                        doc.setTextColor(0, 0, 0);
-                        doc.text(
-                          footerText,
-                          1,
-                          doc.internal.pageSize.height - 17,
-                          { hyperlink: { url: "mailto:info@technishal.com" } }
-                        );
+    // Add footer
+    const footerText = [
+        'Email: info@technishal.com',
+        'Contact: +91 9313386475',
+        'Address: H-1210, Titanium City Center Business Park,',
+        'Nr. Prahlad Nagar Rd, Jodhpur Village,',
+        'Ahmedabad, Gujarat 380015.',
+    ];
 
-                        // Copyright notice
-                        doc.setTextColor(100);
-                        doc.setFontSize(8);
-                        doc.text(
-                          "© 2023 TechNishal. All Rights Reserved.",
-                          doc.internal.pageSize.width - 80,
-                          doc.internal.pageSize.height - 20
-                        );
+    doc.setFontSize(10);
+    doc.setTextColor(0, 0, 0);
 
-                        // Save the PDF
+    // Add horizontal line
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.5);
+    doc.line(10, doc.internal.pageSize.height - 30, doc.internal.pageSize.width - 10, doc.internal.pageSize.height - 30);
+
+    // Add footer text with spacing
+    let footerY = doc.internal.pageSize.height - 25;
+    footerText.forEach((text, index) => {
+        doc.text(text, doc.internal.pageSize.width / 2, footerY, { align: 'center' });
+        footerY += 5;
+    });
+
+    // Copyright notice
+    doc.setTextColor(100);
+    doc.setFontSize(8);
+    doc.text('© 2023 TechNishal. All Rights Reserved.', doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 2, { align: 'center' });
+
+
+                        
                         doc.save(`${row.stuId.Name}-${row.stuId.course}.pdf`);
                       }}
                     >

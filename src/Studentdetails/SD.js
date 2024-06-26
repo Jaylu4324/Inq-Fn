@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
+
 import Dialog from "@mui/material/Dialog";
 import { Box, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, FilledInput } from '@mui/material';
 import Alert from "@mui/material/Alert";
@@ -45,7 +46,7 @@ function convertToIST(utcDateStr) {
 function SD() {
   const [id, setId] = React.useState();
   const [data, setData] = React.useState({
-    course: [],
+    
     Date: dayjs(),
     btime: "",
     days: [],
@@ -80,7 +81,7 @@ function SD() {
     "Sunday",
   ];
 
-  const handleChange = (event) => {
+  const handleChange1 = (event) => {
     const {
       target: { value },
     } = event;
@@ -88,15 +89,7 @@ function SD() {
     setData({ ...data, days: val });
   };
 
-  const course = ["React", "Node", "C", "c++", "Python", "Mern Stack"];
-
-  const handleChange1 = (event) => {
-    const {
-      target: { value },
-    } = event;
-    let val = typeof value === "string" ? value.split(",") : value;
-    setData({ ...data, course: val });
-  };
+  
   const handleparent = (e) => {
     setParent({ ...e.target.value });
   };
@@ -339,42 +332,30 @@ console.log(parent)
               handlechange(e, "Tfees");
             }}
           />
-          <TextField
-            id="outlined-basic"
-            label="Paid Fees"
-            type="Number"
-            variant="filled"
-            value={data.Pfees}
-            fullWidth
-            sx={{ mb: 2 }}
-            onChange={(e) => {
-              handlechange(e, "Pfees");
-            }}
-          />
+         
 
-<Box sx={{ minWidth: 120, mb: 2 }} fullWidth>
-      <FormControl variant="filled" sx={{ width: 530 }}>
-        <InputLabel id="demo-multiple-checkbox-label">Interested Course</InputLabel>
-        <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
-          multiple
-          value={data.course}
-          onChange={handleChange1}
-          input={<FilledInput />}
-          renderValue={(selected) => selected.join(', ')}
-          MenuProps={MenuProps}
-        >
-          {course.map((name) => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={data.course.indexOf(name) > -1} />
-              <ListItemText primary={name} />
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Box>
-
+         <Box sx={{mb: 2 }}>
+            <FormControl variant="filled" sx={{width:530}}>
+              <InputLabel id="demo-simple-select-label">Course</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Course"
+                value={data.course}
+                onChange={(e) => {
+                  handlechange(e, "course");
+                }}
+              >
+                <MenuItem value={"React"}>React</MenuItem>
+                <MenuItem value={"Node"}>Node</MenuItem>
+                <MenuItem value={"AWS"}>AWS</MenuItem>
+                <MenuItem value={"C"}>C</MenuItem>
+                <MenuItem value={"C++"}>C++</MenuItem>
+                <MenuItem value={"Python"}>Python</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          
           <Box sx={{ my: 2 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
               <DemoContainer components={["DatePicker"]} fullWidth>
@@ -408,7 +389,7 @@ console.log(parent)
             </LocalizationProvider>
           </box>
 
-          <box>
+          <Box>
             <FormControl variant="filled" sx={{ width: 260, mt: 3 }}>
               <InputLabel id="demo-multiple-checkbox-label">
                 Batch days
@@ -417,8 +398,8 @@ console.log(parent)
                 labelId="demo-multiple-checkbox-label"
                 id="demo-multiple-checkbox"
                 multiple
-                value={data.days}
-                onChange={handleChange}
+                value={data.days || []}
+                onChange={handleChange1}
                 sx={{ width: 530 }}
                 fullWidth
                 input={<FilledInput/>}
@@ -433,7 +414,7 @@ console.log(parent)
                 ))}
               </Select>
             </FormControl>
-          </box>
+          </Box>
 
           <Grid container spacing={2} justifyContent="center">
             <Grid item xs={4} sx={{ mb: 2, mt: 2 }}>
