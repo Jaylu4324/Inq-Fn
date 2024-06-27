@@ -7,7 +7,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-
+import DeleteIcon from '@mui/icons-material/Delete';
   
 function convertToIST(utcDateStr) {
   const date = new Date(utcDateStr);
@@ -60,17 +60,17 @@ console.log('arr is set')
                   <TableCell align="center">Days</TableCell>
                   <TableCell align="center">Batch Time</TableCell>
                   
-                  <TableCell align='center'>Delete</TableCell>
-                  <TableCell align='center'>Delete</TableCell>
-                  <TableCell align='center'>Delete</TableCell>
-                  <TableCell align='center'>Delete</TableCell>
-                  <TableCell align='center'>Delete</TableCell>
-                  <TableCell align='center'>Delete</TableCell>
-                  <TableCell align='center'>Delete</TableCell>
-                  <TableCell align='center'>Delete</TableCell>
-                  <TableCell align='center'>Delete</TableCell>
-                  <TableCell align='center'>Delete</TableCell>
+                  <TableCell align='center' colSpan={4}>Delete</TableCell>
                   
+                  {/* <TableCell align='center'>Delete</TableCell>
+                  <TableCell align='center'>Delete</TableCell>
+                  <TableCell align='center'>Delete</TableCell>
+                  <TableCell align='center'>Delete</TableCell>
+                  <TableCell align='center'>Delete</TableCell>
+                  <TableCell align='center'>Delete</TableCell>
+                  <TableCell align='center'>Delete</TableCell>
+                  <TableCell align='center'>Delete</TableCell>
+                   */}
                   
                   
                   
@@ -119,6 +119,15 @@ console.log('arr is set')
                       
                       
                        </TableCell>
+                       <TableCell><DeleteIcon
+                       onClick={()=>{console.log('deleted')}}
+                       ></DeleteIcon></TableCell>
+                       <TableCell><button>delete</button></TableCell>
+
+                       <TableCell><button>delete</button></TableCell>
+
+                       
+
                     </TableRow>
 ))}
 </Table>
