@@ -12,7 +12,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { styled } from "@mui/material/styles";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
@@ -20,12 +20,12 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-// import TableBody from "@mui/material/Table";
-// import Table from "@mui/material/Table";
+import DeleteIcon from '@mui/icons-material/Delete';
 
-// import TableContainer from "@mui/material/TableContainer";
-// import TableHead from "@mui/material/TableHead";
-// import TableRow from "@mui/material/TableRow"
+import Tooltip from '@mui/material/Tooltip';
+import EditIcon from '@mui/icons-material/Edit';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+
 import AddIcon from "@mui/icons-material/Add";
 
 import { Grid } from "@mui/material";
@@ -265,30 +265,6 @@ function Eventi() {
   const handleparent = (e) => {
     setParent({ ...e.target.value });
   };
-  // console.log(parent);
-
-  // const TableCell = styled(TableCell)(({ theme }) => ({
-  //   [`&.${tableCellClasses.head}`]: {
-  //     backgroundColor: theme.palette.common.black,
-  //     color: theme.palette.common.white,
-  //     textAlign: "center", // Ensure the header text is centered
-  //   },
-  //   [`&.${tableCellClasses.body}`]: {
-  //     fontSize: 14,
-  //     textAlign: "center", // Ensure the body text is centered
-  //   },
-  // }));
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-      border: 0,
-    },
-  }));
-
   return (
     <React.Fragment>
       <Grid container spacing={2} justifyContent="center">
@@ -531,7 +507,8 @@ function Eventi() {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center">Full Name</TableCell>
+                  <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" }}
+                >Full Name</TableCell>
                   <TableCell align="center">Contact</TableCell>
                   <TableCell align="center">Email</TableCell>
                   <TableCell align="center">Date</TableCell>
@@ -539,9 +516,8 @@ function Eventi() {
                   <TableCell align="center">FollowUp</TableCell>
                   <TableCell align="center">Interaction</TableCell>
                   <TableCell align="center">Description</TableCell>
-                  <TableCell align="center">Edit</TableCell>
-                  <TableCell align="center">Reject</TableCell>
-                  <TableCell align="center">Confirm</TableCell>
+                  <TableCell align="center" colSpan={3}>Actions</TableCell>
+                  
                   
                 </TableRow>
               </TableHead>
@@ -549,7 +525,8 @@ function Eventi() {
                 {ong &&
                   ong.map((row) => (
                     <TableRow key={row._id}  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                      <TableCell align="center">
+                      <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" }}
+                >
                         {row.FullName}
                       </TableCell>
                       <TableCell align="center">
@@ -574,6 +551,8 @@ function Eventi() {
                         {row.Description}
                       </TableCell>
                       <TableCell align="center">
+                      <Tooltip title="Edit" arrow>
+    
                   <Button
                     variant="contained"
                     onClick={() => {
@@ -583,13 +562,16 @@ function Eventi() {
 
                     }}
                   >
-                    Edit
+                    <EditIcon/>
                   </Button>
+                  </Tooltip>
                 </TableCell>
 
     
 
                 <TableCell>
+                <Tooltip title="Delete" arrow>
+    
                   <Button
                     variant="contained"
                     color="error"
@@ -608,11 +590,14 @@ function Eventi() {
                       
                     }}
                   >
-                    Reject
+                    <DeleteIcon/>
                   </Button>
+                  </Tooltip>
                 </TableCell>
 
                 <TableCell>
+                <Tooltip title="Complete" arrow>
+    
                   <Button
                     variant="contained"
                     color="success"
@@ -628,8 +613,9 @@ function Eventi() {
                       
                     }}
                   >
-                    confirmed
+                    <DoneAllIcon/>
                   </Button>
+                  </Tooltip>
                 </TableCell>
 
                 

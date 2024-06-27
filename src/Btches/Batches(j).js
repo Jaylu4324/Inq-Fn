@@ -11,9 +11,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
+import EditIcon from '@mui/icons-material/Edit';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import DeleteIcon from "@mui/icons-material/Delete";
+import Tooltip from "@mui/material/Tooltip";
+
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import OutlinedInput from "@mui/material/OutlinedInput";
 
 
 import axios from "axios";
@@ -296,15 +300,19 @@ console.log('thid api')
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center">Student Name</TableCell>
+                  <TableCell align="center"
+                  sx={{ position: "sticky", left: 0, backgroundColor: "white" }}
+                  
+                  >Student Name</TableCell>
                   <TableCell align="center">Contact</TableCell>
                   <TableCell align="center">Days</TableCell>
                   <TableCell align="center">Date</TableCell>
                   <TableCell align="center">Batch Time</TableCell>
 
-                  <TableCell align="center">Edit</TableCell>
-                  <TableCell align="center">Delete</TableCell>
-                  <TableCell align="center">Completed</TableCell>
+                  <TableCell align="center" colSpan={3}>
+                Actions
+              </TableCell>
+              
                 </TableRow>
               </TableHead>
 
@@ -314,7 +322,8 @@ console.log('thid api')
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell align="center">
+                    <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" }}
+                  >
                       {row.StuName.map((data, index) => (
                         <TableRow>
                           <TableCell align="center"> {data.FullName}</TableCell>
@@ -353,8 +362,10 @@ console.log('thid api')
                         </TableCell>
                       </TableRow>
                     </TableCell>
-
-                    <TableCell>
+<Box sx={{display:'flex',justifyContent:'center',mt:2}}>
+                    <TableCell align="center">
+                    <Tooltip title="Edit" arrow>
+                      
                       <Button
                         variant="contained"
                         onClick={() => {
@@ -371,10 +382,15 @@ console.log('thid api')
                           setopen(true);
                         }}
                       >
-                        Edit
+                        <EditIcon />
                       </Button>
+                      </Tooltip>
                     </TableCell>
-                    <TableCell>
+                    
+                    
+                    <TableCell align="center">
+                    <Tooltip title="Delete" arrow>
+                    
                       <Button
                         variant="contained"
                         color="error"
@@ -393,10 +409,15 @@ console.log('thid api')
                             });
                         }}
                       >
-                        Delete
-                      </Button>
+                        
+                      <DeleteIcon />
+                    </Button>
+                  </Tooltip>
+                  
                     </TableCell>
-                    <TableCell>
+                   
+                    <TableCell align="center">
+                    <Tooltip title="Complete" arrow>
                       <Button
                         variant="contained"
                         color="success"
@@ -415,9 +436,11 @@ console.log('thid api')
                             });
                         }}
                       >
-                        Completed
+                    <DoneAllIcon/>
                       </Button>
+                      </Tooltip>
                     </TableCell>
+                    </Box>
                   </TableRow>
                 ))}
             </Table>

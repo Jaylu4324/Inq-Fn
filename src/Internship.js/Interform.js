@@ -23,6 +23,10 @@ import {
   ListItemText,
   FilledInput,
 } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import DeleteIcon from "@mui/icons-material/Delete";
+import Tooltip from "@mui/material/Tooltip";
 
 import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
@@ -205,9 +209,6 @@ function Interform() {
       });
   }, [update]);
 
-  // React.useEffect(() => {
-  //   console.log("Testing alert");
-  // }, alertSuccess);
 
   const handledelete = (row) => {
     axios
@@ -435,12 +436,12 @@ function Interform() {
       ) : (
         <div></div>
       )}
-      {/* {setAlertSuccess.open && (<Alert severity={alertSuccess.severity}>{alertSuccess.message}</Alert>)} */}
+      
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="center">Course</TableCell>
+              <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" }}>Course</TableCell>
               <TableCell align="center">Type Of Event</TableCell>
               <TableCell align="center">Type Of Payment</TableCell>
 
@@ -452,9 +453,8 @@ function Interform() {
               <TableCell align="center">Days</TableCell>
               <TableCell align="center">Batch Time</TableCell>
 
-              <TableCell align="center">Edit</TableCell>
-              <TableCell align="center">Delete</TableCell>
-              <TableCell align="center">Completed</TableCell>
+              <TableCell align="center" colSpan={3}>Actions</TableCell>
+
             </TableRow>
           </TableHead>
 
@@ -464,7 +464,7 @@ function Interform() {
                 key={row.name}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell align="center">{row.Course}</TableCell>
+                <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" }}>{row.Course}</TableCell>
                 <TableCell align="center">{row.TypeOfEvent}</TableCell>
                 <TableCell align="center">{row.TypeOfPayment}</TableCell>
 
@@ -486,6 +486,8 @@ function Interform() {
                 </TableCell>
 
                 <TableCell align="center">
+                <Tooltip title="Edit" arrow>
+                      
                   <Button
                     variant="contained"
                     onClick={() => {
@@ -494,8 +496,9 @@ function Interform() {
                       setid(row._id);
                     }}
                   >
-                    Edit
+                    <EditIcon/>
                   </Button>
+                  </Tooltip>
                 </TableCell>
                 <Dialog
                   open={open1}
@@ -525,6 +528,8 @@ function Interform() {
                   </DialogActions>
                 </Dialog>
                 <TableCell>
+                <Tooltip title="Delete" arrow>
+                      
                   <Button
                     variant="contained"
                     color="error"
@@ -533,11 +538,14 @@ function Interform() {
                       handleClickOpen1();
                     }}
                   >
-                    Delete
+                    <DeleteIcon/>
                   </Button>
+                  </Tooltip>
                 </TableCell>
 
                 <TableCell>
+                <Tooltip title="Complete" arrow>
+                      
                   <Button
                     variant="contained"
                     color="success"
@@ -556,8 +564,9 @@ function Interform() {
                         });
                     }}
                   >
-                    Completed
+                    <DoneAllIcon/>
                   </Button>
+                  </Tooltip>
                 </TableCell>
               </TableRow>
             ))}

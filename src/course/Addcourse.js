@@ -11,6 +11,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import EditIcon from '@mui/icons-material/Edit';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import DeleteIcon from "@mui/icons-material/Delete";
+import Tooltip from "@mui/material/Tooltip";
+
 import {
   Box,
   FormControl,
@@ -36,7 +41,7 @@ function Addcourse() {
   const [open, setopen] = React.useState(false);
   const [update, doUpdate] = React.useState(false);
   const [arr, setarr] = React.useState([]);
-  const[id,setid]=React.useState(0)
+  const[id,setid]=React.useState()
   const[alertSuccess,setAlertSuccess]=React.useState({
     open:false,message:"",severity:"",
   })
@@ -117,10 +122,11 @@ const handlesubmit=()=>{
     setdata({})
     setid(null)
     setAlertSuccess({
-      open: true,
-      message: "Added Successfully",
+      open: true,      
       severity: "success",
+      message:id==undefined?'Event Added Successfully':'Event Updated Successfully'
     });
+    
     setTimeout(()=>{
       setAlertSuccess("");
     },3000);
@@ -131,7 +137,8 @@ const handlesubmit=()=>{
 })
 
 }
-console.log(data.StartDate)
+console.log(id)
+
   return (
     <>
       <Grid container spacing={2} justifyContent="center">
@@ -273,7 +280,7 @@ console.log(data.StartDate)
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
               <TableRow>
-              <TableCell align="center">Course</TableCell>
+              <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" }}>Course</TableCell>
               
               <TableCell align="center">Amount</TableCell>
               
@@ -281,10 +288,8 @@ console.log(data.StartDate)
               
               <TableCell align="center">Days</TableCell>
               <TableCell align="center">Batch Time</TableCell>
-              <TableCell align="center">Edit</TableCell>
+              <TableCell align="center" colSpan={3}>Actions</TableCell>
               
-              <TableCell align="center">Delete</TableCell>
-              <TableCell align="center">Completed</TableCell>
               </TableRow>
               </TableHead>
               
@@ -294,7 +299,8 @@ console.log(data.StartDate)
                 key={row.name}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-              <TableCell align="center">{row.Course}</TableCell>
+              <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white",zIndex: 1
+                         }}>{row.Course}</TableCell>
               
               <TableCell align="center">{row.Amount}</TableCell>
               
@@ -311,6 +317,8 @@ console.log(data.StartDate)
                 {row.BatchTime && convertToIST(row.BatchTime)}
               </TableCell>
               <TableCell align="center">
+              <Tooltip title="Edit" arrow>
+               
               <Button
                 variant="contained"
               
@@ -318,22 +326,17 @@ console.log(data.StartDate)
                 setopen(true)
                 setdata(row)
                 setid(row._id)
-                setAlertSuccess({
-                  open: true,
-                  message: "Updated Successfully",
-                  severity: "success",
-                });
-                setTimeout(()=>{
-                  setAlertSuccess("");
-                },3000);
+
                }}
               >
-              Edit
+              <EditIcon/>
               </Button>
-              
+              </Tooltip>
                    </TableCell>
               
               <TableCell align="center">
+              <Tooltip title="Delete" arrow>
+               
               <Button
                 variant="contained"
                 color="error"
@@ -357,18 +360,21 @@ console.log(data.StartDate)
                   })
                 }}
               >
-              Delete
+              <DeleteIcon/>
               </Button>
-              
+              </Tooltip>
                    </TableCell>
               
                    <TableCell align="center">
+                   <Tooltip title="Complete" arrow>
+               
               <Button
               variant="contained"
               color="success"
               onClick={() => {
                 axios.post(`http://localhost:5000/batchEvent/completedBevent?id=${row._id}`)
                 .then((data)=>{
+                  doUpdate(!update)
                     console.log('data completed',data)
                 })
                 .catch((err)=>{
@@ -377,9 +383,9 @@ console.log(data.StartDate)
                 })
               }}
               >
-              Completed
+              <DoneAllIcon/>
               </Button>
-              
+              </Tooltip>
                   
                   
                    </TableCell>
