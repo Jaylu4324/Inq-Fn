@@ -81,10 +81,8 @@ function a11yProps(index) {
 
 function Form1() {
   const [value, setValue] = React.useState(0);
-  const [parent, setParent] = React.useState({});
 
-  const [data, setData] = React.useState({ Date: dayjs(), Course: [] });
-  const [addcourse, setaddcourse] = React.useState([]);
+  const [data, setData] = React.useState({ Date: dayjs(), Course: []});
 
   const [open, setOpen] = React.useState(false);
   const [arr, setArr] = React.useState([]);
@@ -95,6 +93,7 @@ function Form1() {
   const handleChange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
   };
+
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
@@ -112,58 +111,40 @@ function Form1() {
   };
 
   const Co = ["React", "Node", "C", "c++", "Python", "Mern Stack"];
-  const handleChange1 = (event) => {
-    const {
-      target: { value },
-    } = event;
-    let val = typeof value === "string" ? value.split(",") : value;
-    setData({ ...data, Course: val });
+  const handlecourse = (e) => {
+    let value=e.target.value
+setData({...data,Course:value})
+
   };
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/batchEvent/DisplayBevent")
+      .get("http://localhost:5000/inquiry/OnGoing")
       .then((data) => {
-        // console.log("add course data received", data);
-
-        setaddcourse(data.data.data);
+        console.log("data received");
+        setArr(data.data.data);
       })
-
+      .catch((err) => {
+        console.log(err);
+      });
+    axios
+      .get("http://localhost:5000/inquiry/Reject")
+      .then((data) => {
+        setReject(data.data.data);
+      })
       .catch((err) => {
         console.log(err);
       });
 
-    if (parent._id) {
-      axios
-        .get(`http://localhost:5000/inquiry/OnGoing?id=${parent._id}`)
-        .then((data) => {
-          console.log("data received");
-          setArr(data.data.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      axios
-        .get(`http://localhost:5000/inquiry/Reject?id=${parent._id}`)
-        .then((data) => {
-          setReject(data.data.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
-      axios
-        .get(`http://localhost:5000/inquiry/Confirm?id=${parent._id}`)
-        .then((data) => {
-          setconfirm(data.data.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      console.log("parent data is not received");
-    }
-  }, [update, parent._id]);
+    axios
+      .get("http://localhost:5000/inquiry/Confirm")
+      .then((data) => {
+        setconfirm(data.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [update]);
 
   console.log("arr is setted", arr);
   const handlesubmit = () => {
@@ -192,10 +173,7 @@ function Form1() {
         });
     } else {
       axios
-        .post("http://localhost:5000/inquiry/addInquiry", {
-          ...data,
-          parentId: parent._id,
-        })
+        .post("http://localhost:5000/inquiry/addInquiry",data)
         .then((data) => {
           doUpdate(!update);
           setOpen(false);
@@ -210,7 +188,6 @@ function Form1() {
             setAlertSuccess("");
           }, 3000);
           console.log("data posted", data);
-          console.log(parent._id);
         })
         .catch((err) => {
           console.log(err);
@@ -226,11 +203,6 @@ function Form1() {
     },
   };
   // console.log("addcoursedata:", addcourse);
-
-  const handleparent = (e) => {
-    setParent({ ...e.target.value });
-  };
-  // console.log('parent data:',parent);
 
   function convertToIST(utcDateStr) {
     const date = new Date(utcDateStr);
@@ -335,7 +307,7 @@ function Form1() {
                 fullWidth
                 multiple
                 value={data.Course || []}
-                onChange={handleChange1}
+                onChange={handlecourse}
                 input={<FilledInput />}
                 renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
@@ -420,54 +392,6 @@ function Form1() {
 
       {alertSuccess.open ? <Alert>{alertSuccess.message}</Alert> : <div></div>}
 
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={11}>
-          <Box sx={{ mt: 2 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                {" "}
-                Select Course
-              </InputLabel>
-              <Select
-                onChange={(e) => {
-                  handleparent(e);
-                }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Status"
-                variant="filled"
-
-                // sx={{fullWidth}}
-              >
-                {addcourse &&
-                  addcourse.map((row) => (
-                    <MenuItem value={row}>
-                      <TableRow
-                        key={row.name}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell align="center">{row.Course}</TableCell>
-                        <TableCell align="center">{row.Amount}</TableCell>
-
-                        <TableCell align="center">{row.Days}</TableCell>
-
-                        <TableCell align="center">
-                          {row.StartDate && row.StartDate.split("T")[0]}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.BatchTime && convertToIST(row.BatchTime)}
-                        </TableCell>
-                      </TableRow>
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </Grid>
-      </Grid>
-
       <Box sx={{ width: "100%", ml: "10" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Grid container spacing={2} justifyContent="center" sx={{ my: 2 }}>
@@ -519,16 +443,13 @@ function Form1() {
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-
                     <TableCell
                       align="center"
                       sx={{
                         position: "sticky",
                         left: 0,
                         backgroundColor: "white",
-                        
-                        zIndex: 1
-
+                        zIndex: 1,
                       }}
                     >
                       {row.FullName}
@@ -658,8 +579,7 @@ function Form1() {
                           position: "sticky",
                           left: 0,
                           backgroundColor: "white",
-                          zIndex: 1
-                        
+                          zIndex: 1,
                         }}
                       >
                         {row.FullName}

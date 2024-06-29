@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import Img from "./Tnlogo.png";
-import autoTable from "jspdf-autotable";
+
 import dayjs from "dayjs";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -12,7 +12,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
+import EmailIcon from '@mui/icons-material/Email';
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -30,10 +30,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
 import FilledInput from "@mui/material/FilledInput";
 
-// import DatePicker from "react-datepicker";
 
 export default function FormDialog() {
   const [coursearr, setcoursearr] = React.useState([]);
@@ -366,10 +364,9 @@ console.log(id)
                 <TableCell align="center">Description</TableCell>
                 <TableCell align="center">Total(total cf)</TableCell>
                 <TableCell align="center">Remaining</TableCell>
+                <TableCell align="center" colSpan={4}>Actions</TableCell>
 
-                <TableCell align="center">Edit</TableCell>
-                <TableCell align="center">Delete</TableCell>
-                <TableCell align="center">Download</TableCell>
+                
               </TableRow>
             </TableHead>
             <TableBody>
@@ -400,6 +397,7 @@ console.log(id)
                     >
                       Edit
                     </Button>
+
                   </TableCell>
 
                   <TableCell align="center">
@@ -549,6 +547,29 @@ console.log(id)
                       Download
                     </Button>
                   </TableCell>
+<TableCell align="center">
+                    <Button
+                  sx={{backgroundColor:'black'}}
+                      variant="contained"
+                      onClick={() => {
+                        axios.post('http://localhost:5000/invoice/pdf',row)
+                        .then((data)=>{
+                          console.log(data)
+
+                        })
+                        .catch((err)=>{
+                          console.log(err)
+                        })
+                      }}
+                    >
+                      <EmailIcon/>
+                    </Button>
+                    
+                  </TableCell>
+
+
+
+
                 </TableRow>
               ))}
             </TableBody>
