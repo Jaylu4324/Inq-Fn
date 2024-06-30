@@ -3,6 +3,13 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import EditIcon from "@mui/icons-material/Edit";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
+
+import Tooltip from "@mui/material/Tooltip";
+
 
 import {
   Box,
@@ -21,11 +28,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Alert from "@mui/material/Alert";
 import { Grid } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import OutlinedInput from "@mui/material/OutlinedInput";
 
 import axios from "axios";
-import Paper from "@mui/material/Paper";
 
 import PropTypes from "prop-types";
 import Typography from "@mui/material/Typography";
@@ -56,29 +60,11 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
-
 function Batches() {
   const [parent, setParent] = React.useState({});
   
   const [data, setData] = React.useState({ StuName: [] });
   const [id, setId] = React.useState("");
-  const [value, setValue] = React.useState(0);
-  const handleChange1 = (event, newValue) => {
-    setValue(newValue);
-  };
 
   function convertToIST(utcDateStr) {
     const date = new Date(utcDateStr);
@@ -289,15 +275,22 @@ function Batches() {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center">Student Name</TableCell>
+                  <TableCell align="center"
+                   sx={{
+                    position: "sticky",
+                    left: 0,
+                    backgroundColor: "white",
+                    zIndex: 1,
+                  }}
+
+                  >Student Name</TableCell>
                   <TableCell align="center">Contact</TableCell>
                   <TableCell align="center">Days</TableCell>
                   <TableCell align="center">Date</TableCell>
                   <TableCell align="center">Batch Time</TableCell>
+                  <TableCell align="center" colSpan={3}>Actions</TableCell>
 
-                  <TableCell align="center">Edit</TableCell>
-                  <TableCell align="center">Delete</TableCell>
-                  <TableCell align="center">Completed</TableCell>
+                  
                 </TableRow>
               </TableHead>
 
@@ -307,7 +300,15 @@ function Batches() {
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell align="center">
+                    <TableCell align="center"
+                     sx={{
+                      position: "sticky",
+                      left: 0,
+                      backgroundColor: "white",
+                      zIndex: 1,
+                    }}
+                    
+                    >
                       {row.StuName.map((data, index) => (
                         <TableRow>
                           <TableCell align="center"> {data.FullName}</TableCell>
@@ -348,6 +349,8 @@ function Batches() {
                     </TableCell>
 
                     <TableCell>
+                    <Tooltip title="Edit" arrow>
+                        
                       <Button
                         variant="contained"
                         onClick={() => {
@@ -365,10 +368,13 @@ function Batches() {
                           setopen(true);
                         }}
                       >
-                        Edit
+                        <EditIcon/>
                       </Button>
+                      </Tooltip>
                     </TableCell>
                     <TableCell>
+                    <Tooltip title="Delete" arrow>
+                        
                       <Button
                         variant="contained"
                         color="error"
@@ -395,10 +401,13 @@ function Batches() {
                             });
                         }}
                       >
-                        Delete
+                        <DeleteIcon/>
                       </Button>
+                      </Tooltip>
                     </TableCell>
                     <TableCell>
+                    <Tooltip title="Complete" arrow>
+                        
                       <Button
                         variant="contained"
                         color="success"
@@ -417,8 +426,9 @@ function Batches() {
                             });
                         }}
                       >
-                        Completed
+                        <DoneAllIcon/>
                       </Button>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -426,13 +436,14 @@ function Batches() {
           </TableContainer>
         </Box>
       </Box>
+      <Grid container spacing={2} justifyContent="center">
+            <Grid item xs={4}>
 
       <Dialog open={open}>
         <DialogContent>
-          <Grid container spacing={2} justifyContent="left">
-            <Grid item xs={4}>
-              <Box>
-                <FormControl sx={{ width: 560, mt: 3 }}>
+              
+              <Box sx={{ maxWidth:300}}>
+                <FormControl sx={{mt: 3 }} fullWidth>
                   <InputLabel id="demo-multiple-checkbox-label">
                     Select Students
                   </InputLabel>
@@ -440,6 +451,7 @@ function Batches() {
                   <Select
                     labelId="demo-multiple-checkbox-label"
                     id="demo-multiple-checkbox"
+                    fullWidth
                     multiple
                     value={
                       data.StuName &&
@@ -448,8 +460,7 @@ function Batches() {
                       )
                     }
                     onChange={handleChange}
-                    sx={{ width: 530 }}
-                    fullWidth
+                
                     input={<FilledInput />}
                     renderValue={renderSelectedValue}
                     MenuProps={MenuProps}
@@ -469,7 +480,9 @@ function Batches() {
                                 item._id == name._id
                             ) > -1
                           }
+
                         />
+
                         <ListItemText
                           primary={`${name.FullName}  ${name.Contact}`}
                         />
@@ -478,9 +491,7 @@ function Batches() {
                   </Select>
                 </FormControl>
               </Box>
-            </Grid>
-          </Grid>
-
+            
           <DialogActions>
             <Button
               onClick={() => {
@@ -536,6 +547,9 @@ function Batches() {
           </DialogActions>
         </DialogContent>
       </Dialog>
+      </Grid>
+          </Grid>
+
     </>
   );
 }

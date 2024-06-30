@@ -13,6 +13,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import EmailIcon from '@mui/icons-material/Email';
+import EditIcon from "@mui/icons-material/Edit";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Tooltip from "@mui/material/Tooltip";
+import DownloadIcon from '@mui/icons-material/Download';
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -237,7 +242,7 @@ console.log(id)
                   defaultValue={id ? dayjs(data.invoiceDate) : null}
                   slotProps={{ textField: { variant: "filled" } }}
                   label="Choose Your Date"
-                  sx={{ width: 530 }}
+                  
                   fullWidth
                   onChange={(newVal) => {
                     setData({ ...data, invoiceDate: newVal });
@@ -356,13 +361,22 @@ console.log(id)
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center">Student Name</TableCell>
-                <TableCell align="center">Amount(current amount)</TableCell>
+                <TableCell align="center"
+                                   sx={{
+                                    position: "sticky",
+                                    left: 0,
+                                    backgroundColor: "white",
+                                    zIndex: 1,
+                                  }}
+                
+                
+                >Student Name</TableCell>
+                <TableCell align="center">Amount</TableCell>
                 <TableCell align="center">Date</TableCell>
                 <TableCell align="center">Course</TableCell>
                 <TableCell align="center">TypeOfPayment</TableCell>
                 <TableCell align="center">Description</TableCell>
-                <TableCell align="center">Total(total cf)</TableCell>
+                <TableCell align="center">Total</TableCell>
                 <TableCell align="center">Remaining</TableCell>
                 <TableCell align="center" colSpan={4}>Actions</TableCell>
 
@@ -375,7 +389,18 @@ console.log(id)
                   key={row.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell align="center">{row.stuId && row.stuId.Name}</TableCell>
+                  <TableCell align="center"
+                                     sx={{
+                                      position: "sticky",
+                                      left: 0,
+                                      backgroundColor: "white",
+                                      zIndex: 1,
+                                    }}
+                  
+                  
+                  
+                  
+                  >{row.stuId && row.stuId.Name}</TableCell>
                   <TableCell align="center">{row.Amount}</TableCell>
                   <TableCell align="center">
                     {row.invoiceDate && row.invoiceDate.split("T")[0]}
@@ -386,6 +411,8 @@ console.log(id)
                   <TableCell align="center">{row.stuId && row.stuId.Tfees}</TableCell>
                   <TableCell align="center">{row.stuId &&row.stuId.Rfees}</TableCell>
                   <TableCell align="center">
+                  <Tooltip title="Edit" arrow>
+                    
                     <Button
                       variant="contained"
                       onClick={() => {
@@ -395,12 +422,14 @@ console.log(id)
                         setOpen(true);
                       }}
                     >
-                      Edit
+                      <EditIcon/>
                     </Button>
-
+</Tooltip>
                   </TableCell>
 
                   <TableCell align="center">
+                  <Tooltip title="Delete" arrow>
+                    
                     <Button
                       variant="contained"
                       color="error"
@@ -426,11 +455,14 @@ console.log(id)
                           });
                       }}
                     >
-                      Delete
+                      <DeleteIcon/>
                     </Button>
+                    </Tooltip>
                   </TableCell>
                   <TableCell align="center">
                     {" "}
+                    <Tooltip title="Download Receipt" arrow>
+                    
                     <Button
                       variant="contained"
                       color="info"
@@ -544,10 +576,13 @@ console.log(id)
                         doc.save(`${row.stuId.Name}-${row.stuId.course}.pdf`);
                       }}
                     >
-                      Download
+                      <DownloadIcon/>
                     </Button>
+                    </Tooltip>
                   </TableCell>
 <TableCell align="center">
+<Tooltip title="Send Email" arrow>
+                    
                     <Button
                   sx={{backgroundColor:'black'}}
                       variant="contained"
@@ -563,8 +598,9 @@ console.log(id)
                       }}
                     >
                       <EmailIcon/>
+  
                     </Button>
-                    
+  </Tooltip>                  
                   </TableCell>
 
 

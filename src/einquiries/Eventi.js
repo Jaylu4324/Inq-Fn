@@ -507,7 +507,8 @@ function Eventi() {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" }}
+                  <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
+                                    }}
                 >Full Name</TableCell>
                   <TableCell align="center">Contact</TableCell>
                   <TableCell align="center">Email</TableCell>
@@ -525,7 +526,8 @@ function Eventi() {
                 {ong &&
                   ong.map((row) => (
                     <TableRow key={row._id}  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                      <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" }}
+                      <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
+                                    }}
                 >
                         {row.FullName}
                       </TableCell>

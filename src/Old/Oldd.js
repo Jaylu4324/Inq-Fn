@@ -48,7 +48,8 @@ export default function Old() {
             <TableRow>
               <TableCell
                 align="center"
-                sx={{ position: "sticky", left: 0, backgroundColor: "white" }}
+                sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
+                }}
 
               >
                 Course
@@ -79,7 +80,8 @@ export default function Old() {
               >
                 <TableCell
                   align="center"
-                  sx={{ position: "sticky", left: 0, backgroundColor: "white" }}
+                  sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
+                  }}
 
                 >
                   {row.Course}

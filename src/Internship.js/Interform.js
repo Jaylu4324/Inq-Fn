@@ -441,7 +441,8 @@ function Interform() {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" }}>Course</TableCell>
+              <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" , zIndex: 1,
+                                   }}>Course</TableCell>
               <TableCell align="center">Type Of Event</TableCell>
               <TableCell align="center">Type Of Payment</TableCell>
 
@@ -464,7 +465,8 @@ function Interform() {
                 key={row.name}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" }}>{row.Course}</TableCell>
+                <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
+                                    }}>{row.Course}</TableCell>
                 <TableCell align="center">{row.TypeOfEvent}</TableCell>
                 <TableCell align="center">{row.TypeOfPayment}</TableCell>
 

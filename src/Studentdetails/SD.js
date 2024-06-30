@@ -4,6 +4,9 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import { Box, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, FilledInput } from '@mui/material';
 import Alert from "@mui/material/Alert";
+import EditIcon from "@mui/icons-material/Edit";
+
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -16,7 +19,8 @@ import { Grid } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
- 
+import Tooltip from "@mui/material/Tooltip";
+
 import dayjs from "dayjs";
 import { styled } from "@mui/material/styles";
 
@@ -511,7 +515,15 @@ console.log(parent)
           <Table sx={{ minWidth: 650, mx: 3 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center">Student Name</TableCell>
+                <TableCell align="center"
+                                   sx={{
+                                    position: "sticky",
+                                    left: 0,
+                                    backgroundColor: "white",
+                                    zIndex: 1,
+                                    
+                                  }}
+                >Student Name</TableCell>
                 <TableCell align="center">Contact</TableCell>
                 <TableCell align="center">Parent Contact</TableCell>
                 <TableCell align="center">Email</TableCell>
@@ -536,7 +548,15 @@ console.log(parent)
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell align="center">{row.Name}</TableCell>
+                    <TableCell align="center"
+                                       sx={{
+                                        position: "sticky",
+                                        left: 0,
+                                        backgroundColor: "white",
+                                        zIndex: 1,
+                                      }}
+                    
+                    >{row.Name}</TableCell>
                     <TableCell align="center">{row.Contact}</TableCell>
                     <TableCell align="center">{row.Parentcontact}</TableCell>
                     <TableCell align="center">{row.Email}</TableCell>
@@ -556,16 +576,21 @@ console.log(parent)
                     </TableCell>
 
                     <TableCell align="center">
+                    <Tooltip title="Edit" arrow>
+                    
                       <Button
                         variant="contained"
                         onClick={() => {
                           handleupdate(row);
                         }}
                       >
-                        Edit
+                        <EditIcon/>
                       </Button>
+                    </Tooltip>
                     </TableCell>
                     <TableCell align="center">
+                    <Tooltip title="Delete" arrow>
+                    
                       <Button
                         variant="contained"
                         color="error"
@@ -573,8 +598,9 @@ console.log(parent)
                           handledelete(row);
                         }}
                       >
-                        Delete
+                        <DeleteIcon/>
                       </Button>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}

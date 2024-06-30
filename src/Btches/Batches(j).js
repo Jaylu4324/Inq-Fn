@@ -301,7 +301,8 @@ console.log('thid api')
               <TableHead>
                 <TableRow>
                   <TableCell align="center"
-                  sx={{ position: "sticky", left: 0, backgroundColor: "white" }}
+                  sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
+                  }}
                   
                   >Student Name</TableCell>
                   <TableCell align="center">Contact</TableCell>
@@ -322,7 +323,8 @@ console.log('thid api')
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" }}
+                    <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
+                                    }}
                   >
                       {row.StuName.map((data, index) => (
                         <TableRow>
