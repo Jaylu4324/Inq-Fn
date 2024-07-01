@@ -81,10 +81,12 @@ function Batches() {
     return new Intl.DateTimeFormat("en-US", options).format(date);
   }
 
-  const [update, doupdate] = React.useState(false);
+  const [update, setUpdate] = React.useState(false);
   const [open, setopen] = React.useState(false);
   const [arr, setarr] = React.useState([]);
   const [map, maparr] = React.useState([]);
+  const [add,setAdd]=React.useState("Nothing")
+  const [adds,setAdds]=React.useState("No")
   const [course, setcoursearr] = React.useState([]);
   const [confirm, setconfirm] = React.useState([]);
   const [alertSuccess, setAlertSuccess] = React.useState({
@@ -105,7 +107,8 @@ function Batches() {
         console.log(err);
       });
 
-    if (parent._id) {
+    if (parent.Course) {
+      console.log("called  fd")
       console.log(parent)
       axios
         .get(`http://localhost:5000/inquiry/getisAdded?Course=${parent.Course}`)
@@ -133,7 +136,7 @@ function Batches() {
           console.log(err);
         });
     }
-  }, [parent._id, update]);
+  }, [parent, update,add,adds]);
 
   const handleOpen = () => {
     // Check if id is present (editing mode)
@@ -148,7 +151,8 @@ function Batches() {
 
     setData({ StuName: [] });
     setopen(false);
-    doupdate(!update);
+    setAdd("Yes--")
+    setAdds("Yes-No")
   };
 
   const handleparent = (e) => {
@@ -366,6 +370,8 @@ function Batches() {
                           setarr([...row.StuName, ...arr]);
 
                           setopen(true);
+                          setAdd("Yes--")
+                          setAdds("Yes-No")
                         }}
                       >
                         <EditIcon/>
@@ -382,11 +388,11 @@ function Batches() {
                           console.log(row._id);
                           axios
                             .delete(
-                              `http://localhost:5000/regBatch/Delete?id=${row._id}`
+                              `http://localhost:5000/regBatch/Delete?id=${row._id}&course=${parent.Course}`
                             )
                             .then((data) => {
                               console.log("delet", data);
-                              doupdate(!update);
+                              setUpdate(!update);
                               setAlertSuccess({
                                 open: true,
                                 message: "Deleted Successfully",
@@ -395,6 +401,10 @@ function Batches() {
                               setTimeout(()=>{
                                 setAlertSuccess("");
                               },3000);
+     setUpdate(!update);
+     setAdd("SAomething13")
+
+
                             })
                             .catch((err) => {
                               console.log(err);
@@ -417,7 +427,7 @@ function Batches() {
                               `http://localhost:5000/regBatch/isCompleted?id=${row._id}`
                             )
                             .then((data) => {
-                              doupdate(!update);
+                              setUpdate(!update);
 
                               console.log(data);
                             })
@@ -504,7 +514,7 @@ function Batches() {
               onClick={() => {
                 if (id) {
                   axios
-                    .post(`http://localhost:5000/regBatch/Update?id=${id}`, {
+                    .post(`http://localhost:5000/regBatch/Update?id=${id}&course=${parent.Course}`, {
                       ...data,
                       EventId: parent._id,
                     })
@@ -514,7 +524,8 @@ function Batches() {
                       setData({ StuName: [] });
                       console.log(data.StuName);
                       setopen(false);
-                      doupdate(!update);
+                      setUpdate(!update);
+                      setAdds("Something22")
                     })
                     .catch((err) => {
                       console.log(err);
@@ -522,7 +533,7 @@ function Batches() {
                 } else {
                   
                   axios
-                    .post("http://localhost:5000/regBatch/addbatch", {
+                    .post(`http://localhost:5000/regBatch/addbatch?course=${parent.Course}`, {
                       ...data,
                       EventId: parent._id,
                     })
@@ -532,7 +543,9 @@ function Batches() {
                       setopen(false);
                       setId("");
                       setData({ StuName: [] });
-                      doupdate(!update);
+                      setUpdate(!update);
+                      setAdd("Something1")
+
                       console.log(data1);
                     })
 

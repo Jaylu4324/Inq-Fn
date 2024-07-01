@@ -110,7 +110,7 @@ function Form1() {
     setValue(newValue);
   };
 
-  const Co = ["React", "Node", "C", "c++", "Python", "Mern Stack"];
+  const Co = ["React", "Node", "C", "C++", "Python", "Mern Stack"];
   const handlecourse = (e) => {
     let value=e.target.value
 setData({...data,Course:value})
