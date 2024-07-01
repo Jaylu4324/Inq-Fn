@@ -491,7 +491,7 @@ setData({...data,Course:value})
                     </TableCell>
 
                     <TableCell align="center">
-                      <Tooltip title="Delete" arrow>
+                      <Tooltip title="Reject" arrow>
                         <Button
                           onClick={() => {
                             axios
@@ -515,7 +515,7 @@ setData({...data,Course:value})
                     </TableCell>
 
                     <TableCell align="center">
-                      <Tooltip title="Complete" arrow>
+                      <Tooltip title="Confirm" arrow>
                         <Button
                           onClick={() => {
                             axios
@@ -528,6 +528,7 @@ setData({...data,Course:value})
                               .catch((err) => {
                                 console.log(err);
                               });
+                              
                           }}
                           variant="contained"
                           color="success"

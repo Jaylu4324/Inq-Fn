@@ -149,7 +149,7 @@ console.log(id)
               setopen(true);
             }}
           >
-            Add Event
+            Add Course
           </Button>
         </Grid>
       </Grid>

@@ -108,7 +108,7 @@ function Batches() {
     if (parent._id) {
       console.log(parent)
       axios
-        .get(`http://localhost:5000/inquiry/getisAdded?id=${parent._id}`)
+        .get(`http://localhost:5000/inquiry/getisAdded?Course=${parent.Course}`)
         .then((data) => {
           setarr(data.data.data);
         })

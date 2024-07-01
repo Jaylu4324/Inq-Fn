@@ -137,12 +137,6 @@ console.log(parent)
     }
   }, [parent,update]);
 
-  // console.log('data received',arr)
-
-  //   useEffect(()=>{
-  //   console.log(data.baseString)
-  // },[data])
-
   const handlesubmit = () => {
     if (id) {
       axios
@@ -194,7 +188,6 @@ console.log(parent)
     };
     reader.readAsDataURL(event.target.files[0]);
   };
-
   const handleopen = () => {
     setOpen(!open);
   };
@@ -431,7 +424,7 @@ console.log(parent)
                 sx={{ mt: 1 }}
               >
                 Aadhar Card
-                <VisuallyHiddenInput type="file" onChange={handleFileUpload} />
+                <VisuallyHiddenInput type="file" onChange={(e)=>{handleFileUpload(e)}} />
               </Button>
               <img src={data.baseString} />
             </Grid>
@@ -510,7 +503,7 @@ console.log(parent)
         </Grid>
       </Grid>
 
-      <box sx={{ mx: 2 }}>
+      <Box sx={{ mx: 2 }}>
         <TableContainer>
           <Table sx={{ minWidth: 650, mx: 3 }} aria-label="simple table">
             <TableHead>
@@ -607,7 +600,7 @@ console.log(parent)
             </TableBody>
           </Table>
         </TableContainer>
-      </box>
+      </Box>
     </React.Fragment>
   );
 }
