@@ -15,6 +15,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import DeleteIcon from "@mui/icons-material/Delete";
 import Tooltip from "@mui/material/Tooltip";
+import utc from 'dayjs/plugin/utc';
 
 import {
   Box,
@@ -137,7 +138,16 @@ const handlesubmit=()=>{
 })
 
 }
-console.log(id)
+
+dayjs.extend(utc);
+const handleDateChange = (val) => {
+  const selectedDate = new Date(val);
+  const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
+  const adjustedDate = new Date(selectedDate.getTime() + timezoneOffset * 60 * 1000);
+  const formattedDate = adjustedDate.toISOString();
+
+  setdata({ ...data, StartDate: formattedDate });
+};
 
   return (
     <>
@@ -194,16 +204,13 @@ console.log(id)
           <Box sx={{ mb: 2 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
-                <DatePicker
-                  label="Start Date"
-                  slotProps={{ textField: { variant: "filled" } }}
-                    defaultValue={id ? dayjs(data.StartDate) : null}
-
-                  sx={{ width: 500 }}
-                  onChange={(val) => {
-                    setdata({ ...data, StartDate: val });
-                  }}
-                ></DatePicker>
+              <DatePicker
+  label="Start Date"
+  slotProps={{ textField: { variant: "filled" } }}
+  defaultValue={id ? dayjs(data.StartDate) : null}
+  sx={{ width: 500 }}
+  onChange={handleDateChange}
+/>
               </DemoContainer>
             </LocalizationProvider>
           </Box>
@@ -306,6 +313,7 @@ console.log(id)
               
               <TableCell align="center">
                 {row.StartDate && row.StartDate.split("T")[0]}
+
               </TableCell>
               
               <TableCell align="center">
@@ -315,6 +323,7 @@ console.log(id)
               </TableCell>
               <TableCell align="center">
                 {row.BatchTime && convertToIST(row.BatchTime)}
+
               </TableCell>
               <TableCell align="center">
               <Tooltip title="Edit" arrow>

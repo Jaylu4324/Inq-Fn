@@ -4,6 +4,8 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import Alert from "@mui/material/Alert";
 import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc';
+
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
@@ -231,6 +233,16 @@ function Interform() {
       });
   };
 
+  dayjs.extend(utc);
+  const handleDateChange = (val,type) => {
+    const selectedDate = new Date(val);
+    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
+    const adjustedDate = new Date(selectedDate.getTime() + timezoneOffset * 60 * 1000);
+    const formattedDate = adjustedDate.toISOString();
+  
+    setdata({ ...data, [type]: formattedDate });
+  };
+  
   return (
     <React.Fragment>
       <Grid container spacing={2} justifyContent="center">
@@ -346,9 +358,7 @@ function Interform() {
                   slotProps={{ textField: { variant: "filled" } }}
                   defaultValue={id ? dayjs(data.StartDate) : null}
                   sx={{ width: 500 }}
-                  onChange={(val) => {
-                    setdata({ ...data, StartDate: val });
-                  }}
+                  onChange={(val)=>{handleDateChange(val,'StartDate')}}
                 ></DatePicker>
               </DemoContainer>
             </LocalizationProvider>
@@ -361,9 +371,7 @@ function Interform() {
                   slotProps={{ textField: { variant: "filled" } }}
                   defaultValue={id ? dayjs(data.EndtDate) : null}
                   sx={{ width: 500 }}
-                  onChange={(val) => {
-                    setdata({ ...data, EndtDate: val });
-                  }}
+                  onChange={(val)=>{handleDateChange(val,'EndtDate')}}
                 ></DatePicker>
               </DemoContainer>
             </LocalizationProvider>

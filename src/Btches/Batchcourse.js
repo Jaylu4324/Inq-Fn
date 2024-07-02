@@ -10,7 +10,6 @@ import DoneAllIcon from "@mui/icons-material/DoneAll";
 
 import Tooltip from "@mui/material/Tooltip";
 
-
 import {
   Box,
   FormControl,
@@ -62,7 +61,7 @@ CustomTabPanel.propTypes = {
 
 function Batches() {
   const [parent, setParent] = React.useState({});
-  
+
   const [data, setData] = React.useState({ StuName: [] });
   const [id, setId] = React.useState("");
 
@@ -74,8 +73,7 @@ function Batches() {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-      hour12: false // 24-hour format
-
+      hour12: false, // 24-hour format
     };
 
     return new Intl.DateTimeFormat("en-US", options).format(date);
@@ -85,8 +83,8 @@ function Batches() {
   const [open, setopen] = React.useState(false);
   const [arr, setarr] = React.useState([]);
   const [map, maparr] = React.useState([]);
-  const [add,setAdd]=React.useState("Nothing")
-  const [adds,setAdds]=React.useState("No")
+  const [add, setAdd] = React.useState("Nothing");
+  const [adds, setAdds] = React.useState("No");
   const [course, setcoursearr] = React.useState([]);
   const [confirm, setconfirm] = React.useState([]);
   const [alertSuccess, setAlertSuccess] = React.useState({
@@ -95,7 +93,6 @@ function Batches() {
     severity: "",
   });
   React.useEffect(() => {
-    
     axios
       .get("http://localhost:5000/batchEvent/DisplayBevent")
       .then((data) => {
@@ -108,8 +105,8 @@ function Batches() {
       });
 
     if (parent.Course) {
-      console.log("called  fd")
-      console.log(parent)
+      console.log("called  fd");
+      console.log(parent);
       axios
         .get(`http://localhost:5000/inquiry/getisAdded?Course=${parent.Course}`)
         .then((data) => {
@@ -125,10 +122,10 @@ function Batches() {
         .get(`http://localhost:5000/regBatch/Display?id=${parent._id}`)
         .then((data) => {
           console.log(data);
-          
-          console.log(parent._id)
-          
-          console.log('last display data:',data.data.data);
+
+          console.log(parent._id);
+
+          console.log("last display data:", data.data.data);
 
           maparr(data.data.data);
         })
@@ -136,7 +133,7 @@ function Batches() {
           console.log(err);
         });
     }
-  }, [parent, update,add,adds]);
+  }, [parent, update, add, adds]);
 
   const handleOpen = () => {
     // Check if id is present (editing mode)
@@ -147,12 +144,12 @@ function Batches() {
         StuName: [],
       }));
     }
+    setAdd("Yes--");
     setId("");
 
     setData({ StuName: [] });
+    setAdds("Yes-No");
     setopen(false);
-    setAdd("Yes--")
-    setAdds("Yes-No")
   };
 
   const handleparent = (e) => {
@@ -203,78 +200,197 @@ function Batches() {
 
   return (
     <>
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={2} sx={{ mb: 3 }}>
-          <Button
-            variant="outlined"
-            onClick={() => {
-              setarr([...arr]);
-              console.log(arr);
+    <Grid container spacing={2}>
 
-              setopen(true);
-              setData({ StuName: [] });
-              setId("");
-            }}
-          >
-            Add Batches
-          </Button>
-        </Grid>
-      </Grid>
-      <Box sx={{ mt: 2, mx: 2 }}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">
-            {" "}
-            Select Course
-          </InputLabel>
-          <Select
-            onChange={(e) => {
-              handleparent(e);
-            }}
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Status"
-            variant="filled"
-            // sx={{fullWidth}}
-          >
-            {course &&
-              course.map((row) => (
-                <MenuItem value={row}>
-                  <TableRow
-                    key={row.name}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                    }}
-                  >
-                    <TableCell align="center">{row.Course}</TableCell>
+      <Grid xs={10}>
+        <Box sx={{ mt: 2,ml:4}}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">
+              {" "}
+              Select Course
+            </InputLabel>
+            <Select
+              onChange={(e) => {
+                handleparent(e);
+              }}
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Status"
+              variant="filled"
+              
+            >
+              {course &&
+                course.map((row) => (
+                  <MenuItem value={row}>
+                    <TableRow
+                      key={row.name}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}
+                    >
+                      <TableCell align="center">{row.Course}</TableCell>
 
-                    <TableCell align="center">{row.TypeOfEvent}</TableCell>
-                    <TableCell align="center">{row.TypeOfPayment}</TableCell>
+                      <TableCell align="center">{row.TypeOfEvent}</TableCell>
+                      <TableCell align="center">{row.TypeOfPayment}</TableCell>
 
-                    <TableCell align="center">{row.Amount}</TableCell>
+                      <TableCell align="center">{row.Amount}</TableCell>
 
-                    <TableCell align="center">
-                      {row.StartDate && row.StartDate.split("T")[0]}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.EndtDate && row.EndtDate.split("T")[0]}
-                    </TableCell>
-                    {/* <TableCell align="center">
+                      <TableCell align="center">
+                        {row.StartDate && row.StartDate.split("T")[0]}
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.EndtDate && row.EndtDate.split("T")[0]}
+                      </TableCell>
+                      {/* <TableCell align="center">
                       {row.Days && row.Days.map((val) => (
                         <TableCell align="center">{val}</TableCell>
                       ))}
                     </TableCell> */}
-                    <TableCell align="center">
-                      {row.BatchTime && convertToIST(row.BatchTime)}
-                    </TableCell>
-                  </TableRow>
-                </MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </Box>
+                      <TableCell align="center">
+                        {row.BatchTime && convertToIST(row.BatchTime)}
+                      </TableCell>
+                    </TableRow>
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+        </Box>
+      </Grid>
+      <Grid item xs={2}>
+        <Button
+        sx={{ mt: 1,ml:2}}
+          variant="outlined"
+          onClick={() => {
+            setarr([...arr]);
+            console.log(arr);
 
-      <Box>
-        <Box sx={{ mt: 5 }}>
+            setopen(true);
+            setData({ StuName: [] });
+            setId("");
+          }}
+        >
+          Add Batches
+        </Button>
+      </Grid>
+</Grid>
+      <Dialog open={open}>
+        <DialogContent>
+          <Box sx={{ maxWidth: 300 }}>
+            <FormControl sx={{ mt: 3 }} fullWidth>
+              <InputLabel id="demo-multiple-checkbox-label">
+                Select Students
+              </InputLabel>
+
+              <Select
+                labelId="demo-multiple-checkbox-label"
+                id="demo-multiple-checkbox"
+                fullWidth
+                multiple
+                value={
+                  data.StuName &&
+                  data.StuName.map(
+                    (item) => `${item.FullName}-${item.Contact}-${item._id}`
+                  )
+                }
+                onChange={handleChange}
+                input={<FilledInput />}
+                renderValue={renderSelectedValue}
+                MenuProps={MenuProps}
+              >
+                {arr.map((name) => (
+                  <MenuItem
+                    key={name._id}
+                    value={`${name.FullName}-${name.Contact}-${name._id}`}
+                  >
+                    <Checkbox
+                      checked={
+                        data.StuName &&
+                        data.StuName.findIndex(
+                          (item) =>
+                            item.Contact == name.Contact &&
+                            item.FullName == name.FullName &&
+                            item._id == name._id
+                        ) > -1
+                      }
+                    />
+
+                    <ListItemText
+                      primary={`${name.FullName}  ${name.Contact}`}
+                    />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          <DialogActions>
+            <Button
+              onClick={() => {
+                handleOpen();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                if (id) {
+                  axios
+                    .post(
+                      `http://localhost:5000/regBatch/Update?id=${id}&course=${parent.Course}`,
+                      {
+                        ...data,
+                        EventId: parent._id,
+                      }
+                    )
+                    .then((data) => {
+                      console.log(arr);
+                      setId("");
+                      setData({ StuName: [] });
+                      console.log(data.StuName);
+                      setAdd("setOpen");
+                      setopen(false);
+                      setUpdate(!update);
+                      setAdds("Something22");
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                } else {
+                  axios
+                    .post(
+                      `http://localhost:5000/regBatch/addbatch?course=${parent.Course}`,
+                      {
+                        ...data,
+                        EventId: parent._id,
+                      }
+                    )
+                    .then((data1) => {
+                      console.log(arr);
+
+                      setopen(false);
+                      setId("");
+                      setData({ StuName: [] });
+                      setAdds("Setted");
+                      setUpdate(!update);
+                      setAdd("Something12");
+
+                      console.log(data1);
+                    })
+
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }
+              }}
+            >
+              Submit
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+      
+       <Box>
+                <Box sx={{ mt: 5 }}>
           <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -296,6 +412,8 @@ function Batches() {
 
                   
                 </TableRow>
+
+                
               </TableHead>
 
               {map &&
@@ -314,45 +432,38 @@ function Batches() {
                     
                     >
                       {row.StuName.map((data, index) => (
-                        <TableRow>
-                          <TableCell align="center"> {data.FullName}</TableCell>
-                        </TableRow>
+                          <Box>{data.FullName}</Box>
+                        
                       ))}
                     </TableCell>
 
                     <TableCell align="center">
                       {row.StuName.map((data) => (
-                        <TableRow>
-                          <TableCell align="center">{data.Contact}</TableCell>
-                        </TableRow>
+                          <Box>{data.Contact}</Box>
                       ))}
                     </TableCell>
                     <TableCell align="center">
                       {row.EventId.Days &&
                         row.EventId.Days.map((data) => (
-                          <TableRow>
-                            <TableCell align="center">{data}</TableCell>
-                          </TableRow>
+                          <Box>{data}</Box>
+                          
                         ))}
                     </TableCell>
                     
                     <TableCell align="center">
-                      <TableRow>
-                        <TableCell align="center">
-
+                      
+                        <Box>
                           {row.EventId.StartDate && row.EventId.StartDate.split("T")[0]}
-                        </TableCell>
-                      </TableRow>
+                        </Box>
+                    
                     </TableCell>
                     <TableCell align="center">
-                      <TableRow>
-                        <TableCell align="center">
+                      <Box>
                           {row.EventId.BatchTime && convertToIST(row.EventId.BatchTime)}
-                        </TableCell>
-                      </TableRow>
+                        </Box>
                     </TableCell>
 
-                    <TableCell>
+                    <TableCell align="center">
                     <Tooltip title="Edit" arrow>
                         
                       <Button
@@ -365,20 +476,21 @@ function Batches() {
                           console.log("rwow", arr);
                           // setData({...row,StuName:[...data.StuName]})
 
+                          
                           // console.log(...data.StuName,...arr)
                           console.log("wdfd", row, "arr", ...arr);
                           setarr([...row.StuName, ...arr]);
 
                           setopen(true);
-                          setAdd("Yes--")
-                          setAdds("Yes-No")
+                          
+                          
                         }}
                       >
                         <EditIcon/>
                       </Button>
                       </Tooltip>
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                     <Tooltip title="Delete" arrow>
                         
                       <Button
@@ -415,7 +527,7 @@ function Batches() {
                       </Button>
                       </Tooltip>
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                     <Tooltip title="Complete" arrow>
                         
                       <Button
@@ -446,125 +558,14 @@ function Batches() {
           </TableContainer>
         </Box>
       </Box>
-      <Grid container spacing={2} justifyContent="center">
-            <Grid item xs={4}>
+       
 
-      <Dialog open={open}>
-        <DialogContent>
-              
-              <Box sx={{ maxWidth:300}}>
-                <FormControl sx={{mt: 3 }} fullWidth>
-                  <InputLabel id="demo-multiple-checkbox-label">
-                    Select Students
-                  </InputLabel>
-
-                  <Select
-                    labelId="demo-multiple-checkbox-label"
-                    id="demo-multiple-checkbox"
-                    fullWidth
-                    multiple
-                    value={
-                      data.StuName &&
-                      data.StuName.map(
-                        (item) => `${item.FullName}-${item.Contact}-${item._id}`
-                      )
-                    }
-                    onChange={handleChange}
-                
-                    input={<FilledInput />}
-                    renderValue={renderSelectedValue}
-                    MenuProps={MenuProps}
-                  >
-                    {arr.map((name) => (
-                      <MenuItem
-                        key={name._id}
-                        value={`${name.FullName}-${name.Contact}-${name._id}`}
-                      >
-                        <Checkbox
-                          checked={
-                            data.StuName &&
-                            data.StuName.findIndex(
-                              (item) =>
-                                item.Contact == name.Contact &&
-                                item.FullName == name.FullName &&
-                                item._id == name._id
-                            ) > -1
-                          }
-
-                        />
-
-                        <ListItemText
-                          primary={`${name.FullName}  ${name.Contact}`}
-                        />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-            
-          <DialogActions>
-            <Button
-              onClick={() => {
-                handleOpen();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={() => {
-                if (id) {
-                  axios
-                    .post(`http://localhost:5000/regBatch/Update?id=${id}&course=${parent.Course}`, {
-                      ...data,
-                      EventId: parent._id,
-                    })
-                    .then((data) => {
-                      console.log(arr);
-                      setId("");
-                      setData({ StuName: [] });
-                      console.log(data.StuName);
-                      setopen(false);
-                      setUpdate(!update);
-                      setAdds("Something22")
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                } else {
-                  
-                  axios
-                    .post(`http://localhost:5000/regBatch/addbatch?course=${parent.Course}`, {
-                      ...data,
-                      EventId: parent._id,
-                    })
-                    .then((data1) => {
-                      console.log(arr);
-
-                      setopen(false);
-                      setId("");
-                      setData({ StuName: [] });
-                      setUpdate(!update);
-                      setAdd("Something1")
-
-                      console.log(data1);
-                    })
-
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                }
-              }}
-            >
-              Submit
-            </Button>
-          </DialogActions>
-        </DialogContent>
-      </Dialog>
-      </Grid>
-          </Grid>
 
     </>
   );
 }
 
 export default Batches;
+
+
+

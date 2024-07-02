@@ -5,6 +5,7 @@ import Dialog from "@mui/material/Dialog";
 import { Box, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, FilledInput } from '@mui/material';
 import Alert from "@mui/material/Alert";
 import EditIcon from "@mui/icons-material/Edit";
+import utc from 'dayjs/plugin/utc';
 
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -216,12 +217,73 @@ console.log(parent)
     setId(row._id);
     setOpen(true);
   };
-
+  dayjs.extend(utc);
+  const handleDateChange = (val) => {
+    const selectedDate = new Date(val);
+    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
+    const adjustedDate = new Date(selectedDate.getTime() + timezoneOffset * 60 * 1000);
+    const formattedDate = adjustedDate.toISOString();
+  
+    setData({ ...data, Date: formattedDate });
+  };
+  
   return (
     <React.Fragment>
-      <Grid container spacing={2} justifyContent="end">
-        <Grid item xs={2} sx={{ mb: 3, mr: 2 }}>
+          <Grid container spacing={2}>
+
+
+        <Grid item xs={10}>
+          <Box sx={{mx:2}}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                {" "}
+                Select Course
+              </InputLabel>
+              <Select
+              onChange={(e) => {
+                handleparent(e);
+              }}
+              
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Status"
+                variant="filled"
+
+                // sx={{fullWidth}}
+              >
+                {coursearr &&
+                  coursearr.map((row) => (
+                    <MenuItem value={row}>
+                      <TableRow
+                        key={row.name}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell align="center">{row.Course}</TableCell>
+                        <TableCell align="center">{row.Amount}</TableCell>
+
+                        <TableCell align="center">{row.Days}</TableCell>
+
+                        <TableCell align="center">
+                          {row.StartDate && row.StartDate.split("T")[0]}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.BatchTime && convertToIST(row.BatchTime)}
+                        </TableCell>
+                      </TableRow>
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </Grid>
+     
+
+      
+        <Grid item xs={2}>
           <Button
+          sx={{my:1}}
             variant="outlined"
             onClick={() => {
               handleopen();
@@ -231,7 +293,6 @@ console.log(parent)
           </Button>
         </Grid>
       </Grid>
-
       <Dialog
         open={open}
         PaperProps={{
@@ -354,14 +415,12 @@ console.log(parent)
           </Box>
           
           <Box sx={{ my: 2 }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
-              <DemoContainer components={["DatePicker"]} fullWidth>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="Choose Your Date"
                   slotProps={{ textField: { variant: "filled" } }}
-                  onChange={(newval) => {
-                    setData({ ...data, Date: newval });
-                  }}
+                  onChange={handleDateChange}
                   defaultValue={id ? dayjs(data.Date) : null}
                   sx={{ width: 530 }}
                   fullWidth
@@ -403,9 +462,9 @@ console.log(parent)
                 renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
               >
-                {days.map((name) => (
+                {days && days.map((name) => (
                   <MenuItem key={name} value={name}>
-                    <Checkbox checked={data.days.indexOf(name) > -1} />
+                    <Checkbox checked={data.days && data.days.indexOf(name) > -1} />
                     <ListItemText primary={name} />
                   </MenuItem>
                 ))}
@@ -434,7 +493,9 @@ console.log(parent)
         <DialogActions>
           <Button
             onClick={() => {
-              setOpen(!open);
+              setOpen(false);
+              setId()
+              setData({})
             }}
           >
             Cancel
@@ -454,56 +515,8 @@ console.log(parent)
         <div></div>
       )}
 
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={11}>
-          <Box sx={{ my: 3 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                {" "}
-                Select Course
-              </InputLabel>
-              <Select
-              onChange={(e) => {
-                handleparent(e);
-              }}
-              
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Status"
-                variant="filled"
 
-                // sx={{fullWidth}}
-              >
-                {coursearr &&
-                  coursearr.map((row) => (
-                    <MenuItem value={row}>
-                      <TableRow
-                        key={row.name}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell align="center">{row.Course}</TableCell>
-                        <TableCell align="center">{row.Amount}</TableCell>
-
-                        <TableCell align="center">{row.Days}</TableCell>
-
-                        <TableCell align="center">
-                          {row.StartDate && row.StartDate.split("T")[0]}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.BatchTime && convertToIST(row.BatchTime)}
-                        </TableCell>
-                      </TableRow>
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </Grid>
-      </Grid>
-
-      <Box sx={{ mx: 2 }}>
+      <Box sx={{ mx: 2,my:2 }}>
         <TableContainer>
           <Table sx={{ minWidth: 650, mx: 3 }} aria-label="simple table">
             <TableHead>
@@ -530,8 +543,8 @@ console.log(parent)
                 <TableCell align="center">Date</TableCell>
                 <TableCell align="center">Batch Days</TableCell>
                 <TableCell align="center">Batch Timing</TableCell>
-                <TableCell align="center">Edit</TableCell>
-                <TableCell align="center">Delete</TableCell>
+                <TableCell align="center" colSpan={2}>Actions</TableCell>
+                
               </TableRow>
             </TableHead>
             <TableBody>

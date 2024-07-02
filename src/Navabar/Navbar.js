@@ -45,10 +45,10 @@ export default function ButtonAppBar() {
       <TreeItem itemId="charts-community" label="Dashboard" />
         
     
-        <TreeItem itemId="grid" label="Courses" 
+        <TreeItem itemId="grid" label="Course" 
     >
         <List>
-         {['Add Course','Course-Inquiries','Add Batches-Course', 'Invoice', 'Student Details','Completed-courses'].map(
+         {['Add Batches','Course-Inquiries','Assign-Students to Batch', 'Invoice', 'Student Details','Completed-courses'].map(
            (text, index) => (
              <ListItem key={text} disablePadding onClick={()=>{Nav(`${arr[index]}`)}}>
                <ListItemButton onClick={()=>{
@@ -68,9 +68,9 @@ export default function ButtonAppBar() {
      
           
         </TreeItem>
-        <TreeItem itemId="pickers" label="Events">
+        <TreeItem itemId="pickers" label="Event">
         <List>
-      {[ 'Events','Event Inquiries','Add Batches-Events','Completed Events'].map(
+      {[ 'Add-Events','Event Inquiries','Add Students-Events','Completed Events'].map(
            (text, index) => (
              <ListItem key={text} disablePadding onClick={()=>{Nav(`${arr1[index]}`)}}>
                <ListItemButton onClick={()=>{
