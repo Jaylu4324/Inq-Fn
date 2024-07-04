@@ -509,14 +509,9 @@ console.log(parent)
           </Button>
         </DialogActions>
       </Dialog>
-      {alertSuccess.open  ? (
-        <Alert>{alertSuccess.message}</Alert>
-      ) : (
-        <div></div>
-      )}
 
 
-      <Box sx={{ mx: 2,my:2 }}>
+      <Box sx={{ mx: 2,my:2}}>
         <TableContainer>
           <Table sx={{ minWidth: 650, mx: 3 }} aria-label="simple table">
             <TableHead>
@@ -547,7 +542,7 @@ console.log(parent)
                 
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody sx={{height:arr && arr.length<1?300:0}}>
               {arr &&
                 arr.map((row) => (
                   <TableRow
@@ -619,3 +614,8 @@ console.log(parent)
 }
 
 export default SD;
+      {/* {alertSuccess.open  ? (
+        <Alert>{alertSuccess.message}</Alert>
+      ) : (
+        <div></div>
+      )} */}

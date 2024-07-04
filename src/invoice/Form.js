@@ -14,8 +14,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import EmailIcon from "@mui/icons-material/Email";
 import EditIcon from "@mui/icons-material/Edit";
-import DoneAllIcon from "@mui/icons-material/DoneAll";
-import DeleteIcon from "@mui/icons-material/Delete";
+
 import Tooltip from "@mui/material/Tooltip";
 import DownloadIcon from "@mui/icons-material/Download";
 import Table from "@mui/material/Table";
@@ -39,6 +38,7 @@ import Alert from "@mui/material/Alert";
 import FilledInput from "@mui/material/FilledInput";
 
 export default function FormDialog() {
+  
   const [coursearr, setcoursearr] = React.useState([]);
 
   const [arr, setArr] = React.useState([]);
@@ -51,6 +51,7 @@ export default function FormDialog() {
   const handleparent = (e) => {
     setParent({ ...e.target.value });
   };
+  const [name,setname]=React.useState([])
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
@@ -62,6 +63,7 @@ export default function FormDialog() {
       .get("http://localhost:5000/batchEvent/DisplayBevent")
       .then((data) => {
         setcoursearr(data.data.data);
+      
         console.log("arr is set");
       })
       .catch((err) => {
@@ -89,8 +91,11 @@ export default function FormDialog() {
         });
     }
   }, [update, parent]);
+
+
+
   const [open, setOpen] = React.useState(false);
-  console.log(stuarr);
+  
   const [data, setData] = React.useState({ invoiceDate: dayjs() });
   const [id, setId] = React.useState();
   
@@ -181,7 +186,8 @@ export default function FormDialog() {
   
     setData({ ...data, invoiceDate: formattedDate });
   };
-  
+  console.log(id)
+  let str='Total Paid Fees'
   return (
     <React.Fragment>
           <Grid container spacing={2}>
@@ -245,6 +251,7 @@ export default function FormDialog() {
         <DialogContent>
           <Box>
             <FormControl sx={{ my: 2 }} fullWidth>
+              
               <InputLabel id="demo-multiple-checkbox-label">
                 Select Students
               </InputLabel>
@@ -252,7 +259,6 @@ export default function FormDialog() {
               <Select
                 labelId="demo-multiple-checkbox-label"
                 disabled={id == undefined ? false : true}
-                // value={id!==undefined?value:null}
 
                 id="demo-multiple-checkbox"
                 onChange={(e) => {
@@ -296,7 +302,8 @@ export default function FormDialog() {
                   defaultValue={id ? dayjs(data.invoiceDate) : null}
                   slotProps={{ textField: { variant: "filled" } }}
                   label="Choose Your Date"
-                  
+                  sx={{ width: 525 }}
+  
                   onChange={handleDateChange}
                 />
               </DemoContainer>
@@ -344,7 +351,6 @@ export default function FormDialog() {
       </Dialog>
       {alertSuccess.open ? <Alert>{alertSuccess.message}</Alert> : <div></div>}
 
-      <Box sx={{ mt: 3,mx:2 }}>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -360,19 +366,21 @@ export default function FormDialog() {
                 >
                   Student Name
                 </TableCell>
-                <TableCell align="center">Amount</TableCell>
                 <TableCell align="center">Date</TableCell>
                 <TableCell align="center">Course</TableCell>
                 <TableCell align="center">TypeOfPayment</TableCell>
-                <TableCell align="center">Description</TableCell>
+                
+                <TableCell align="center">Invoice Amount</TableCell>
+              <TableCell align="center">{str && str.length<4?str:<Tooltip title="Total Paid Fees" arrow><span>{'TPF'}</span></Tooltip>}</TableCell>
+                
                 <TableCell align="center">Total</TableCell>
                 <TableCell align="center">Remaining</TableCell>
-                <TableCell align="center" colSpan={4}>
+                <TableCell align="center" colSpan={3}>
                   Actions
                 </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody sx={{height:arr && arr.length<1?300:0,border:'2px solid blue'}}>
               {arr &&
                 arr.map((row) => (
                   <TableRow
@@ -390,7 +398,6 @@ export default function FormDialog() {
                     >
                       {row.stuId && row.stuId.Name}
                     </TableCell>
-                    <TableCell align="center">{row.Amount}</TableCell>
                     <TableCell align="center">
                       {row.invoiceDate && row.invoiceDate.split("T")[0]}
                     </TableCell>
@@ -398,15 +405,20 @@ export default function FormDialog() {
                       {row.stuId && row.stuId.course}
                     </TableCell>
                     <TableCell align="center">{row.TypeOfPayment}</TableCell>
-                    <TableCell align="center">{row.Description}</TableCell>
+                    <TableCell align="center">{row.Amount}</TableCell>
+                    
+                    <TableCell align="center">{row.stuId && row.stuId.Pfees}</TableCell>
+                    
                     <TableCell align="center">
                       {row.stuId && row.stuId.Tfees}
+                      
                     </TableCell>
                     <TableCell align="center">
                       {row.stuId && row.stuId.Rfees}
                     </TableCell>
                     <TableCell align="center">
                       <Tooltip title="Edit" arrow>
+
                         <Button
                           variant="contained"
                           onClick={() => {
@@ -421,44 +433,13 @@ export default function FormDialog() {
                       </Tooltip>
                     </TableCell>
 
-                    <TableCell align="center">
-                      <Tooltip title="Delete" arrow>
-                        <Button
-                          variant="contained"
-                          color="error"
-                          onClick={() => {
-                            axios
-                              .post(
-                                `http://localhost:5000/invoice/Delete?id=${row._id}`,
-                                row
-                              )
-                              .then((data) => {
-                                doUpdate(!update);
-                                setAlertSuccess({
-                                  open: true,
-                                  message: "Deleted Successfully",
-                                  severity: "success",
-                                });
-                                setTimeout(() => {
-                                  setAlertSuccess("");
-                                }, 3000);
-                                console.log(data);
-                              })
-                              .catch((err) => {
-                                console.log(err);
-                              });
-                          }}
-                        >
-                          <DeleteIcon />
-                        </Button>
-                      </Tooltip>
-                    </TableCell>
+                    
                     <TableCell align="center">
                       {" "}
                       <Tooltip title="Download Receipt" arrow>
                         <Button
                           variant="contained"
-                          color="info"
+                          color="warning"
                           onClick={() => {
                             const doc = new jsPDF();
 
@@ -582,7 +563,10 @@ export default function FormDialog() {
                               );
                               footerY += 5;
                             });
-
+                            doc.setFontSize(10);
+                            doc.setTextColor(100);
+                            doc.text('This is a computer-generated invoice. Signature not required.', doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 50, { align: 'center' });
+                        
                             // Copyright notice
                             doc.setTextColor(100);
                             doc.setFontSize(8);
@@ -627,7 +611,7 @@ export default function FormDialog() {
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>
+  
     </React.Fragment>
   );
 }

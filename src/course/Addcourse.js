@@ -209,6 +209,7 @@ const handleDateChange = (val) => {
   slotProps={{ textField: { variant: "filled" } }}
   defaultValue={id ? dayjs(data.StartDate) : null}
   sx={{ width: 500 }}
+  
   onChange={handleDateChange}
 />
               </DemoContainer>

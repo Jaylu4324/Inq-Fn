@@ -19,6 +19,7 @@ import {
   Checkbox,
   ListItemText,
   FilledInput,
+  TableBody,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
@@ -221,7 +222,7 @@ function Batches() {
             >
               {course &&
                 course.map((row) => (
-                  <MenuItem value={row}>
+                  <MenuItem  key={row.name} value={row}>
                     <TableRow
                       key={row.name}
                       sx={{
@@ -241,11 +242,7 @@ function Batches() {
                       <TableCell align="center">
                         {row.EndtDate && row.EndtDate.split("T")[0]}
                       </TableCell>
-                      {/* <TableCell align="center">
-                      {row.Days && row.Days.map((val) => (
-                        <TableCell align="center">{val}</TableCell>
-                      ))}
-                    </TableCell> */}
+                    
                       <TableCell align="center">
                         {row.BatchTime && convertToIST(row.BatchTime)}
                       </TableCell>
@@ -255,6 +252,7 @@ function Batches() {
             </Select>
           </FormControl>
         </Box>
+
       </Grid>
       <Grid item xs={2}>
         <Button
@@ -415,8 +413,8 @@ function Batches() {
 
                 
               </TableHead>
-
-              {map &&
+              <TableBody sx={{height:map && map.length<1?300:0}}>              
+            {map &&
                 map.map((row) => (
                   <TableRow
                     key={row.name}
@@ -554,6 +552,8 @@ function Batches() {
                     </TableCell>
                   </TableRow>
                 ))}
+                </TableBody>
+  
             </Table>
           </TableContainer>
         </Box>
