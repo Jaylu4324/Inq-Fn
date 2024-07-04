@@ -12,19 +12,20 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
+import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from '@mui/icons-material/Done';
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
-
+import DeleteIcon from "@mui/icons-material/Delete";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import DeleteIcon from '@mui/icons-material/Delete';
 
 import Tooltip from '@mui/material/Tooltip';
 import EditIcon from '@mui/icons-material/Edit';
-import DoneAllIcon from '@mui/icons-material/DoneAll';
+import utc from 'dayjs/plugin/utc';
+
 
 import AddIcon from "@mui/icons-material/Add";
 
@@ -265,6 +266,17 @@ function Eventi() {
   const handleparent = (e) => {
     setParent({ ...e.target.value });
   };
+  dayjs.extend(utc);
+  const handleDateChange = (val,type) => {
+    const selectedDate = new Date(val);
+    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
+    const adjustedDate = new Date(selectedDate.getTime() + timezoneOffset * 60 * 1000);
+    const formattedDate = adjustedDate.toISOString();
+  
+    setData({ ...data, Date: formattedDate });
+  };
+  
+
   return (
     <React.Fragment>
           <Grid container spacing={2}>
@@ -397,9 +409,7 @@ function Eventi() {
                   sx={{ width: 530 }}
                   slotProps={{ textField: { variant: 'filled' } }}
           
-                  onChange={(newval) => {
-                    setData({ ...data, Date: newval });
-                  }}
+               onChange={handleDateChange}
                   fullWidth
                 ></DatePicker>
               </DemoContainer>
@@ -539,7 +549,7 @@ function Eventi() {
                         {row.Email}
                       </TableCell>
                       <TableCell align="center">
-                        {row.Date}
+                      {row.Date && row.Date.split('T')[0]}
                       </TableCell>
                       <TableCell align="center">
                         {row.CollageName}
@@ -573,7 +583,7 @@ function Eventi() {
     
 
                 <TableCell>
-                <Tooltip title="Delete" arrow>
+                <Tooltip title="Reject" arrow>
     
                   <Button
                     variant="contained"
@@ -593,13 +603,13 @@ function Eventi() {
                       
                     }}
                   >
-                    <DeleteIcon/>
+                    <CloseIcon/>
                   </Button>
                   </Tooltip>
                 </TableCell>
 
                 <TableCell>
-                <Tooltip title="Complete" arrow>
+                <Tooltip title="Confirm" arrow>
     
                   <Button
                     variant="contained"
@@ -616,7 +626,7 @@ function Eventi() {
                       
                     }}
                   >
-                    <DoneAllIcon/>
+                   <DoneIcon />
                   </Button>
                   </Tooltip>
                 </TableCell>
@@ -643,7 +653,7 @@ function Eventi() {
                   <TableCell align="center">FollowUp</TableCell>
                   <TableCell align="center">Interaction</TableCell>
                   <TableCell align="center">Description</TableCell>
-                  <TableCell align="center">Delete</TableCell>
+                  <TableCell align="center">Action</TableCell>
                   
                 </TableRow>
               </TableHead>
@@ -661,7 +671,7 @@ function Eventi() {
                         {row.Email}
                       </TableCell>
                       <TableCell align="center">
-                        {row.Date}
+                        {row.Date && row.Date.split('T')[0]}
                       </TableCell>
                       <TableCell align="center">
                         {row.CollageName}
@@ -677,7 +687,7 @@ function Eventi() {
                       </TableCell>
                       <TableCell>
 
-              
+                      <Tooltip title="Delete" arrow>
                   <Button
                     variant="contained"
                     color="error"
@@ -688,8 +698,9 @@ function Eventi() {
                       
                     }}
                   >
-                    Delete
+                    <DeleteIcon/>
                   </Button>
+                  </Tooltip>
                 </TableCell>
 
                 
@@ -731,7 +742,7 @@ function Eventi() {
                         {row.Email}
                       </TableCell>
                       <TableCell align="center">
-                        {row.Date}
+                      {row.Date && row.Date.split('T')[0]}
                       </TableCell>
                       <TableCell align="center">
                         {row.CollageName}
