@@ -4,7 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 
-import { Box, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, FilledInput } from '@mui/material';
+import { Box, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, FilledInput, TableBody } from '@mui/material';
 import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -224,24 +224,12 @@ console.log('thid api')
 
   return (
     <>
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={2} sx={{ mb: 3 }}>
-          <Button
-            variant="outlined"
-            onClick={() => {
-              setarr([...arr])
-              console.log(arr)
+   <Grid container spacing={2}>
+   <Grid item xs={12} sx={{display: 'flex', alignItems: 'center' }}>
 
-              setopen(true);
-              setData({ StuName: [] })
-              setId("");
-            }}
-          >
-            Add Batches
-          </Button>
-        </Grid>
-      </Grid>
-      <Box sx={{ mt: 2, mx: 2 }}>
+   <Grid item xs={10}>
+       
+   <Box sx={{ mt: 2, mx: 2 }}>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">
             {" "}
@@ -293,9 +281,27 @@ console.log('thid api')
           </Select>
         </FormControl>
       </Box>
+</Grid>
 
+<Grid item  xs={2} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setarr([...arr])
+              console.log(arr)
+
+              setopen(true);
+              setData({ StuName: [] })
+              setId("");
+            }}
+          >
+            Add Batches
+          </Button>
+       </Grid>
+     
+</Grid></Grid>
       <Box>
-        <Box sx={{ mt: 5 }}>
+        <Box sx={{ mt: 4 }}>
           <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -316,7 +322,7 @@ console.log('thid api')
               
                 </TableRow>
               </TableHead>
-
+<TableBody sx={{height:map && map.length<1?220:0}}>
               {map &&
                 map.map((row) => (
                   <TableRow
@@ -445,80 +451,12 @@ console.log('thid api')
                     </Box>
                   </TableRow>
                 ))}
+</TableBody>
             </Table>
           </TableContainer>
         </Box>
 
-        {/* <Grid item xs={6}>
-              
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 350 }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="center">Student Name</TableCell>
-                      <TableCell align="center">Contact</TableCell>
-                      <TableCell align="center">Days</TableCell>
-                      
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {confirm &&
-                      confirm.map((row,idx) => (
-                        <TableRow
-                          key={idx}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                          }}
-                        >
-                          <TableCell align="center">
-                             
-                             {row.StuName && row.StuName.map((data,index) => (
-     
-     
-                               <TableRow key={index}>
-                                 <TableCell align="center"> {data.FullName}</TableCell>
-     
-                               </TableRow>
-                             ))}
-     
-     
-     
-                           </TableCell>
-                           
-                          <TableCell align="center">{'hi'}</TableCell>
-                          <TableCell align="center">{row.Contact}</TableCell>
-                          <TableCell align="center">{row.Email}</TableCell>
-                          <TableCell align="center">{row.Date && row.Date.split('T')[0]}</TableCell>
-                          <TableCell align="center">
-                            {row.CollageName}
-                          </TableCell>
-                          <TableCell align="center">{row.Status}</TableCell>
-                          <TableCell
-                            align="center"
-                            style={{
-                              color: row.FollowUp == "Yes" ? "green" : "red",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            {row.FollowUp}
-                          </TableCell>
-                          <TableCell align="center">
-                            {row.Interaction}
-                          </TableCell>
-
-                          <TableCell align="center">
-                            {row.Description}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            
-          
-        </Grid>
-        
-       */}
+       
       </Box>
 
       <Dialog open={open}>

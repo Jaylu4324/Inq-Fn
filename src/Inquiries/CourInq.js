@@ -221,15 +221,15 @@ function Form1() {
 <React.Fragment>
   <Container>
     <Grid container spacing={2} alignItems="flex-start">
-      <Grid item xs={2} sx={{border:'2px solid blue'}}>
+      <Grid item xs={2}>
         <Button variant="outlined" onClick={handleopen}>
           <AddIcon /> Inquiry
         </Button>
       </Grid>
     </Grid>
 
-    <Box sx={{ border: '2px solid black', marginTop: 2 }}>
-      <Box sx={{ mt: 1, display: 'flex', justifyContent: 'center' }}>
+    <Box>
+      <Box sx={{display: 'flex', justifyContent: 'center' }}>
         <Tabs value={value} onChange={handlechange1} aria-label="basic tabs example">
           <Tab label="onGoing" {...a11yProps(0)} />
           <Tab label="Reject" {...a11yProps(1)} />
@@ -238,8 +238,8 @@ function Form1() {
       </Box>
 
       <CustomTabPanel value={value} index={0}>
-        <TableContainer component={Paper} sx={{ display: 'flex', justifyContent: 'left' }}>
-          <Table sx={{ minWidth: 650, border: '2px solid green' }} aria-label="simple table">
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650}} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" }}>Full Name</TableCell>
@@ -254,7 +254,7 @@ function Form1() {
                 <TableCell align="center" colSpan={3}>Actions</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody sx={{height:arr && arr.length<1?220:0}}>
               {arr && arr.map((row) => (
                 <TableRow key={row.name} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                   <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1 }}>{row.FullName}</TableCell>
@@ -309,7 +309,7 @@ function Form1() {
                 <TableCell align="center">Action</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody sx={{height:reject && reject.length<1?220:0}}>
               {reject && reject.map((row) => (
                 <TableRow key={row.name} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                   <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1 }}>{row.FullName}</TableCell>
@@ -347,7 +347,7 @@ function Form1() {
                 <TableCell align="center">Description</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody sx={{height:confirm && confirm.length<1?220:0}}>
               {confirm && confirm.map((row) => (
                 <TableRow key={row.name} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                   <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" }}>{row.FullName}</TableCell>

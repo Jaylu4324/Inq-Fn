@@ -254,9 +254,9 @@ function Batches() {
         </Box>
 
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={2} sx={{display:'flex',justifyContent:'center'}}>
         <Button
-        sx={{ mt: 1,ml:2}}
+        sx={{ml:2}}
           variant="outlined"
           onClick={() => {
             setarr([...arr]);

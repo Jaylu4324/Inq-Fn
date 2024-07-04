@@ -267,19 +267,88 @@ function Eventi() {
   };
   return (
     <React.Fragment>
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={3} md={2.1}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sx={{display: 'flex', alignItems: 'center' }}>
+          <Grid item xs={10}>
+       
+      
+       <Box sx={{ mx:2}} fullWidth>
+         <FormControl fullWidth>
+           <InputLabel id="demo-simple-select-label">
+             {" "}
+             Select Event Type
+           </InputLabel>
+           <Select
+             onChange={(e) => {
+               handleparent(e);
+             }}
+             
+             labelId="demo-simple-select-label"
+             id="demo-simple-select"
+             label="Status"
+             variant="filled"
+         
+             
+           >
+             {arr &&
+               arr.map((row) => (
+                 <MenuItem value={row}>
+                   <TableRow
+                     key={row.name}
+                     sx={{
+                       "&:last-child td, &:last-child th": { border: 0 },
+                     }}
+                   >
+                     <TableCell align="center">{row.Course}</TableCell>
+
+                     <TableCell align="center">{row.TypeOfEvent}</TableCell>
+                     <TableCell align="center">
+                       {row.TypeOfPayment}
+                     </TableCell>
+
+                     <TableCell align="center">{row.Amount}</TableCell>
+
+                     <TableCell align="center">
+                       {row.StartDate && row.StartDate.split("T")[0]}
+                     </TableCell>
+                     <TableCell align="center">
+                       {row.EndtDate && row.EndtDate.split("T")[0]}
+                     </TableCell>
+                     <TableCell align="center">
+                       {row.Days.map((val) => (
+                         <TableCell align="center">{val}</TableCell>
+                       ))}
+                     </TableCell>
+                     <TableCell align="center">
+                       {row.BatchTime && convertToIST(row.BatchTime)}
+                     </TableCell>
+                   </TableRow>
+                 </MenuItem>
+               ))}
+           </Select>
+         </FormControl>
+       </Box>
+       </Grid>
+
+
+     <Grid item  xs={2} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+
           <Button
             variant="outlined"
             onClick={handleopen}
             disabled={parent._id ? false : true}
+          
           >
-            <AddIcon /> Add Event Inquiry
+            <AddIcon />Inquiry
           </Button>
-        </Grid>
-      </Grid>
+          </Grid>
 
-      <Dialog open={open} onClose={handleClose}>
+     
+    
+          </Grid>
+          </Grid>
+
+          <Dialog open={open} onClose={handleClose}>
         <DialogContent>
         {alertMsg.open && (<Alert severity="error" sx={{zIndex:9999}}>{alertMsg.message}</Alert>)}
 
@@ -417,76 +486,10 @@ function Eventi() {
         </DialogContent>
         <DialogActions></DialogActions>
       </Dialog>
-      {alertSuccess.open  ? (
-        <Alert>{alertSuccess.message}</Alert>
-      ) : (
-        <div></div>
-      )}
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={11}>
-          <Box sx={{ mt: 2 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                {" "}
-                Select Event Type
-              </InputLabel>
-              <Select
-                onChange={(e) => {
-                  handleparent(e);
-                }}
-                
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Status"
-                variant="filled"
-            
-                // sx={{fullWidth}}
-              >
-                {arr &&
-                  arr.map((row) => (
-                    <MenuItem value={row}>
-                      <TableRow
-                        key={row.name}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell align="center">{row.Course}</TableCell>
 
-                        <TableCell align="center">{row.TypeOfEvent}</TableCell>
-                        <TableCell align="center">
-                          {row.TypeOfPayment}
-                        </TableCell>
-
-                        <TableCell align="center">{row.Amount}</TableCell>
-
-                        <TableCell align="center">
-                          {row.StartDate && row.StartDate.split("T")[0]}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.EndtDate && row.EndtDate.split("T")[0]}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.Days.map((val) => (
-                            <TableCell align="center">{val}</TableCell>
-                          ))}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.BatchTime && convertToIST(row.BatchTime)}
-                        </TableCell>
-                      </TableRow>
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </Grid>
-      </Grid>
-      
-      <Box sx={{ width: "100%", ml: "10" }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Grid container spacing={2} justifyContent="center" sx={{ my: 2 }}>
-            <Grid item xs={4}>
+      <Box>
+ 
+        <Box sx={{display: 'flex', justifyContent: 'center',mt:2}}>
               <Tabs
                 value={value}
                 onChange={handlechange1}
@@ -496,13 +499,11 @@ function Eventi() {
                 <Tab label="Reject" {...a11yProps(1)} />
                 <Tab label="Confirmed" {...a11yProps(2)} />
               </Tabs>
-            </Grid>
-          </Grid>
-        </Box>
+            </Box>
+      
 
         <CustomTabPanel value={value} index={0}>
-          <Grid>
-
+        
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -522,7 +523,7 @@ function Eventi() {
                   
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <TableBody sx={{height:ong && ong.length<1?220:0}}>
                 {ong &&
                   ong.map((row) => (
                     <TableRow key={row._id}  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
@@ -627,7 +628,7 @@ function Eventi() {
             </Table>
           </TableContainer>
 
-          </Grid>
+       
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
 <TableContainer component={Paper}>
@@ -646,7 +647,7 @@ function Eventi() {
                   
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <TableBody sx={{height:reject && reject.length<1?220:0}}>
                 {reject &&
                   reject.map((row) => (
                     <TableRow key={row._id}  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
@@ -681,17 +682,7 @@ function Eventi() {
                     variant="contained"
                     color="error"
                     onClick={() => {
-                      // axios.delete(`http://localhost:5000/Eventinquiry/Delete?id=${parent._id}`)
-
-
-                      // .then((data)=>{
-                      //   console.log(data)
-                      //   doUpdate(!update) 
-                      // })
-                      //   .catch((err)=>{
-                      //     console.log(err)
-                      //   })
-                      
+                 
                       handleClickOpen1()
                       setDeleteId(row._id);
                       
@@ -726,7 +717,7 @@ function Eventi() {
                   
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <TableBody sx={{height:confirm && confirm.length<1?220:0}}>
                 {confirm &&
                   confirm.map((row) => (
                     <TableRow key={row._id}  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
@@ -763,8 +754,16 @@ function Eventi() {
           </TableContainer>
           
         </CustomTabPanel>
+     
       </Box>
-      
+  
+      {alertSuccess.open  ? (
+        <Alert>{alertSuccess.message}</Alert>
+      ) : (
+        <div></div>
+      )}
+
+
                 <Dialog
                     open={open1} 
                     onClose={handleClose1}

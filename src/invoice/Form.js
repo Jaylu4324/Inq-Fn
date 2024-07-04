@@ -351,6 +351,7 @@ export default function FormDialog() {
       </Dialog>
       {alertSuccess.open ? <Alert>{alertSuccess.message}</Alert> : <div></div>}
 
+      <Box sx={{ mt: 3,mx:2 }}>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -380,7 +381,7 @@ export default function FormDialog() {
                 </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody sx={{height:arr && arr.length<1?300:0,border:'2px solid blue'}}>
+            <TableBody sx={{height:arr && arr.length<1?300:0}}>
               {arr &&
                 arr.map((row) => (
                   <TableRow
@@ -611,7 +612,7 @@ export default function FormDialog() {
             </TableBody>
           </Table>
         </TableContainer>
-  
+      </Box>
     </React.Fragment>
   );
 }

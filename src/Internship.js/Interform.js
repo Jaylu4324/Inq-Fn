@@ -24,6 +24,7 @@ import {
   Checkbox,
   ListItemText,
   FilledInput,
+  TableBody,
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
@@ -267,7 +268,7 @@ function Interform() {
               </Alert>
             )}
 
-            <FormControl variant="filled" sx={{ minWidth: 500 }}>
+            <FormControl variant="filled" fullWidth>
               <InputLabel id="demo-simple-select-label">Course</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -288,7 +289,7 @@ function Interform() {
             </FormControl>
           </Box>
           <Box sx={{ minWidth: 120, mb: 2 }}>
-            <FormControl variant="filled" sx={{ minWidth: 500 }}>
+            <FormControl variant="filled" fullWidth>
               <InputLabel id="demo-simple-select-label">
                 Type Of Event
               </InputLabel>
@@ -377,7 +378,7 @@ function Interform() {
             </LocalizationProvider>
           </Box>
           <Box sx={{ minWidth: 120, mb: 2 }} fullWidth>
-            <FormControl variant="filled">
+            <FormControl variant="filled" fullWidth>
               <InputLabel id="demo-multiple-checkbox-label"> Days</InputLabel>
               <Select
                 labelId="demo-multiple-checkbox-label"
@@ -385,10 +386,10 @@ function Interform() {
                 multiple
                 value={data.Days || []}
                 onChange={handleChange1}
-                sx={{ width: 500 }}
+                fullWidth
                 input={<FilledInput />}
                 renderValue={(selected) => selected.join(", ")}
-                MenuProps={MenuProps}
+         
               >
                 {DaysArr.map((name) => (
                   <MenuItem key={name} value={name}>
@@ -444,7 +445,7 @@ function Interform() {
       ) : (
         <div></div>
       )}
-      
+      <Box sx={{mx:2}}>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -466,7 +467,7 @@ function Interform() {
 
             </TableRow>
           </TableHead>
-
+<TableBody sx={{height:arr && arr.length<1?300:0}}>
           {arr &&
             arr.map((row) => (
               <TableRow
@@ -579,9 +580,12 @@ function Interform() {
                   </Tooltip>
                 </TableCell>
               </TableRow>
+
             ))}
+</TableBody>
         </Table>
       </TableContainer>
+      </Box>
     </React.Fragment>
   );
 }
