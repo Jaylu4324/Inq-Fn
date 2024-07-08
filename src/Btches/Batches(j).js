@@ -18,6 +18,9 @@ import Tooltip from "@mui/material/Tooltip";
 
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
+// let str="2024-07-01T12:00:99"
+
+// let newdate=str.split('T')[0].split("-").reverse().join("/")
 
 
 import axios from "axios";

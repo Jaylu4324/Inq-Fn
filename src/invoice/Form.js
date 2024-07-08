@@ -14,7 +14,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import EmailIcon from "@mui/icons-material/Email";
 import EditIcon from "@mui/icons-material/Edit";
-
+import Toolbar from '@mui/material/Toolbar';
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
 import Tooltip from "@mui/material/Tooltip";
 import DownloadIcon from "@mui/icons-material/Download";
 import Table from "@mui/material/Table";
@@ -24,7 +26,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import utc from 'dayjs/plugin/utc';
-
+import Menu from '@mui/material/Menu';
+import { styled, alpha } from '@mui/material/styles';
 import Paper from "@mui/material/Paper";
 import { jsPDF } from "jspdf";
 import { Grid } from "@mui/material";
@@ -36,9 +39,36 @@ import Select from "@mui/material/Select";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
 import FilledInput from "@mui/material/FilledInput";
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+
+
+import SortIcon from '@mui/icons-material/Sort';
 
 export default function FormDialog() {
   
+  const Search = styled('div')(({ theme }) => ({
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor:'white',
+  border:'2px solid black',
+    marginLeft: 0,
+    width: '140%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(1),
+      width: 250,
+    },
+  }));
+  
+  const StyledInputBase = styled(InputBase)(({ theme }) => ({
+    color: 'inherit',
+    width: '300%',
+    '& .MuiInputBase-input': {
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+     
+    },
+  }));
   const [coursearr, setcoursearr] = React.useState([]);
 
   const [arr, setArr] = React.useState([]);
@@ -51,7 +81,7 @@ export default function FormDialog() {
   const handleparent = (e) => {
     setParent({ ...e.target.value });
   };
-  const [name,setname]=React.useState([])
+  
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
@@ -69,7 +99,6 @@ export default function FormDialog() {
       .catch((err) => {
         console.log(err);
       });
-    console.log(coursearr);
 
     axios
       .get("http://localhost:5000/invoice/Display")
@@ -93,6 +122,9 @@ export default function FormDialog() {
   }, [update, parent]);
 
 
+React.useEffect(()=>{
+
+},[])
 
   const [open, setOpen] = React.useState(false);
   
@@ -105,7 +137,6 @@ export default function FormDialog() {
 
   const handleClose = () => {
     setData({});
-
     setId();
     setOpen(false);
   };
@@ -175,7 +206,7 @@ export default function FormDialog() {
 
     return new Intl.DateTimeFormat("en-US", options).format(date);
   }
-  console.log("NORMAL data", arr);
+  console.log("NORMAL datafgffgf",data );
 
   dayjs.extend(utc);
   const handleDateChange = (val) => {
@@ -186,12 +217,187 @@ export default function FormDialog() {
   
     setData({ ...data, invoiceDate: formattedDate });
   };
+
   console.log(id)
   let str='Total Paid Fees'
+  const[order,setorder]=React.useState(1)
+  const[order1,setorder1]=React.useState(1)
+  
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openmenu = Boolean(anchorEl);
+  const handleClickmenu = (event) => {
+    setAnchorEl(event.currentTarget);
+    
+  };
+
+  const handleClosemenu = () => {
+    setAnchorEl(null);
+  };
+  const [anchorEl1, setAnchorEl1] = React.useState(null);
+  const openmenu1 = Boolean(anchorEl1);
+  const handleClickmenu1 = (event) => {
+    setAnchorEl1(event.currentTarget);
+    
+  };
+
+  const handleClosemenu1 = () => {
+    setAnchorEl1(null);
+  };
+console.log(arr)
+  const montharr=[1,2,3,4,5,6,7,8,9,10,11,12]
+  const monthname=['January','February','March','April','May','June','July','August','September','October','November','December']
   return (
     <React.Fragment>
-          <Grid container spacing={2}>
+          <Grid container spacing={2}  sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+          <Grid xs={2} sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+         <div>
+         <Tooltip title="Filter" arrow>
+          
+      <Button
+        id="basic-button"
+        aria-controls={openmenu1 ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={openmenu1 ? 'true' : undefined}
+        onClick={handleClickmenu1}
+      >
+          
+     <FilterAltIcon sx={{color:'black'}}/>
+      </Button>
+      </Tooltip>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl1}
+        open={openmenu1}
+        onClose={handleClosemenu1}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        {montharr.map((val,index)=>(
 
+        
+        <MenuItem onClick={()=>{
+
+          axios.get(`http://localhost:5000/invoice/filterByMonth?stuId=${parent._id ? parent._id : ''}&month=${montharr[index]}&sort=${order1}`)
+          .then((response) => {
+            console.log('API Response:', response.data);
+            setArr(response.data);
+            setorder1(order1 === 1 ? -1 : 1);
+          })
+          .catch((error) => {
+            console.error('API Request Error:', error);
+          });
+          
+          handleClosemenu1()
+          
+          }}>
+            
+
+{monthname[index]}
+
+          </MenuItem>))}
+        
+      
+
+        
+
+      </Menu>
+    </div>
+
+         </Grid>
+         <Grid xs={5} sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+     
+         <Toolbar>
+         <Box>
+          
+          <Search>
+    
+            <StyledInputBase
+              placeholder="Search Students…"
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </Search>
+          </Box>
+          <Tooltip title="Search" arrow>
+          
+         <Button sx={{color:'black'}}>
+                <SearchIcon
+                onClick={()=>{console.log('hi')}}
+                />
+               </Button>
+              </Tooltip>
+        </Toolbar>
+     
+         </Grid>
+         <Grid xs={2} sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+         <div>
+         <Tooltip title="Sort" arrow>
+          
+      <Button
+        id="basic-button"
+        aria-controls={openmenu ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={openmenu ? 'true' : undefined}
+        onClick={handleClickmenu}
+      >
+      <SortIcon sx={{color:'black'}}/>
+      </Button>
+      </Tooltip>    
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={openmenu}
+        onClose={handleClosemenu}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem onClick={()=>{
+          setParent({})
+          handleClosemenu()
+        
+          }}>All</MenuItem>
+
+        <MenuItem onClick={()=>{
+          axios.get(`http://localhost:5000/student/fillter?key=Date&sortby=${order}&courseid=${parent._id?parent._id:''}`)
+          .then((data)=>{
+            console.log(data)
+            setorder(order==1?-1:1)
+              setArr(data.data.data)
+          })
+          .catch((err)=>{
+            console.log(err)
+          })
+          handleClosemenu()
+          
+          }}>Sort By Date</MenuItem>
+        <MenuItem onClick={()=>{
+           axios.get(`http://localhost:5000/student/fillter?key=Name&sortby=${order}&courseid=${parent._id?parent._id:''}`)
+           .then((data)=>{
+             console.log(data)
+             setorder(order==1?-1:1)
+               setArr(data.data.data)
+           })
+           .catch((err)=>{
+             console.log(err)
+           })
+          handleClosemenu()}}>Sort By Name</MenuItem>
+        <MenuItem onClick={()=>{
+           axios.get(`http://localhost:5000/student/fillter?key=Rfees&sortby=${order}&courseid=${parent._id?parent._id:''}`)
+           .then((data)=>{
+             console.log(data)
+             setorder(order==1?-1:1)
+               setArr(data.data.data)
+           })
+           .catch((err)=>{
+             console.log(err)
+           })
+          handleClosemenu()
+          }}>Sort By RF</MenuItem>
+      </Menu>
+    </div>
+    
+         </Grid>
       <Grid xs={10}>
         <Box sx={{ mt: 2, ml: 4 }}>
           <FormControl fullWidth>
@@ -247,6 +453,8 @@ export default function FormDialog() {
         </Button>
       </Grid>
 </Grid>
+
+
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
           <Box>
@@ -258,12 +466,13 @@ export default function FormDialog() {
 
               <Select
                 labelId="demo-multiple-checkbox-label"
-                disabled={id == undefined ? false : true}
-
+                disabled={id ? true : false}
+                // renderValue={() => (id ? selectedStudentName : '')}
                 id="demo-multiple-checkbox"
                 onChange={(e) => {
                   handleChange(e, "stuId");
                 }}
+           
                 sx={{ width: 530 }}
                 fullWidth
                 input={<FilledInput />}

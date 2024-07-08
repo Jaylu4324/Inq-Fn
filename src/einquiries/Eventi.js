@@ -383,6 +383,7 @@ function Eventi() {
             variant="filled"
             value={data.Contact}
             onChange={(e) => {
+              console.log(e)
               handleChange(e, "Contact");
             }}
             fullWidth
