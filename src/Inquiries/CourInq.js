@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
+import Menu from "@mui/material/Menu";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import Tooltip from "@mui/material/Tooltip";
@@ -99,6 +100,22 @@ function Form1() {
   const [confirm, setconfirm] = React.useState([]);
   const [update, doUpdate] = React.useState(false);
   const [id, setId] = React.useState();
+  const [searchname, setseearchname] = React.useState("");
+  const handlesearchname = (e) => {
+    setseearchname(e.target.value);
+  };
+  console.log(searchname);
+  const [rejectsearchname, setrejectseearchname] = React.useState("");
+  const handlerejectsearchname = (e) => {
+    setrejectseearchname(e.target.value);
+  };
+  console.log(rejectsearchname);
+  const [confirmsearchname, setconfirmseearchname] = React.useState("");
+  const handleconfirmsearchname = (e) => {
+    setconfirmseearchname(e.target.value);
+  };
+  console.log(confirmsearchname);
+  
   const handleChange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
   };
@@ -244,9 +261,6 @@ function Form1() {
   const handleClosemenu1 = () => {
     setAnchorEl1(null);
   };
-  // const handlesearchname = (e) => {
-  //   setseearchname(e.target.value);
-  // };
 
   const montharr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const monthname = [
@@ -301,13 +315,13 @@ function Form1() {
                 >
                   <Box sx={{ width: 400, ml: 2 }}>
                     <TextField
-                      // value={searchname}
+                      value={searchname}
 
                       id="filled-hidden-label-small"
                       placeholder="Search Ongoing Inquiries..."
                       variant="filled"
                       size="small"
-                      // onChange={handlesearchname}
+                      onChange={handlesearchname}
 
                       sx={{
                         width: "100%",
@@ -345,21 +359,22 @@ function Form1() {
                   <Tooltip title="Search" arrow>
                     <Button sx={{ color: "#0063cc" }}>
                       <SearchIcon
-                      // onClick={() => {
-                      //   axios
-                      //     .get(
-                      //       `http://localhost:5000/invoice/searchinstu?name=${searchname}`
-                      //     )
-                      //     .then((data) => {
-                      //       console.log(data);
-                      //       setArr(data.data.filterdata);
-                      //       // setseearchname("");
+                      onClick={() => {
+                        axios
+                          .get(
+                            `http://localhost:5000/inquiry/onGoingsearchstu?FullName=${searchname}`
+                          )
+                          .then((data) => {
+                            console.log(data);
+                            setArr(data.data.data);
+                            setseearchname("");
 
-                      //     })
-                      //     .catch((err) => {
-                      //       console.log(err);
-                      //     });
-                      // }}
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                          });
+                      }}
+
                       />
                     </Button>
                   </Tooltip>
@@ -384,7 +399,7 @@ function Form1() {
                         <FilterAltIcon sx={{ color: "#0063cc" }} />
                       </Button>
                     </Tooltip>
-                    {/* <Menu
+                    <Menu
               id="basic-menu"
               anchorEl={anchorEl1}
               open={openmenu1}
@@ -400,11 +415,10 @@ function Form1() {
 
                     axios
                       .get(
-                        `http://localhost:5000/invoice/fillterinvocemonth?courseId=${
-                          parent._id ? parent._id : ""
-                        }&month=${montharr[index]}&sort=${order1}`
+                        `http://localhost:5000/inquiry/coursefillbymonth?month=${montharr[index]}&sort=${order1}`
                       )
                       .then((data) => {
+                        console.log('click 2')
                         console.log("API Response:", data);
                         setArr(data.data);
 
@@ -421,7 +435,7 @@ function Form1() {
                 </MenuItem>
               ))}
             </Menu>
-             */}
+            
                   </div>
 
                   <div>
@@ -687,13 +701,13 @@ function Form1() {
                 >
                   <Box sx={{ width: 400, ml: 2 }}>
                     <TextField
-                      // value={searchname}
+                      value={rejectsearchname}
 
                       id="filled-hidden-label-small"
                       placeholder="Search Rejected Inquiries..."
                       variant="filled"
                       size="small"
-                      // onChange={handlesearchname}
+                      onChange={handlerejectsearchname}
 
                       sx={{
                         width: "100%",
@@ -731,21 +745,21 @@ function Form1() {
                   <Tooltip title="Search" arrow>
                     <Button sx={{ color: "#0063cc" }}>
                       <SearchIcon
-                      // onClick={() => {
-                      //   axios
-                      //     .get(
-                      //       `http://localhost:5000/invoice/searchinstu?name=${searchname}`
-                      //     )
-                      //     .then((data) => {
-                      //       console.log(data);
-                      //       setArr(data.data.filterdata);
-                      //       // setseearchname("");
+                      onClick={() => {
+                        axios
+                          .get(
+                            `http://localhost:5000/inquiry/rejectsearchstu?FullName=${rejectsearchname}`
+                          )
+                          .then((data) => {
+                            console.log(data);
+                            setReject(data.data.data);
+                            setrejectseearchname('')
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                          });
+                      }}
 
-                      //     })
-                      //     .catch((err) => {
-                      //       console.log(err);
-                      //     });
-                      // }}
                       />
                     </Button>
                   </Tooltip>
@@ -1010,13 +1024,13 @@ function Form1() {
                 >
                   <Box sx={{ width: 400, ml: 2 }}>
                     <TextField
-                      // value={searchname}
+                      value={confirmsearchname}
 
                       id="filled-hidden-label-small"
                       placeholder="Search Confirmed Inquiries..."
                       variant="filled"
                       size="small"
-                      // onChange={handlesearchname}
+                      onChange={handleconfirmsearchname}
 
                       sx={{
                         width: "100%",
@@ -1054,21 +1068,21 @@ function Form1() {
                   <Tooltip title="Search" arrow>
                     <Button sx={{ color: "#0063cc" }}>
                       <SearchIcon
-                      // onClick={() => {
-                      //   axios
-                      //     .get(
-                      //       `http://localhost:5000/invoice/searchinstu?name=${searchname}`
-                      //     )
-                      //     .then((data) => {
-                      //       console.log(data);
-                      //       setArr(data.data.filterdata);
-                      //       // setseearchname("");
+                      onClick={() => {
+                        axios
+                          .get(
+                            `http://localhost:5000/inquiry/confirmsearchstu?FullName=${confirmsearchname}`
+                          )
+                          .then((data) => {
+                            console.log(data);
+                            setconfirm(data.data.data)
+                            setconfirmseearchname('')
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                          });
+                      }}
 
-                      //     })
-                      //     .catch((err) => {
-                      //       console.log(err);
-                      //     });
-                      // }}
                       />
                     </Button>
                   </Tooltip>
