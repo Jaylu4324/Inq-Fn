@@ -87,30 +87,6 @@ function SD() {
     },
   };
 
-  const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor:'white',
-  border:'2px solid black',
-    marginLeft: 0,
-    width: '140%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(1),
-      width: 250,
-    },
-  }));
-  
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    width: '300%',
-    '& .MuiInputBase-input': {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-     
-    },
-  }));
   const days = [
     "Monday",
     "Tuesday",
@@ -305,8 +281,77 @@ console.log(arr)
   return (
     <React.Fragment>
           <Grid container spacing={2} sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-         <Grid xs={2} sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-         <div>
+          <Grid
+          xs={8}
+          sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}
+        >
+
+     
+<Box sx={{ width: 400, ml: 4 }}>
+            <TextField
+              // value={searchname}
+
+              id="filled-hidden-label-small"
+              placeholder="Search Students..."
+              variant="filled"
+              size="small"
+              // onChange={handlesearchname}
+
+              sx={{
+                width: "100%",
+                maxWidth: 400,
+                "& .MuiFilledInput-root": {
+                  borderRadius: "16px",
+                  border: "2px solid #0063cc",
+                  backgroundColor: "white",
+                  padding: "0 16px", // Ensure background color is consistent
+                  "&:hover": {
+                    backgroundColor: "white",
+                  },
+                  "&.Mui-focused": {
+                    backgroundColor: "white",
+                  },
+                  "& input": {
+                    padding: "12px 0", // Adjust vertical padding to center text
+                    // Center the text horizontally
+                  },
+                },
+                "& .MuiFilledInput-underline:before": {
+                  borderBottom: "none", // Remove the default underline before focus
+                },
+                "& .MuiFilledInput-underline:after": {
+                  borderBottom: "none", // Remove the default underline after focus
+                },
+                "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
+                  borderBottom: "none", // Remove underline on hover
+                },
+              }}
+            />
+      
+
+          </Box>
+          <Tooltip title="Search" arrow>
+          
+         <Button sx={{color:"#0063cc"}}>
+                <SearchIcon
+                onClick={()=>{console.log('hi')}}
+                />
+               </Button>
+              </Tooltip>
+   
+
+          </Grid>
+          <Grid
+          xs={3}
+          sx={{
+            display: "flex",
+            justifyContent: "center", // Adjusted to 'flex-end' for right alignment
+            alignItems: "center",
+            flexDirection: "column"
+          
+          }}
+        >
+            <div>
          <Tooltip title="Filter" arrow>
           
       <Button
@@ -317,7 +362,7 @@ console.log(arr)
         onClick={handleClickmenu1}
       >
           
-     <FilterAltIcon sx={{color:'black'}}/>
+     <FilterAltIcon sx={{color:"#0063cc"}}/>
       </Button>
       </Tooltip>
       <Menu
@@ -360,35 +405,7 @@ console.log(arr)
 
       </Menu>
     </div>
-
-         </Grid>
-         <Grid xs={5} sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-
-       
-        <Toolbar>
-         <Box>
-          
-          <Search>
-    
-            <StyledInputBase
-              placeholder="Search Students…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
-          </Box>
-          <Tooltip title="Search" arrow>
-          
-         <Button sx={{color:'black'}}>
-                <SearchIcon
-                onClick={()=>{console.log('hi')}}
-                />
-               </Button>
-              </Tooltip>
-        </Toolbar>
-     
-         </Grid>
-         <Grid xs={2} sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-         <div>
+              <div>
          <Tooltip title="Sort" arrow>
           
       <Button
@@ -398,7 +415,7 @@ console.log(arr)
         aria-expanded={openmenu ? 'true' : undefined}
         onClick={handleClickmenu}
       >
-      <SortIcon sx={{color:'black'}}/>
+      <SortIcon sx={{color:"#0063cc"}}/>
       </Button>
       </Tooltip>    
       <Menu
@@ -454,15 +471,16 @@ console.log(arr)
           }}>Sort By RF</MenuItem>
       </Menu>
     </div>
-    
-         </Grid>
+  
+          </Grid>
+        
    
    
    
 
 
           <Grid item xs={12} sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-          <Grid xs={1}></Grid>
+    
         <Grid  item xs={8}>
           <Box sx={{mx:2}}>
             <FormControl fullWidth>
