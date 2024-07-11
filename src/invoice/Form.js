@@ -13,6 +13,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import EmailIcon from "@mui/icons-material/Email";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
 
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -255,12 +256,15 @@ export default function FormDialog() {
   ];
   return (
     <React.Fragment>
-      <Grid container spacing={2}>
-        <Grid
-          xs={10}
-          sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}
-        >
-          <Box sx={{ width: 400, ml: 4 }}>
+     <Grid container spacing={2}>
+      {/* Left Section */}
+      <Grid item xs={12} sm={4} sx={{
+        display: "flex",
+        justifyContent: "left",
+        alignItems: "center",
+   
+      }}>
+          <Box sx={{ width: 400, ml: 3 }}>
             <TextField
               value={searchname}
               id="filled-hidden-label-small"
@@ -321,16 +325,66 @@ export default function FormDialog() {
             </Button>
           </Tooltip>
         </Grid>
-        <Grid
-          xs={2}
-          sx={{
-            display: "flex",
-            justifyContent: "center", // Adjusted to 'flex-end' for right alignment
-            alignItems: "center",
-            flexDirection: "column"
-          
-          }}
-        >
+        <Grid item xs={12} sm={5} sx={{
+       
+        
+
+        
+      }}>
+  <Box>
+    <FormControl fullWidth>
+      <InputLabel id="demo-simple-select-label">
+        Select Course
+      </InputLabel>
+      <Select
+        onChange={(e) => {
+          handleparent(e);
+        }}
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        label="Status"
+        sx={{ minWidth: '100%', borderRadius: "16px" }}
+      >
+        {coursearr &&
+          coursearr.map((row) => (
+            <MenuItem key={row.name} value={row}>
+              <TableRow
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                }}
+              >
+                <TableCell align="center">{row.Course}</TableCell>
+                <TableCell align="center">{row.Amount}</TableCell>
+                <TableCell align="center">{row.Days}</TableCell>
+                <TableCell align="center">
+                  {row.StartDate && row.StartDate.split("T")[0]}
+                </TableCell>
+                <TableCell align="center">
+                  {row.BatchTime && convertToIST(row.BatchTime)}
+                </TableCell>
+              </TableRow>
+            </MenuItem>
+          ))}
+      </Select>
+    </FormControl>
+  </Box>
+</Grid>
+<Grid item xs={12} sm={3} sx={{
+        display: "flex",
+        justifyContent: "flex-end", // Adjusted for right alignment
+        alignItems: "center",
+      
+      }}>
+        
+          <div>
+          <Button
+       
+        
+       onClick={handleopenclose}
+     >
+     <AddIcon/>
+     </Button>
+          </div>
           <div>
             <Tooltip title="Filter" arrow>
               <Button
@@ -478,60 +532,8 @@ export default function FormDialog() {
             </Menu>
           </div>
         </Grid>
-        <Grid xs={10}>
-          <Box sx={{ mt: 2, ml: 4 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                {" "}
-                Select Course
-              </InputLabel>
-              <Select
-                onChange={(e) => {
-                  handleparent(e);
-                }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Status"
-                variant="filled"
-
-                // sx={{fullWidth}}
-              >
-                {coursearr &&
-                  coursearr.map((row) => (
-                    <MenuItem value={row}>
-                      <TableRow
-                        key={row.name}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell align="center">{row.Course}</TableCell>
-                        <TableCell align="center">{row.Amount}</TableCell>
-
-                        <TableCell align="center">{row.Days}</TableCell>
-
-                        <TableCell align="center">
-                          {row.StartDate && row.StartDate.split("T")[0]}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.BatchTime && convertToIST(row.BatchTime)}
-                        </TableCell>
-                      </TableRow>
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <Button
-            sx={{ mt: 1, ml: 2 }}
-            variant="outlined"
-            onClick={handleopenclose}
-          >
-            Add Invoice
-          </Button>
-        </Grid>
+      
+     
       </Grid>
 
       <Dialog open={open} onClose={handleClose}>

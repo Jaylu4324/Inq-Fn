@@ -48,6 +48,7 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SortIcon from "@mui/icons-material/Sort";
 
 import AddIcon from "@mui/icons-material/Add";
+
 import { Grid } from "@mui/material";
 import axios from "axios";
 
@@ -93,7 +94,7 @@ function Form1() {
   const [value, setValue] = React.useState(0);
 
   const [data, setData] = React.useState({ Date: dayjs(), Course: [] });
-
+  const[type,settype]=React.useState('')
   const [open, setOpen] = React.useState(false);
   const [arr, setArr] = React.useState([]);
   const [reject, setReject] = React.useState([]);
@@ -105,16 +106,6 @@ function Form1() {
     setseearchname(e.target.value);
   };
   console.log(searchname);
-  const [rejectsearchname, setrejectseearchname] = React.useState("");
-  const handlerejectsearchname = (e) => {
-    setrejectseearchname(e.target.value);
-  };
-  console.log(rejectsearchname);
-  const [confirmsearchname, setconfirmseearchname] = React.useState("");
-  const handleconfirmsearchname = (e) => {
-    setconfirmseearchname(e.target.value);
-  };
-  console.log(confirmsearchname);
   
   const handleChange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
@@ -135,7 +126,19 @@ function Form1() {
   const handlechange1 = (event, newValue) => {
     setValue(newValue);
   };
-
+console.log(value)
+React.useEffect(()=>{
+if(value==0){
+  settype('onGoing')
+}
+else if(value==1){
+  settype('Reject')
+}
+else {
+  settype('Confirm')
+}
+},[value])
+console.log(type)
   const Co = ["React", "Node", "C", "C++", "Python", "Mern Stack", "AWS"];
   const handlecourse = (e) => {
     let value = e.target.value;
@@ -261,7 +264,9 @@ function Form1() {
   const handleClosemenu1 = () => {
     setAnchorEl1(null);
   };
-
+console.log(arr)
+console.log(reject)
+console.log(confirm)
   const montharr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const monthname = [
     "January",
@@ -281,36 +286,14 @@ function Form1() {
   return (
     <>
       <React.Fragment>
-        <Container>
-          <Grid container spacing={2} alignItems="flex-start">
-            <Grid item xs={2}>
-              <Button variant="outlined" onClick={handleopen}>
-                <AddIcon /> Inquiry
-              </Button>
-            </Grid>
-          </Grid>
-
-          <Box>
-            <Box sx={{ display: "flex", justifyContent: "center",mb:2 }}>
-              <Tabs
-                value={value}
-                onChange={handlechange1}
-                aria-label="basic tabs example"
-              >
-                <Tab label="onGoing" {...a11yProps(0)} />
-                <Tab label="Reject" {...a11yProps(1)} />
-                <Tab label="Confirmed" {...a11yProps(2)} />
-              </Tabs>
-            </Box>
-
-            <CustomTabPanel value={value} index={0}>
-            <Grid container spacing={2}>
+      <Grid container spacing={2}>
                 <Grid
-                  xs={10}
+                  xs={9}
                   sx={{
                     display: "flex",
-                    justifyContent: "left",
-                    alignItems: "center",
+                    justifyContent: "center",
+                    alignItems: "flex-start"
+                 
                   }}
                 >
                   <Box sx={{ width: 400, ml: 2 }}>
@@ -318,7 +301,7 @@ function Form1() {
                       value={searchname}
 
                       id="filled-hidden-label-small"
-                      placeholder="Search Ongoing Inquiries..."
+                      placeholder="Search Inquiries..."
                       variant="filled"
                       size="small"
                       onChange={handlesearchname}
@@ -355,18 +338,30 @@ function Form1() {
                       }}
                     />
                   </Box>
-
+                  <Box sx={{mt:1}}>
                   <Tooltip title="Search" arrow>
                     <Button sx={{ color: "#0063cc" }}>
                       <SearchIcon
                       onClick={() => {
                         axios
                           .get(
-                            `http://localhost:5000/inquiry/onGoingsearchstu?FullName=${searchname}`
-                          )
+                            `http://localhost:5000/inquiry/commansearchstu?FullName=${searchname}&type=${type}`
+                          )                                        
                           .then((data) => {
                             console.log(data);
-                            setArr(data.data.filterdata);
+                            if(type=='onGoing')
+                            {
+                              setArr(data.data.filterdata)
+                              
+                            }
+                            else if(type=='Reject')
+                            {
+                              setReject(data.data.filterdata)
+                            }
+                            else{
+                              setconfirm(data.data.filterdata)
+                            }
+                            console.log('coorect')
                             setseearchname("");
 
                           })
@@ -378,15 +373,24 @@ function Form1() {
                       />
                     </Button>
                   </Tooltip>
+                  </Box>
                 </Grid>
                 <Grid
-                  xs={2}
+                  xs={3}
                   sx={{
                     display: "flex",
                     justifyContent: "center", // Adjusted to 'flex-end' for right alignment
-                    alignItems: "center",
+                    alignItems: "center"
+                 
                   }}
                 >
+                    <div>
+              <Tooltip title="Add Inquiry" arrow>
+              <Button  onClick={handleopen}>
+                <AddIcon /> 
+              </Button>
+              </Tooltip>
+              </div>
                   <div>
                     <Tooltip title="Filter" arrow>
                       <Button
@@ -412,17 +416,30 @@ function Form1() {
                 <MenuItem
                   onClick={() => {
                     console.log("clicked1");
-
                     axios
                       .get(
-                        `http://localhost:5000/inquiry/coursefillbymonth?month=${montharr[index]}&sort=${order1}`
+                        `http://localhost:5000/inquiry/coursefillbymonth?month=${montharr[index]}&sort=${order1}&type=${type}`
                       )
                       .then((data) => {
-                        console.log('click 2')
-                        console.log("API Response:", data);
-                        setArr(data.data);
+                        console.log('click2')
+                        console.log(data)
+                        if(type=='onGoing')
+                        {
+                          setArr(data.data)
+                          setorder1(order1 === 1 ? -1 : 1);
+                        }
+                        else if(type=='Reject')
+                        {
+                          setReject(data.data)
+                          setorder1(order1 === 1 ? -1 : 1);
+                        }
+                        else{
+                          setconfirm(data.data)
+                          setorder1(order1 === 1 ? -1 : 1);
+                        }
+                        console.log('coorect')
+                    
 
-                        setorder1(order1 === 1 ? -1 : 1);
                       })
                       .catch((error) => {
                         console.error("API Request Error:", error);
@@ -450,7 +467,7 @@ function Form1() {
                         <SortIcon sx={{ color: "#0063cc" }} />
                       </Button>
                     </Tooltip>
-                    {/* <Menu
+                     <Menu
               id="basic-menu"
               anchorEl={anchorEl}
               open={openmenu}
@@ -461,8 +478,22 @@ function Form1() {
             >
               <MenuItem
                 onClick={() => {
-                  setParent({});
-                  handleClosemenu();
+                  axios.get(`http://localhost:5000/inquiry/Alldata?key=${type}`)
+                  .then((data)=>{
+                    console.log(data)
+                    if(type=='onGoing')
+                      {
+                        setArr(data.data.allData)
+                      }
+                      else if(type=='Reject')
+                      {
+                        setReject(data.data.allData)
+                      }
+                      else{
+                        setconfirm(data.data.allData)
+                        
+                      }
+                  })
                 }}
               >
                 All
@@ -471,19 +502,32 @@ function Form1() {
               <MenuItem
                 onClick={() => {
                   axios
-                    .get(
-                      `http://localhost:5000/invoice/filterinvocedate?key=invoiceDate&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
+                  .get(
+                    `http://localhost:5000/inquiry/coursefillbydate?key=Date&sortby=${order}&type=${type}`
+                  )
+                  .then((data) => {
+                   
+                    console.log(data)
+                    if(type=='onGoing')
+                    {
+                      setArr(data.data.data)
+                      setorder(order === 1 ? -1 : 1);
+                    }
+                    else if(type=='Reject')
+                    {
+                      setReject(data.data.data)
+                      setorder(order === 1 ? -1 : 1);
+                    }
+                    else{
+                      setconfirm(data.data.data)
+                      setorder(order === 1 ? -1 : 1);
+                    }
+                  
+
+                  })
+                  .catch((error) => {
+                    console.error("API Request Error:", error);
+                  });
                   handleClosemenu();
                 }}
               >
@@ -492,51 +536,65 @@ function Form1() {
               <MenuItem
                 onClick={() => {
                   axios
-                    .get(
-                      `http://localhost:5000/invoice/filterinvocedate?key=Name&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
+                  .get(
+                    `http://localhost:5000/inquiry/coursefillbydate?key=FullName&sortby=${order}&type=${type}`
+                  )
+                  .then((data) => {
+                   
+                    console.log(data)
+                    if(type=='onGoing')
+                    {
+                      setArr(data.data.data)
+                      setorder(order === 1 ? -1 : 1);
+                    }
+                    else if(type=='Reject')
+                    {
+                      setReject(data.data.data)
+                      setorder(order === 1 ? -1 : 1);
+                    }
+                    else{
+                      setconfirm(data.data.data)
+                      setorder(order === 1 ? -1 : 1);
+                    }
+                  
+
+                  })
+                  .catch((error) => {
+                    console.error("API Request Error:", error);
+                  });
                   handleClosemenu();
                 }}
               >
                 Sort By Name
               </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/student/fillter?key=Rfees&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  handleClosemenu();
-                }}
-              >
-                Sort By RF
-              </MenuItem>
+              
             </Menu>
-             */}
+             
                   </div>
+                
+
+
                 </Grid>
               </Grid>
-                  <Box sx={{mt:2}}>
+              
+        <Container>
+
+          <Box>
+            <Box sx={{ display: "flex", justifyContent: "center",mt:2}}>
+              <Tabs
+                value={value}
+                onChange={handlechange1}
+                aria-label="basic tabs example"
+              >
+                <Tab label="onGoing" {...a11yProps(0)} />
+                <Tab label="Reject" {...a11yProps(1)} />
+                <Tab label="Confirmed" {...a11yProps(2)} />
+              </Tabs>
+            </Box>
+
+            <CustomTabPanel value={value} index={0}>
+            
+                  <Box>
                     <TableContainer component={Paper}>
                       <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
@@ -690,240 +748,9 @@ function Form1() {
             </CustomTabPanel>
 
             <CustomTabPanel value={value} index={1}>
-              <Grid container spacing={2}>
-                <Grid
-                  xs={10}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "left",
-                    alignItems: "center",
-                  }}
-                >
-                  <Box sx={{ width: 400, ml: 2 }}>
-                    <TextField
-                      value={rejectsearchname}
+            
 
-                      id="filled-hidden-label-small"
-                      placeholder="Search Rejected Inquiries..."
-                      variant="filled"
-                      size="small"
-                      onChange={handlerejectsearchname}
-
-                      sx={{
-                        width: "100%",
-                        maxWidth: 400,
-                        "& .MuiFilledInput-root": {
-                          borderRadius: "16px",
-                          border: "2px solid #0063cc",
-                          backgroundColor: "white",
-                          padding: "0 16px", // Ensure background color is consistent
-                          "&:hover": {
-                            backgroundColor: "white",
-                          },
-                          "&.Mui-focused": {
-                            backgroundColor: "white",
-                          },
-                          "& input": {
-                            padding: "12px 0", // Adjust vertical padding to center text
-                            // Center the text horizontally
-                          },
-                        },
-                        "& .MuiFilledInput-underline:before": {
-                          borderBottom: "none", // Remove the default underline before focus
-                        },
-                        "& .MuiFilledInput-underline:after": {
-                          borderBottom: "none", // Remove the default underline after focus
-                        },
-                        "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before":
-                          {
-                            borderBottom: "none", // Remove underline on hover
-                          },
-                      }}
-                    />
-                  </Box>
-
-                  <Tooltip title="Search" arrow>
-                    <Button sx={{ color: "#0063cc" }}>
-                      <SearchIcon
-                      onClick={() => {
-                        axios
-                          .get(
-                            `http://localhost:5000/inquiry/rejectsearchstu?FullName=${rejectsearchname}`
-                          )
-                          .then((data) => {
-                            console.log(data);
-                            setReject(data.data.filterdata);
-                            setrejectseearchname('')
-                          })
-                          .catch((err) => {
-                            console.log(err);
-                          });
-                      }}
-
-                      />
-                    </Button>
-                  </Tooltip>
-                </Grid>
-                <Grid
-                  xs={2}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center", // Adjusted to 'flex-end' for right alignment
-                    alignItems: "center",
-                  }}
-                >
-                  <div>
-                    <Tooltip title="Filter" arrow>
-                      <Button
-                        id="basic-button"
-                        aria-controls={openmenu1 ? "basic-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={openmenu1 ? "true" : undefined}
-                        onClick={handleClickmenu1}
-                      >
-                        <FilterAltIcon sx={{ color: "#0063cc" }} />
-                      </Button>
-                    </Tooltip>
-                    {/* <Menu
-              id="basic-menu"
-              anchorEl={anchorEl1}
-              open={openmenu1}
-              onClose={handleClosemenu1}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              {montharr.map((val, index) => (
-                <MenuItem
-                  onClick={() => {
-                    console.log("clicked1");
-
-                    axios
-                      .get(
-                        `http://localhost:5000/invoice/fillterinvocemonth?courseId=${
-                          parent._id ? parent._id : ""
-                        }&month=${montharr[index]}&sort=${order1}`
-                      )
-                      .then((data) => {
-                        console.log("API Response:", data);
-                        setArr(data.data);
-
-                        setorder1(order1 === 1 ? -1 : 1);
-                      })
-                      .catch((error) => {
-                        console.error("API Request Error:", error);
-                      });
-
-                    handleClosemenu1();
-                  }}
-                >
-                  {monthname[index]}
-                </MenuItem>
-              ))}
-            </Menu>
-             */}
-                  </div>
-
-                  <div>
-                    <Tooltip title="Sort" arrow>
-                      <Button
-                        id="basic-button"
-                        aria-controls={openmenu ? "basic-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={openmenu ? "true" : undefined}
-                        onClick={handleClickmenu}
-                      >
-                        <SortIcon sx={{ color: "#0063cc" }} />
-                      </Button>
-                    </Tooltip>
-                    {/* <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={openmenu}
-              onClose={handleClosemenu}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem
-                onClick={() => {
-                  setParent({});
-                  handleClosemenu();
-                }}
-              >
-                All
-              </MenuItem>
-
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/invoice/filterinvocedate?key=invoiceDate&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  handleClosemenu();
-                }}
-              >
-                Sort By Date
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/invoice/filterinvocedate?key=Name&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  handleClosemenu();
-                }}
-              >
-                Sort By Name
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/student/fillter?key=Rfees&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  handleClosemenu();
-                }}
-              >
-                Sort By RF
-              </MenuItem>
-            </Menu>
-             */}
-                  </div>
-                </Grid>
-              </Grid>
-
-              <Box sx={{ mt: 2 }}>
+              <Box>
                 <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -1013,241 +840,10 @@ function Form1() {
             </CustomTabPanel>
 
             <CustomTabPanel value={value} index={2}>
-            <Grid container spacing={2}>
-                <Grid
-                  xs={10}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "left",
-                    alignItems: "center",
-                  }}
-                >
-                  <Box sx={{ width: 400, ml: 2 }}>
-                    <TextField
-                      value={confirmsearchname}
-
-                      id="filled-hidden-label-small"
-                      placeholder="Search Confirmed Inquiries..."
-                      variant="filled"
-                      size="small"
-                      onChange={handleconfirmsearchname}
-
-                      sx={{
-                        width: "100%",
-                        maxWidth: 400,
-                        "& .MuiFilledInput-root": {
-                          borderRadius: "16px",
-                          border: "2px solid #0063cc",
-                          backgroundColor: "white",
-                          padding: "0 16px", // Ensure background color is consistent
-                          "&:hover": {
-                            backgroundColor: "white",
-                          },
-                          "&.Mui-focused": {
-                            backgroundColor: "white",
-                          },
-                          "& input": {
-                            padding: "12px 0", // Adjust vertical padding to center text
-                            // Center the text horizontally
-                          },
-                        },
-                        "& .MuiFilledInput-underline:before": {
-                          borderBottom: "none", // Remove the default underline before focus
-                        },
-                        "& .MuiFilledInput-underline:after": {
-                          borderBottom: "none", // Remove the default underline after focus
-                        },
-                        "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before":
-                          {
-                            borderBottom: "none", // Remove underline on hover
-                          },
-                      }}
-                    />
-                  </Box>
-
-                  <Tooltip title="Search" arrow>
-                    <Button sx={{ color: "#0063cc" }}>
-                      <SearchIcon
-                      onClick={() => {
-                        axios
-                          .get(
-                            `http://localhost:5000/inquiry/confirmsearchstu?FullName=${confirmsearchname}`
-                          )
-                          .then((data) => {
-                            console.log(data);
-                            setconfirm(data.data.filterdata)
-                            setconfirmseearchname('')
-                          })
-                          .catch((err) => {
-                            console.log(err);
-                          });
-                      }}
-
-                      />
-                    </Button>
-                  </Tooltip>
-                </Grid>
-                <Grid
-                  xs={2}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center", // Adjusted to 'flex-end' for right alignment
-                    alignItems: "center",
-                  }}
-                >
-                  <div>
-                    <Tooltip title="Filter" arrow>
-                      <Button
-                        id="basic-button"
-                        aria-controls={openmenu1 ? "basic-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={openmenu1 ? "true" : undefined}
-                        onClick={handleClickmenu1}
-                      >
-                        <FilterAltIcon sx={{ color: "#0063cc" }} />
-                      </Button>
-                    </Tooltip>
-                    {/* <Menu
-              id="basic-menu"
-              anchorEl={anchorEl1}
-              open={openmenu1}
-              onClose={handleClosemenu1}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              {montharr.map((val, index) => (
-                <MenuItem
-                  onClick={() => {
-                    console.log("clicked1");
-
-                    axios
-                      .get(
-                        `http://localhost:5000/invoice/fillterinvocemonth?courseId=${
-                          parent._id ? parent._id : ""
-                        }&month=${montharr[index]}&sort=${order1}`
-                      )
-                      .then((data) => {
-                        console.log("API Response:", data);
-                        setArr(data.data);
-
-                        setorder1(order1 === 1 ? -1 : 1);
-                      })
-                      .catch((error) => {
-                        console.error("API Request Error:", error);
-                      });
-
-                    handleClosemenu1();
-                  }}
-                >
-                  {monthname[index]}
-                </MenuItem>
-              ))}
-            </Menu>
-             */}
-                  </div>
-
-                  <div>
-                    <Tooltip title="Sort" arrow>
-                      <Button
-                        id="basic-button"
-                        aria-controls={openmenu ? "basic-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={openmenu ? "true" : undefined}
-                        onClick={handleClickmenu}
-                      >
-                        <SortIcon sx={{ color: "#0063cc" }} />
-                      </Button>
-                    </Tooltip>
-                    {/* <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={openmenu}
-              onClose={handleClosemenu}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem
-                onClick={() => {
-                  setParent({});
-                  handleClosemenu();
-                }}
-              >
-                All
-              </MenuItem>
-
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/invoice/filterinvocedate?key=invoiceDate&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  handleClosemenu();
-                }}
-              >
-                Sort By Date
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/invoice/filterinvocedate?key=Name&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  handleClosemenu();
-                }}
-              >
-                Sort By Name
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/student/fillter?key=Rfees&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  handleClosemenu();
-                }}
-              >
-                Sort By RF
-              </MenuItem>
-            </Menu>
-             */}
-                  </div>
-                </Grid>
-              </Grid>
+          
 
 
-                  <Box sx={{mt:2}}>
+                  <Box>
                     <TableContainer component={Paper}>
                       <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
