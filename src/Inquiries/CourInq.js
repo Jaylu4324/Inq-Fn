@@ -366,7 +366,7 @@ function Form1() {
                           )
                           .then((data) => {
                             console.log(data);
-                            setArr(data.data.data);
+                            setArr(data.data.filterdata);
                             setseearchname("");
 
                           })
@@ -752,7 +752,7 @@ function Form1() {
                           )
                           .then((data) => {
                             console.log(data);
-                            setReject(data.data.data);
+                            setReject(data.data.filterdata);
                             setrejectseearchname('')
                           })
                           .catch((err) => {
@@ -1075,7 +1075,7 @@ function Form1() {
                           )
                           .then((data) => {
                             console.log(data);
-                            setconfirm(data.data.data)
+                            setconfirm(data.data.filterdata)
                             setconfirmseearchname('')
                           })
                           .catch((err) => {
