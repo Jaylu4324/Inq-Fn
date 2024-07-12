@@ -1,14 +1,24 @@
 import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
+import AddIcon from "@mui/icons-material/Add";
 
 import Dialog from "@mui/material/Dialog";
-import { Box, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, FilledInput } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+  FilledInput,
+} from "@mui/material";
 import Alert from "@mui/material/Alert";
 import EditIcon from "@mui/icons-material/Edit";
-import utc from 'dayjs/plugin/utc';
+import utc from "dayjs/plugin/utc";
 import TableCell from "@mui/material/TableCell";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Menu from '@mui/material/Menu';
+import Menu from "@mui/material/Menu";
 
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -25,10 +35,9 @@ import Tooltip from "@mui/material/Tooltip";
 
 import dayjs from "dayjs";
 
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-
-import SortIcon from '@mui/icons-material/Sort';
+import SortIcon from "@mui/icons-material/Sort";
 import axios from "axios";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -36,15 +45,13 @@ import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha } from "@mui/material/styles";
 
-import Toolbar from '@mui/material/Toolbar';
+import Toolbar from "@mui/material/Toolbar";
 
+import InputBase from "@mui/material/InputBase";
 
-
-import InputBase from '@mui/material/InputBase';
-
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 function convertToIST(utcDateStr) {
   const date = new Date(utcDateStr);
 
@@ -62,22 +69,20 @@ function convertToIST(utcDateStr) {
 function SD() {
   const [id, setId] = React.useState();
   const [data, setData] = React.useState({
-    
     Date: dayjs(),
     btime: "",
     days: [],
   });
   const [arr, setarr] = React.useState([]);
   const [update, doupdate] = React.useState(false);
-  const[coursearr,setcoursearr]=React.useState([])
+  const [coursearr, setcoursearr] = React.useState([]);
   const [parent, setParent] = React.useState({});
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
     severity: "",
   });
-  
-  
+
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -105,10 +110,9 @@ function SD() {
     setData({ ...data, days: val });
   };
 
-  
   const handleparent = (e) => {
     setParent({ ...e.target.value });
-  }
+  };
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -121,47 +125,47 @@ function SD() {
     width: 1,
   });
   const [open, setOpen] = React.useState(false);
-const[order,setorder]=React.useState(1)
-const[order1,setorder1]=React.useState(1)
+  const [order, setorder] = React.useState(1);
+  const [order1, setorder1] = React.useState(1);
 
   const handlechange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
   };
 
   React.useEffect(() => {
-    axios.get('http://localhost:5000/batchEvent/DisplayBevent')
-    .then((data)=>{
-    setcoursearr(data.data.data)
-    console.log('arr is set')
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
+    axios
+      .get("http://localhost:5000/batchEvent/DisplayBevent")
+      .then((data) => {
+        setcoursearr(data.data.data);
+        console.log("arr is set");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
-    console.log(coursearr)
-    if(!parent._id){
+    console.log(coursearr);
+    if (!parent._id) {
       axios
-        .get('http://localhost:5000/student/Alldata')
+        .get("http://localhost:5000/student/Alldata")
         .then((data) => {
           setarr(data.data.data);
         })
         .catch((err) => {
           console.log(err);
         });
-      }
-      
-    if(parent._id){
-    axios
-      .get(`http://localhost:5000/student/allStuden?id=${parent._id}`)
-      .then((data) => {
-        setarr(data.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
     }
 
-  }, [parent,update]);
+    if (parent._id) {
+      axios
+        .get(`http://localhost:5000/student/allStuden?id=${parent._id}`)
+        .then((data) => {
+          setarr(data.data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [parent, update]);
 
   const handlesubmit = () => {
     if (id) {
@@ -175,16 +179,19 @@ const[order1,setorder1]=React.useState(1)
             message: "Updated Successfully",
             severity: "success",
           });
-          setTimeout(()=>{
+          setTimeout(() => {
             setAlertSuccess("");
-          },3000);
+          }, 3000);
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
       axios
-        .post("http://localhost:5000/student/stuadd",{...data,CourseId:parent._id})
+        .post("http://localhost:5000/student/stuadd", {
+          ...data,
+          CourseId: parent._id,
+        })
         .then((data) => {
           console.log("data posted", data);
           doupdate(!update);
@@ -193,9 +200,9 @@ const[order1,setorder1]=React.useState(1)
             message: "Added Successfully",
             severity: "success",
           });
-          setTimeout(()=>{
+          setTimeout(() => {
             setAlertSuccess("");
-          },3000);
+          }, 3000);
         })
         .catch((err) => {
           console.log(err);
@@ -203,19 +210,21 @@ const[order1,setorder1]=React.useState(1)
     }
 
     setOpen(!open);
-    setData({})
-    setId('')
+    setData({});
+    setId("");
   };
+
 
   const handleFileUpload = (event) => {
     var reader = new FileReader();
-    var baseString;
     reader.onloadend = function () {
-      baseString = reader.result;
-      setData({ ...data, baseString });
+      const baseString = reader.result;
+      setData((prevData) => ({ ...prevData, baseString }));
     };
     reader.readAsDataURL(event.target.files[0]);
   };
+  console.log(data.baseString);
+
   const handleopen = () => {
     setOpen(!open);
   };
@@ -230,9 +239,9 @@ const[order1,setorder1]=React.useState(1)
           message: "Deleted Successfully",
           severity: "success",
         });
-        setTimeout(()=>{
+        setTimeout(() => {
           setAlertSuccess("");
-        },3000);
+        }, 3000);
       })
       .catch((err) => {
         console.log(err);
@@ -247,9 +256,11 @@ const[order1,setorder1]=React.useState(1)
   const handleDateChange = (val) => {
     const selectedDate = new Date(val);
     const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
-    const adjustedDate = new Date(selectedDate.getTime() + timezoneOffset * 60 * 1000);
+    const adjustedDate = new Date(
+      selectedDate.getTime() + timezoneOffset * 60 * 1000
+    );
     const formattedDate = adjustedDate.toISOString();
-  
+
     setData({ ...data, Date: formattedDate });
   };
 
@@ -257,7 +268,6 @@ const[order1,setorder1]=React.useState(1)
   const openmenu = Boolean(anchorEl);
   const handleClickmenu = (event) => {
     setAnchorEl(event.currentTarget);
-    
   };
 
   const handleClosemenu = () => {
@@ -267,27 +277,41 @@ const[order1,setorder1]=React.useState(1)
   const openmenu1 = Boolean(anchorEl1);
   const handleClickmenu1 = (event) => {
     setAnchorEl1(event.currentTarget);
-    
   };
 
   const handleClosemenu1 = () => {
     setAnchorEl1(null);
   };
 
-const montharr=[1,2,3,4,5,6,7,8,9,10,11,12]
-const monthname=['January','February','March','April','May','June','July','August','September','October','November','December']
-console.log(arr)
-          
+  const montharr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const monthname = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  console.log(arr);
+
   return (
     <React.Fragment>
-          <Grid container spacing={2} sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-          <Grid
-          xs={8}
-          sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}
+      <Grid
+        container
+        spacing={2}
+        
+      >
+        <Grid
+       xs={12} sm={4} 
+          sx={{ display: "flex", justifyContent: "center", alignItems: "center"}}
         >
-
-     
-<Box sx={{ width: 400, ml: 4 }}>
+          <Box sx={{ width: 400,ml:3,mt:2 }}>
             <TextField
               // value={searchname}
 
@@ -327,215 +351,229 @@ console.log(arr)
                 },
               }}
             />
-      
-
           </Box>
+          <Box sx={{mt:2}}>
           <Tooltip title="Search" arrow>
-          
-         <Button sx={{color:"#0063cc"}}>
-                <SearchIcon
-                onClick={()=>{console.log('hi')}}
-                />
-               </Button>
-              </Tooltip>
-   
-
-          </Grid>
-          <Grid
-          xs={3}
-          sx={{
-            display: "flex",
-            justifyContent: "center", // Adjusted to 'flex-end' for right alignment
-            alignItems: "center",
-            flexDirection: "column"
-          
-          }}
-        >
-            <div>
-         <Tooltip title="Filter" arrow>
-          
-      <Button
-        id="basic-button"
-        aria-controls={openmenu1 ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={openmenu1 ? 'true' : undefined}
-        onClick={handleClickmenu1}
-      >
-          
-     <FilterAltIcon sx={{color:"#0063cc"}}/>
-      </Button>
-      </Tooltip>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl1}
-        open={openmenu1}
-        onClose={handleClosemenu1}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        {montharr.map((val,index)=>(
-
-        
-        <MenuItem onClick={()=>{
-
-          axios.get(`http://localhost:5000/student/filtermonth?perentId=${parent._id?parent._id:''}&month=${montharr[index]}&sort=${order1}`)
-          .then((data)=>{
-            console.log(data)
-            setarr(data.data)
-    
-            setorder1(order1==1?-1:1)
-          })
-         
-          .catch((err)=>{
-            console.log(err)
-          })
-          handleClosemenu1()
-          
-          }}>
-            
-
-{monthname[index]}
-
-          </MenuItem>))}
-        
-      
-
-        
-
-      </Menu>
-    </div>
-              <div>
-         <Tooltip title="Sort" arrow>
-          
-      <Button
-        id="basic-button"
-        aria-controls={openmenu ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={openmenu ? 'true' : undefined}
-        onClick={handleClickmenu}
-      >
-      <SortIcon sx={{color:"#0063cc"}}/>
-      </Button>
-      </Tooltip>    
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={openmenu}
-        onClose={handleClosemenu}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        <MenuItem onClick={()=>{
-          setParent({})
-          handleClosemenu()
-        
-          }}>All</MenuItem>
-
-        <MenuItem onClick={()=>{
-          axios.get(`http://localhost:5000/student/fillter?key=Date&sortby=${order}&courseid=${parent._id?parent._id:''}`)
-          .then((data)=>{
-            console.log(data)
-            setorder(order==1?-1:1)
-              setarr(data.data.data)
-          })
-          .catch((err)=>{
-            console.log(err)
-          })
-          handleClosemenu()
-          
-          }}>Sort By Date</MenuItem>
-        <MenuItem onClick={()=>{
-           axios.get(`http://localhost:5000/student/fillter?key=Name&sortby=${order}&courseid=${parent._id?parent._id:''}`)
-           .then((data)=>{
-             console.log(data)
-             setorder(order==1?-1:1)
-               setarr(data.data.data)
-           })
-           .catch((err)=>{
-             console.log(err)
-           })
-          handleClosemenu()}}>Sort By Name</MenuItem>
-        <MenuItem onClick={()=>{
-           axios.get(`http://localhost:5000/student/fillter?key=Rfees&sortby=${order}&courseid=${parent._id?parent._id:''}`)
-           .then((data)=>{
-             console.log(data)
-             setorder(order==1?-1:1)
-               setarr(data.data.data)
-           })
-           .catch((err)=>{
-             console.log(err)
-           })
-          handleClosemenu()
-          }}>Sort By RF</MenuItem>
-      </Menu>
-    </div>
-  
-          </Grid>
-        
-   
-   
-   
-
-
-          <Grid item xs={12} sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-    
-        <Grid  item xs={8}>
-          <Box sx={{mx:2}}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                {" "}
-                Select Course
-              </InputLabel>
-              <Select
-              onChange={(e) => {
-                handleparent(e);
-              }}
-              
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Status"
-                variant="filled"
-                renderValue={(data)=>{
-                 
-                  return parent._id&&data.Course||""}}
-
-              >
-                {coursearr &&
-                  coursearr.map((row) => (
-                    <MenuItem key={row._id} value={row}>
-                      <TableRow>
-                  <TableCell align="center">{row.Course}</TableCell>
-                  <TableCell align="center">{row.Amount}</TableCell>
-                  <TableCell align="center">{row.Days}</TableCell>
-                  <TableCell align="center">{row.StartDate && row.StartDate.split("T")[0]}</TableCell>
-                  <TableCell align="center">{row.BatchTime && convertToIST(row.BatchTime)}</TableCell>
-                  </TableRow>
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
+            <Button sx={{ color: "#0063cc" }}>
+              <SearchIcon
+                onClick={() => {
+                  console.log("hi");
+                }}
+              />
+            </Button>
+          </Tooltip>
           </Box>
         </Grid>
-      
-        <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Button
-          sx={{my:1}}
-            variant="outlined"
-            onClick={() => {
-              handleopen();
-            }}
-          >
-            Add Student
-          </Button>
-        </Grid>
-   
+        <Grid
+           item xs={12} sm={5}
+
+        >
+           <Box sx={{ mx: 2 }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  {" "}
+                  Select Course
+                </InputLabel>
+                <Select
+                  onChange={(e) => {
+                    handleparent(e);
+                  }}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Status"
+                  sx={{ minWidth: '100%', borderRadius: "16px", border: "2px solid #0063cc"
+
+                   }}
+       
+                  renderValue={(data) => {
+                    return (parent._id && data.Course) || "";
+                  }}
+                >
+                  {coursearr &&
+                    coursearr.map((row) => (
+                      <MenuItem key={row._id} value={row}>
+                        <TableRow>
+                          <TableCell align="center">{row.Course}</TableCell>
+                          <TableCell align="center">{row.Amount}</TableCell>
+                          <TableCell align="center">{row.Days}</TableCell>
+                          <TableCell align="center">
+                            {row.StartDate && row.StartDate.split("T")[0]}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.BatchTime && convertToIST(row.BatchTime)}
+                          </TableCell>
+                        </TableRow>
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+            </Box>
+         
         </Grid>
 
+          <Grid item xs={12} sm={3} sx={{ display: "flex",
+        justifyContent: "flex-end", // Adjusted for right alignment
+        alignItems: "center",}}>
+          
+          <Tooltip title="Add Student Details" arrow>
+            <Button
+              sx={{ my: 1 }}
+        
+              onClick={() => {
+                handleopen();
+              }}
+            >
+        <AddIcon/>
+            </Button>
+            </Tooltip>
+          <div>
+            <Tooltip title="Filter" arrow>
+              <Button
+                id="basic-button"
+                aria-controls={openmenu1 ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={openmenu1 ? "true" : undefined}
+                onClick={handleClickmenu1}
+              >
+                <FilterAltIcon sx={{ color: "#0063cc" }} />
+              </Button>
+            </Tooltip>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl1}
+              open={openmenu1}
+              onClose={handleClosemenu1}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              {montharr.map((val, index) => (
+                <MenuItem
+                  onClick={() => {
+                    axios
+                      .get(
+                        `http://localhost:5000/student/filtermonth?perentId=${
+                          parent._id ? parent._id : ""
+                        }&month=${montharr[index]}&sort=${order1}`
+                      )
+                      .then((data) => {
+                        console.log(data);
+                        setarr(data.data);
+
+                        setorder1(order1 == 1 ? -1 : 1);
+                      })
+
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                    handleClosemenu1();
+                  }}
+                >
+                  {monthname[index]}
+                </MenuItem>
+              ))}
+            </Menu>
+          </div>
+          <div>
+            <Tooltip title="Sort" arrow>
+              <Button
+                id="basic-button"
+                aria-controls={openmenu ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={openmenu ? "true" : undefined}
+                onClick={handleClickmenu}
+              >
+                <SortIcon sx={{ color: "#0063cc" }} />
+              </Button>
+            </Tooltip>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={openmenu}
+              onClose={handleClosemenu}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem
+                onClick={() => {
+                  setParent({});
+                  handleClosemenu();
+                }}
+              >
+                All
+              </MenuItem>
+
+              <MenuItem
+                onClick={() => {
+                  axios
+                    .get(
+                      `http://localhost:5000/student/fillter?key=Date&sortby=${order}&courseid=${
+                        parent._id ? parent._id : ""
+                      }`
+                    )
+                    .then((data) => {
+                      console.log(data);
+                      setorder(order == 1 ? -1 : 1);
+                      setarr(data.data.data);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                  handleClosemenu();
+                }}
+              >
+                Sort By Date
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  axios
+                    .get(
+                      `http://localhost:5000/student/fillter?key=Name&sortby=${order}&courseid=${
+                        parent._id ? parent._id : ""
+                      }`
+                    )
+                    .then((data) => {
+                      console.log(data);
+                      setorder(order == 1 ? -1 : 1);
+                      setarr(data.data.data);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                  handleClosemenu();
+                }}
+              >
+                Sort By Name
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  axios
+                    .get(
+                      `http://localhost:5000/student/fillter?key=Rfees&sortby=${order}&courseid=${
+                        parent._id ? parent._id : ""
+                      }`
+                    )
+                    .then((data) => {
+                      console.log(data);
+                      setorder(order == 1 ? -1 : 1);
+                      setarr(data.data.data);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                  handleClosemenu();
+                }}
+              >
+                Sort By RF
+              </MenuItem>
+            </Menu>
+          </div>
+          </Grid>
+
+      
       </Grid>
-    
-    
+
       <Dialog
         open={open}
         PaperProps={{
@@ -615,49 +653,14 @@ console.log(arr)
             variant="filled"
             value={data.AcademicCourse}
             fullWidth
-            sx={{ mb: 2 }}
+            sx={{ mb: 1 }}
             onChange={(e) => {
               handlechange(e, "AcademicCourse");
             }}
           />
 
-          <TextField
-            id="outlined-basic"
-            label="Total Fees"
-            type="Number"
-            value={data.Tfees}
-            variant="filled"
-            fullWidth
-            sx={{ mb: 2 }}
-            onChange={(e) => {
-              handlechange(e, "Tfees");
-            }}
-          />
-         
 
-         <Box sx={{mb: 2 }}>
-            <FormControl variant="filled" sx={{width:530}}>
-              <InputLabel id="demo-simple-select-label">Course</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Course"
-                value={data.course}
-                onChange={(e) => {
-                  handlechange(e, "course");
-                }}
-              >
-                <MenuItem value={"React"}>React</MenuItem>
-                <MenuItem value={"Node"}>Node</MenuItem>
-                <MenuItem value={"AWS"}>AWS</MenuItem>
-                <MenuItem value={"C"}>C</MenuItem>
-                <MenuItem value={"C++"}>C++</MenuItem>
-                <MenuItem value={"Python"}>Python</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-          
-          <Box sx={{ my: 2 }}>
+          <Box sx={{mb:1}}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
@@ -665,20 +668,20 @@ console.log(arr)
                   slotProps={{ textField: { variant: "filled" } }}
                   onChange={handleDateChange}
                   defaultValue={id ? dayjs(data.Date) : null}
-                  sx={{ width: 530 }}
+                  sx={{ width: 530}}
                   fullWidth
                 ></DatePicker>
               </DemoContainer>
             </LocalizationProvider>
           </Box>
-          <box sx={{ mt: 3 }}>
+          <Box>
             <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
               <DemoContainer components={["TimePicker"]} fullWidth>
                 <TimePicker
                   label="Batch Timings"
                   defaultValue={id ? dayjs(data.btime) : null}
                   slotProps={{ textField: { variant: "filled" } }}
-                  sx={{ width: 530 }}
+                  sx={{ width: 530,mb:1 }}
                   fullWidth
                   onChange={(val) => {
                     setData({ ...data, btime: val });
@@ -686,10 +689,10 @@ console.log(arr)
                 />
               </DemoContainer>
             </LocalizationProvider>
-          </box>
+          </Box>
 
           <Box>
-            <FormControl variant="filled" sx={{ width: 260, mt: 3 }}>
+            <FormControl variant="filled" sx={{ width: 260, mt: 2 }} fullWidth>
               <InputLabel id="demo-multiple-checkbox-label">
                 Batch days
               </InputLabel>
@@ -699,18 +702,21 @@ console.log(arr)
                 multiple
                 value={data.days || []}
                 onChange={handleChange1}
-                sx={{ width: 530 }}
+                
                 fullWidth
-                input={<FilledInput/>}
+                input={<FilledInput />}
                 renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
               >
-                {days && days.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    <Checkbox checked={data.days && data.days.indexOf(name) > -1} />
-                    <ListItemText primary={name} />
-                  </MenuItem>
-                ))}
+                {days &&
+                  days.map((name) => (
+                    <MenuItem key={name} value={name}>
+                      <Checkbox
+                        checked={data.days && data.days.indexOf(name) > -1}
+                      />
+                      <ListItemText primary={name} />
+                    </MenuItem>
+                  ))}
               </Select>
             </FormControl>
           </Box>
@@ -726,7 +732,12 @@ console.log(arr)
                 sx={{ mt: 1 }}
               >
                 Aadhar Card
-                <VisuallyHiddenInput type="file" onChange={(e)=>{handleFileUpload(e)}} />
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={(e) => {
+                    handleFileUpload(e);
+                  }}
+                />
               </Button>
               <img src={data.baseString} />
             </Grid>
@@ -737,8 +748,8 @@ console.log(arr)
           <Button
             onClick={() => {
               setOpen(false);
-              setId()
-              setData({})
+              setId();
+              setData({});
             }}
           >
             Cancel
@@ -753,65 +764,64 @@ console.log(arr)
         </DialogActions>
       </Dialog>
 
-    
-
-
-
-      <Box sx={{ mx: 2,my:2}}>
+      <Box sx={{ mx: 2, my: 2 }}>
         <TableContainer>
           <Table sx={{ minWidth: 650, mx: 3 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center"
-                                   sx={{
-                                    position: "sticky",
-                                    left: 0,
-                                    backgroundColor: "white",
-                                    zIndex: 1,
-                                    
-                                  }}
-                >Student Name</TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    position: "sticky",
+                    left: 0,
+                    backgroundColor: "white",
+                    zIndex: 1,
+                  }}
+                >
+                  Student Name
+                </TableCell>
                 <TableCell align="center">Contact</TableCell>
+
                 <TableCell align="center">Parent Contact</TableCell>
+                
                 <TableCell align="center">Email</TableCell>
                 <TableCell align="center">College Name</TableCell>
                 <TableCell align="center">Academic Course</TableCell>
-
-                <TableCell align="center">Interested Course</TableCell>
-                <TableCell align="center">Total Fees</TableCell>
                 <TableCell align="center">Paid Fees</TableCell>
-
                 <TableCell align="center">Date</TableCell>
                 <TableCell align="center">Batch Days</TableCell>
                 <TableCell align="center">Batch Timing</TableCell>
-                <TableCell align="center" colSpan={2}>Actions</TableCell>
-                
+                <TableCell align="center">Aadhar</TableCell>
+
+                <TableCell align="center" colSpan={2}>
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody sx={{height:arr && arr.length<1?300:0}}>
+            <TableBody sx={{ height: arr && arr.length < 1 ? 300 : 0 }}>
               {arr &&
                 arr.map((row) => (
                   <TableRow
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell align="center"
-                                       sx={{
-                                        position: "sticky",
-                                        left: 0,
-                                        backgroundColor: "white",
-                                        zIndex: 1,
-                                      }}
-                    
-                    >{row.Name}</TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        position: "sticky",
+                        left: 0,
+                        backgroundColor: "white",
+                        zIndex: 1,
+                      }}
+                    >
+                      {row.Name}
+                    </TableCell>
                     <TableCell align="center">{row.Contact}</TableCell>
                     <TableCell align="center">{row.Parentcontact}</TableCell>
                     <TableCell align="center">{row.Email}</TableCell>
                     <TableCell align="center">{row.CollegeName}</TableCell>
                     <TableCell align="center">{row.AcademicCourse}</TableCell>
 
-                    <TableCell align="center">{row.course}</TableCell>
-                    <TableCell align="center">{row.Tfees}</TableCell>
                     <TableCell align="center">{row.Pfees}</TableCell>
 
                     <TableCell align="center">
@@ -821,32 +831,45 @@ console.log(arr)
                     <TableCell align="center">
                       {row.btime && convertToIST(row.btime)}
                     </TableCell>
+                    <TableCell align="center">
+                      <Tooltip title="Click here to download">
+                        <img
+                        style={{cursor:"pointer"}}
+                          onClick={() => {
+                            var a = document.createElement("a"); //Create <a>
+                            a.href = row.baseString; //Image Base64 Goes here
+                            console.log(row);
+                            a.download = "Image.png"; //File name Here
+                            a.click(); //Downloaded file
+                          }}
+                          src={row.baseString}
+                        />
+                      </Tooltip>
+                    </TableCell>
 
                     <TableCell align="center">
-                    <Tooltip title="Edit" arrow>
-                    
-                      <Button
-                        variant="contained"
-                        onClick={() => {
-                          handleupdate(row);
-                        }}
-                      >
-                        <EditIcon/>
-                      </Button>
-                    </Tooltip>
+                      <Tooltip title="Edit" arrow>
+                        <Button
+  
+                          onClick={() => {
+                            handleupdate(row);
+                          }}
+                        >
+                          <EditIcon />
+                        </Button>
+                      </Tooltip>
                     </TableCell>
                     <TableCell align="center">
-                    <Tooltip title="Delete" arrow>
-                    
-                      <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => {
-                          handledelete(row);
-                        }}
-                      >
-                        <DeleteIcon/>
-                      </Button>
+                      <Tooltip title="Delete" arrow>
+                        <Button
+                      
+                          color="error"
+                          onClick={() => {
+                            handledelete(row);
+                          }}
+                        >
+                          <DeleteIcon />
+                        </Button>
                       </Tooltip>
                     </TableCell>
                   </TableRow>
@@ -860,8 +883,10 @@ console.log(arr)
 }
 
 export default SD;
-      {/* {alertSuccess.open  ? (
+{
+  /* {alertSuccess.open  ? (
         <Alert>{alertSuccess.message}</Alert>
       ) : (
         <div></div>
-      )} */}
+      )} */
+}

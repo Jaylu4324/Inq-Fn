@@ -101,6 +101,7 @@ function Form1() {
   const [confirm, setconfirm] = React.useState([]);
   const [update, doUpdate] = React.useState(false);
   const [id, setId] = React.useState();
+
   const [searchname, setseearchname] = React.useState("");
   const handlesearchname = (e) => {
     setseearchname(e.target.value);
@@ -126,6 +127,7 @@ function Form1() {
   const handlechange1 = (event, newValue) => {
     setValue(newValue);
   };
+  
 console.log(value)
 React.useEffect(()=>{
 if(value==0){
@@ -687,7 +689,7 @@ console.log(confirm)
                                         setId(row._id);
                                         setOpen(true);
                                       }}
-                                      variant="contained"
+                                  
                                     >
                                       <EditIcon />
                                     </Button>
@@ -709,7 +711,7 @@ console.log(confirm)
                                             console.log(err);
                                           });
                                       }}
-                                      variant="contained"
+                               
                                       color="error"
                                     >
                                       <CloseIcon />
@@ -731,7 +733,7 @@ console.log(confirm)
                                             console.log(err);
                                           });
                                       }}
-                                      variant="contained"
+                             
                                       color="success"
                                     >
                                       <DoneIcon />
@@ -824,7 +826,7 @@ console.log(confirm)
                                         console.log(err);
                                       });
                                   }}
-                                  variant="contained"
+                               
                                   color="error"
                                 >
                                   <DeleteIcon />
@@ -956,7 +958,7 @@ console.log(confirm)
                 handleChange(e, "Email");
               }}
               fullWidth
-              sx={{ mb: 2 }}
+              sx={{ mb: 1 }}
             />
 
             <Box sx={{ mb: 2 }}>
@@ -982,7 +984,7 @@ console.log(confirm)
                 handleChange(e, "CollageName");
               }}
               fullWidth
-              sx={{ mb: 2 }}
+              sx={{ mb: 1 }}
             />
 
             <Box sx={{ mt: 1 }}>

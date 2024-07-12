@@ -28,7 +28,7 @@ import TableRow from "@mui/material/TableRow";
 import utc from "dayjs/plugin/utc";
 import Menu from "@mui/material/Menu";
 
-import { styled, alpha } from "@mui/material/styles";
+
 import Paper from "@mui/material/Paper";
 import { jsPDF } from "jspdf";
 import { Grid } from "@mui/material";
@@ -239,6 +239,7 @@ export default function FormDialog() {
   };
   console.log(searchname);
   console.log(arr);
+  
   const montharr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const monthname = [
     "January",
@@ -326,10 +327,7 @@ export default function FormDialog() {
           </Tooltip>
         </Grid>
         <Grid item xs={12} sm={5} sx={{
-       
-        
 
-        
       }}>
   <Box>
     <FormControl fullWidth>
@@ -343,7 +341,7 @@ export default function FormDialog() {
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         label="Status"
-        sx={{ minWidth: '100%', borderRadius: "16px" }}
+        sx={{ minWidth: '100%', borderRadius: "16px", border: "2px solid #0063cc" }}
       >
         {coursearr &&
           coursearr.map((row) => (
@@ -715,7 +713,7 @@ export default function FormDialog() {
                     <TableCell align="center">
                       <Tooltip title="Edit" arrow>
                         <Button
-                          variant="contained"
+                      
                           onClick={() => {
                             setData(row);
                             setId(row._id);
@@ -732,7 +730,7 @@ export default function FormDialog() {
                       {" "}
                       <Tooltip title="Download Receipt" arrow>
                         <Button
-                          variant="contained"
+                     
                           color="warning"
                           onClick={() => {
                             const doc = new jsPDF();
@@ -889,7 +887,7 @@ export default function FormDialog() {
                       <Tooltip title="Send Email" arrow>
                         <Button
                           sx={{ backgroundColor: "black" }}
-                          variant="contained"
+                      
                           onClick={() => {
                             axios
                               .post("http://localhost:5000/invoice/pdf", row)

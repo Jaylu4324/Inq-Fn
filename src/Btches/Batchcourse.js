@@ -7,6 +7,7 @@ import EditIcon from "@mui/icons-material/Edit";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
+import AddIcon from "@mui/icons-material/Add";
 
 import Tooltip from "@mui/material/Tooltip";
 
@@ -255,9 +256,10 @@ function Batches() {
 
       </Grid>
       <Grid item xs={2} sx={{display:'flex',justifyContent:'center'}}>
+        <Tooltip title="Add Batches" arrow>
         <Button
         sx={{ml:2}}
-          variant="outlined"
+         
           onClick={() => {
             setarr([...arr]);
             console.log(arr);
@@ -267,8 +269,9 @@ function Batches() {
             setId("");
           }}
         >
-          Add Batches
+       <AddIcon/>
         </Button>
+        </Tooltip>
       </Grid>
 </Grid>
       <Dialog open={open}>

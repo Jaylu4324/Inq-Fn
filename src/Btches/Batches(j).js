@@ -10,6 +10,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import AddIcon from "@mui/icons-material/Add";
 
 import EditIcon from '@mui/icons-material/Edit';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
@@ -287,8 +288,9 @@ console.log('thid api')
 </Grid>
 
 <Grid item  xs={2} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+  <Tooltip title="Add Batches" arrow>
           <Button
-            variant="outlined"
+       
             onClick={() => {
               setarr([...arr])
               console.log(arr)
@@ -298,8 +300,9 @@ console.log('thid api')
               setId("");
             }}
           >
-            Add Batches
+    <AddIcon/>
           </Button>
+          </Tooltip>
        </Grid>
      
 </Grid></Grid>

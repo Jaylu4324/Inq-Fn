@@ -5,6 +5,7 @@ import Dialog from "@mui/material/Dialog";
 import Alert from "@mui/material/Alert";
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';
+import AddIcon from "@mui/icons-material/Add";
 
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -239,15 +240,17 @@ function Interform() {
   return (
     <React.Fragment>
       <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={2} sx={{ mb: 3 }}>
+        <Grid item xs={1} sx={{ mb: 3 }}>
+          <Tooltip title="Add Events">
           <Button
-            variant="outlined"
+         
             onClick={() => {
               setopen(true);
             }}
           >
-            Add Event
+           <AddIcon/>
           </Button>
+          </Tooltip>
         </Grid>
       </Grid>
 

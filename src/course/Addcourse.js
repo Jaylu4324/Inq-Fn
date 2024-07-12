@@ -16,6 +16,7 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import DeleteIcon from "@mui/icons-material/Delete";
 import Tooltip from "@mui/material/Tooltip";
 import utc from 'dayjs/plugin/utc';
+import AddIcon from "@mui/icons-material/Add";
 
 import {
   Box,
@@ -152,22 +153,24 @@ const handleDateChange = (val) => {
   return (
     <>
       <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={2} sx={{ mb: 3 }}>
+        <Grid item xs={1} sx={{ mb: 3 }}>
+          <Tooltip title="Add Course" arrow>
           <Button
-            variant="outlined"
+        
             onClick={() => {
               setopen(true);
             }}
           >
-            Add Course
+            <AddIcon/>
           </Button>
+          </Tooltip>
         </Grid>
       </Grid>
 
       <Dialog open={open}>
         <DialogContent>
           <Box sx={{ minWidth: 120, mb: 2 }}>
-            <FormControl variant="filled" sx={{ minWidth: 500 }}>
+            <FormControl variant="filled" fullWidth>
               <InputLabel id="demo-simple-select-label">Course</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -216,8 +219,8 @@ const handleDateChange = (val) => {
             </LocalizationProvider>
           </Box>
 
-          <Box sx={{ minWidth: 120, mb: 2 }} fullWidth>
-            <FormControl variant="filled">
+          <Box sx={{ minWidth: 120, mb: 2 }} >
+            <FormControl variant="filled" fullWidth>
               <InputLabel id="demo-multiple-checkbox-label"> Days</InputLabel>
               <Select
                 labelId="demo-multiple-checkbox-label"
@@ -225,7 +228,7 @@ const handleDateChange = (val) => {
                 multiple
                 value={data.Days || []}
                 onChange={handleChange1}
-                sx={{ width: 500 }}
+             
                 input={<FilledInput />}
                 renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
@@ -330,7 +333,7 @@ const handleDateChange = (val) => {
               <Tooltip title="Edit" arrow>
                
               <Button
-                variant="contained"
+             
               
                onClick={()=>{
                 setopen(true)
@@ -348,7 +351,7 @@ const handleDateChange = (val) => {
               <Tooltip title="Delete" arrow>
                
               <Button
-                variant="contained"
+             
                 color="error"
                 onClick={() => {
                   axios.delete(`http://localhost:5000/batchEvent/DeleteBevent?id=${row._id}`)
@@ -379,7 +382,7 @@ const handleDateChange = (val) => {
                    <Tooltip title="Complete" arrow>
                
               <Button
-              variant="contained"
+           
               color="success"
               onClick={() => {
                 axios.post(`http://localhost:5000/batchEvent/completedBevent?id=${row._id}`)
