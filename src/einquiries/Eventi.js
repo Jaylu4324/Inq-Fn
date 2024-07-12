@@ -3,17 +3,17 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import dayjs from "dayjs";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import CloseIcon from '@mui/icons-material/Close';
-import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from "@mui/icons-material/Close";
+import DoneIcon from "@mui/icons-material/Done";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
@@ -31,11 +31,9 @@ import SortIcon from "@mui/icons-material/Sort";
 
 import SearchIcon from "@mui/icons-material/Search";
 
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip from "@mui/material/Tooltip";
 
-import utc from 'dayjs/plugin/utc';
-
-
+import utc from "dayjs/plugin/utc";
 
 import { Grid } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -54,6 +52,7 @@ import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
+import { AlignHorizontalRightSharp } from "@mui/icons-material";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -89,6 +88,7 @@ function a11yProps(index) {
 }
 
 function Eventi() {
+
   function convertToIST(utcDateStr) {
     const date = new Date(utcDateStr);
 
@@ -115,13 +115,14 @@ function Eventi() {
   const [reject, setReject] = React.useState([]);
   const [confirm, setconfirm] = React.useState([]);
   const [update, doUpdate] = React.useState(false);
-  const[alertMsg,setAlertMsg]=React.useState("");
+  const [alertMsg, setAlertMsg] = React.useState("");
   const [open1, setOpen1] = React.useState(false);
-  const[alertSuccess,setAlertSuccess]=React.useState({
-    open:false
-,message:"",  severity:""});
- const[deleteId,setDeleteId]=React.useState("");
-
+  const [alertSuccess, setAlertSuccess] = React.useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
+  const [deleteId, setDeleteId] = React.useState("");
 
   const [id, setId] = React.useState();
 
@@ -147,22 +148,22 @@ function Eventi() {
             message: "Updated Successfully",
             severity: "success",
           });
-          setTimeout(()=>{
+          setTimeout(() => {
             setAlertSuccess("");
-          },3000);
+          }, 3000);
           handleClose();
         })
         .catch((err) => {
           console.log(err);
-          if(err.response.data){
+          if (err.response.data) {
             setAlertMsg({
-              open:true,
-              message:err.response.data.error.details[0].message
-            })
+              open: true,
+              message: err.response.data.error.details[0].message,
+            });
             // setAlertMsg(err.response.data.error.details[0].message)
-          setTimeout(()=>{
-            setAlertMsg("");
-          },3000)
+            setTimeout(() => {
+              setAlertMsg("");
+            }, 3000);
           }
         });
     } else {
@@ -179,27 +180,26 @@ function Eventi() {
             message: "Added Successfully",
             severity: "success",
           });
-          setTimeout(()=>{
+          setTimeout(() => {
             setAlertSuccess("");
-          },3000);
-       
+          }, 3000);
+
           handleClose();
         })
         .catch((err) => {
           console.log(err);
-          if(err.response.data){
+          if (err.response.data) {
             setAlertMsg({
-              open:true,
-              message:err.response.data.error.details[0].message
-            })
-            
-          setTimeout(()=>{
-            setAlertMsg("");
-          },3000)
+              open: true,
+              message: err.response.data.error.details[0].message,
+            });
+
+            setTimeout(() => {
+              setAlertMsg("");
+            }, 3000);
           }
         });
     }
-   
   };
   React.useEffect(() => {
     axios
@@ -223,7 +223,6 @@ function Eventi() {
         })
         .catch((err) => {
           console.log(err);
-    
         });
       axios
         .get(`http://localhost:5000/Eventinquiry/Reject?id=${parent._id}`)
@@ -234,7 +233,6 @@ function Eventi() {
         })
         .catch((err) => {
           console.log(err);
-      
         });
       axios
         .get(`http://localhost:5000/Eventinquiry/Confirm?id=${parent._id}`)
@@ -245,15 +243,15 @@ function Eventi() {
         })
         .catch((err) => {
           console.log(err);
-          if(err.response.data){
+          if (err.response.data) {
             setAlertMsg({
-              open:true,
-              message:err.response.data.error.details[0].message
-            })
+              open: true,
+              message: err.response.data.error.details[0].message,
+            });
             // setAlertMsg(err.response.data.error.details[0].message)
-          setTimeout(()=>{
-            setAlertMsg("");
-          },3000)
+            setTimeout(() => {
+              setAlertMsg("");
+            }, 3000);
           }
         });
     }
@@ -274,87 +272,91 @@ function Eventi() {
   const handleparent = (e) => {
     setParent({ ...e.target.value });
   };
+  
   dayjs.extend(utc);
-  const handleDateChange = (val,type) => {
+  const handleDateChange = (val, type) => {
     const selectedDate = new Date(val);
     const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
-    const adjustedDate = new Date(selectedDate.getTime() + timezoneOffset * 60 * 1000);
+    const adjustedDate = new Date(
+      selectedDate.getTime() + timezoneOffset * 60 * 1000
+    );
     const formattedDate = adjustedDate.toISOString();
-  
+
     setData({ ...data, Date: formattedDate });
   };
-  
-  const[type,settype]=React.useState('')
+
+  const [type, settype] = React.useState("");
   const [searchname, setseearchname] = React.useState("");
   const handlesearchname = (e) => {
     setseearchname(e.target.value);
   };
   console.log(searchname);
-  
-console.log(value)
-React.useEffect(()=>{
-if(value==0){
-  settype('onGoing')
-}
-else if(value==1){
-  settype('Reject')
-}
-else {
-  settype('Confirm')
-}
-},[value])
-console.log(type)
 
-const [order, setorder] = React.useState(1);
+  console.log(value);
+  React.useEffect(() => {
+    if (value == 0) {
+      settype("onGoing");
+    } else if (value == 1) {
+      settype("Reject");
+    } else {
+      settype("Confirm");
+    }
+  }, [value]);
+  console.log(type);
 
-const [order1, setorder1] = React.useState(1);
-const [anchorEl, setAnchorEl] = React.useState(null);
-const openmenu = Boolean(anchorEl);
-const handleClickmenu = (event) => {
-  setAnchorEl(event.currentTarget);
-};
+  const [order, setorder] = React.useState(1);
 
-const handleClosemenu = () => {
-  setAnchorEl(null);
-};
-const [anchorEl1, setAnchorEl1] = React.useState(null);
-const openmenu1 = Boolean(anchorEl1);
-const handleClickmenu1 = (event) => {
-  setAnchorEl1(event.currentTarget);
-};
+  const [order1, setorder1] = React.useState(1);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openmenu = Boolean(anchorEl);
+  const handleClickmenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-const handleClosemenu1 = () => {
-  setAnchorEl1(null);
-};
-console.log(ong)
-console.log(reject)
-console.log(confirm)
+  const handleClosemenu = () => {
+    setAnchorEl(null);
+  };
+  const [anchorEl1, setAnchorEl1] = React.useState(null);
+  const openmenu1 = Boolean(anchorEl1);
+  const handleClickmenu1 = (event) => {
+    setAnchorEl1(event.currentTarget);
+  };
 
-const montharr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-const monthname = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+  const handleClosemenu1 = () => {
+    setAnchorEl1(null);
+  };
+  console.log('ong:',ong);
+  console.log('reject:',reject);
+  console.log('confirm:',confirm);
+
+  const montharr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const monthname = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   return (
     <React.Fragment>
-          <Grid container spacing={2}>
-     
-           <Grid item xs={12} sm={4} sx={{
-        display: "flex",
-        justifyContent: "left",
-        alignItems: "center",
-         
-      }}>
+      <Grid container spacing={2}>
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          sx={{
+            display: "flex",
+            justifyContent: "left",
+            alignItems: "center",
+          }}
+        >
           <Box sx={{ width: 400, ml: 3 }}>
             <TextField
               value={searchname}
@@ -397,108 +399,124 @@ const monthname = [
           <Tooltip title="Search" arrow>
             <Button sx={{ color: "#0063cc" }}>
               <SearchIcon
-                // onClick={() => {
-                //   axios
-                //     .get(
-                //       `http://localhost:5000/invoice/searchinstu?name=${searchname}`
-                //     )
-                //     .then((data) => {
-                //       console.log(data);
-                //       setArr(data.data.filterdata);
-                //       setseearchname("");
-                //     })
-                //     .catch((err) => {
-                //       console.log(err);
-                //     });
-                // }}
+              onClick={() => {
+                axios
+                  .get(
+                    `http://localhost:5000/Eventinquiry/search?FullName=${searchname}&type=${type}`
+                  )
+                  .then((data) => {
+                    console.log(data);
+                    if(type=='onGoing')
+                    {
+                      setong(data.data.filterdata)
+                      
+                    }
+                    else if(type=='Reject')
+                    {
+                      setReject(data.data.filterdata)
+                    }
+                    else{
+                      setconfirm(data.data.filterdata)
+                    }
+                    console.log('coorect')
+                    setseearchname("");
+
+                  })
+              .catch((err)=>{
+                console.log(err)
+              })
+            }}
+
               />
             </Button>
           </Tooltip>
-      
-      
-       </Grid>
-<Grid item xs={12} sm={5}
->
-       <Box sx={{ mx:2}}>
-         <FormControl fullWidth>
-           <InputLabel id="demo-simple-select-label">
-             {" "}
-             Select Event Type
-           </InputLabel>
-           <Select
-             onChange={(e) => {
-               handleparent(e);
-             }}
-             
-             labelId="demo-simple-select-label"
-             id="demo-simple-select"
-             label="Status"
-             
-             sx={{
-             borderRadius: "16px",
-                  border: "2px solid #0063cc"
+        </Grid>
+        <Grid item xs={12} sm={5}>
+          <Box sx={{ mx: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                {" "}
+                Select Event Type
+              </InputLabel>
+              <Select
+                onChange={(e) => {
+                  handleparent(e);
                 }}
-           >
-             {arr &&
-               arr.map((row) => (
-                 <MenuItem value={row}>
-                   <TableRow
-                     key={row.name}
-                     sx={{
-                       "&:last-child td, &:last-child th": { border: 0 },
-                     }}
-                   >
-                     <TableCell align="center">{row.Course}</TableCell>
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Status"
+                renderValue={(data)=>{return (parent._id && data.Course || '')}}
+                sx={{
+                  borderRadius: "16px",
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      border: '2px solid #0063cc', // Default border color
+                    },
+                    '&:hover fieldset': {
+                      border: '2px solid #0063cc', // Border color on hover
+                    },
+                    '&.Mui-focused fieldset': {
+                      border: '2px solid #0063cc', // Border color when focused
+                    },
+                  },
+                }}
+              >
+                {arr &&
+                  arr.map((row) => (
+                    <MenuItem value={row}>
+                      <TableRow
+                        key={row.name}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell align="center">{row.Course}</TableCell>
 
-                     <TableCell align="center">{row.TypeOfEvent}</TableCell>
-                     <TableCell align="center">
-                       {row.TypeOfPayment}
-                     </TableCell>
+                        <TableCell align="center">{row.TypeOfEvent}</TableCell>
+                        <TableCell align="center">
+                          {row.TypeOfPayment}
+                        </TableCell>
 
-                     <TableCell align="center">{row.Amount}</TableCell>
+                        <TableCell align="center">{row.Amount}</TableCell>
 
-                     <TableCell align="center">
-                       {row.StartDate && row.StartDate.split("T")[0]}
-                     </TableCell>
-                     <TableCell align="center">
-                       {row.EndtDate && row.EndtDate.split("T")[0]}
-                     </TableCell>
-                     <TableCell align="center">
-                       {row.Days.map((val) => (
-                         <TableCell align="center">{val}</TableCell>
-                       ))}
-                     </TableCell>
-                     <TableCell align="center">
-                       {row.BatchTime && convertToIST(row.BatchTime)}
-                     </TableCell>
-                   </TableRow>
-                 </MenuItem>
-               ))}
-           </Select>
-         </FormControl>
-       </Box>
+                        <TableCell align="center">
+                          {row.StartDate && row.StartDate.split("T")[0]}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.EndtDate && row.EndtDate.split("T")[0]}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.Days.map((val) => (
+                            <TableCell align="center">{val}</TableCell>
+                          ))}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.BatchTime && convertToIST(row.BatchTime)}
+                        </TableCell>
+                      </TableRow>
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </Grid>
 
-       </Grid>
+        <Grid
+          item
+          xs={12}
+          sm={3}
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end", // Adjusted for right alignment
+            alignItems: "center",
+          }}
+        >
+          <Tooltip title="Add Event Inquiries">
+            <Button onClick={handleopen} disabled={parent._id ? false : true}>
+              <AddIcon />
+            </Button>
+          </Tooltip>
 
-     <Grid item  xs={12} sm={3} sx={{
-        display: "flex",
-        justifyContent: "flex-end", // Adjusted for right alignment
-        alignItems: "center",
-
-      }}>
-     
-     
-      <Tooltip title="Add Event Inquiries">
-          <Button
-           
-            onClick={handleopen}
-            disabled={parent._id ? false : true}
-          
-          >
-            <AddIcon />
-          </Button>
-          </Tooltip> 
-          
           <div>
             <Tooltip title="Filter" arrow>
               <Button
@@ -527,15 +545,26 @@ const monthname = [
 
                     axios
                       .get(
-                        `http://localhost:5000/invoice/fillterinvocemonth?courseId=${
-                          parent._id ? parent._id : ""
-                        }&month=${montharr[index]}&sort=${order1}`
-                      )
+                        `http://localhost:5000/Eventinquiry/filterbyMonth?month=${montharr[index]}&sortby=${order1}&type=${type}`)
                       .then((data) => {
-                        console.log("API Response:", data);
-                        setArr(data.data);
+                        console.log(data)
+                        if(type=='onGoing')
+                          {
+                            setong(data.data)
+                            setorder1(order1 === 1 ? -1 : 1);
+                          }
+                          else if(type=='Reject')
+                          {
+                            setReject(data.data)
+                            setorder1(order1 === 1 ? -1 : 1);
+                          }
+                          else{
+                            setconfirm(data.data)
+                            setorder1(order1 === 1 ? -1 : 1);
+                          }
+                     
 
-                        setorder1(order1 === 1 ? -1 : 1);
+                      
                       })
                       .catch((error) => {
                         console.error("API Request Error:", error);
@@ -573,7 +602,28 @@ const monthname = [
             >
               <MenuItem
                 onClick={() => {
-                  setParent({});
+              axios.get(`http://localhost:5000/Eventinquiry/alldata?key=${type}`)
+              .then((data) => {
+                console.log(data)
+                if(type=='onGoing')
+                  {
+                    setong(data.data.allData)
+                   
+                  }
+                  else if(type=='Reject')
+                  {
+                    setReject(data.data.allData)
+                
+                  }
+                  else{
+                    setconfirm(data.data.allData)
+                  
+                  }
+              
+              })
+              .catch((error) => {
+                console.error("API Request Error:", error);
+              });
                   handleClosemenu();
                 }}
               >
@@ -584,85 +634,84 @@ const monthname = [
                 onClick={() => {
                   axios
                     .get(
-                      `http://localhost:5000/invoice/filterinvocedate?key=invoiceDate&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
+                      `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=Date&sortBy=${order}&type=${type}`)
+                      .then((data) => {
+                        console.log(data)
+                        if(type=='onGoing')
+                          {
+                            setong(data.data.sortData)
+                            setorder(order == 1 ? -1 : 1);
+                          }
+                          else if(type=='Reject')
+                          {
+                            setReject(data.data.sortData)
+                            setorder(order == 1 ? -1 : 1);
+                          }
+                          else{
+                            setconfirm(data.data.sortData)
+                            setorder(order == 1 ? -1 : 1);
+                          }
+                      
+                      })
+                      .catch((error) => {
+                        console.error("API Request Error:", error);
+                      });
                   handleClosemenu();
+                  
                 }}
               >
                 Sort By Date
               </MenuItem>
               <MenuItem
-                onClick={() => {
+                 onClick={() => {
                   axios
                     .get(
-                      `http://localhost:5000/invoice/filterinvocedate?key=Name&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
+                      `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=FullName&sortBy=${order}&type=${type}`)
+                      .then((data) => {
+                        console.log(data)
+                        if(type=='onGoing')
+                          {
+                            setong(data.data.sortData)
+                            setorder(order == 1 ? -1 : 1);
+                          }
+                          else if(type=='Reject')
+                          {
+                            setReject(data.data.sortData)
+                            setorder(order == 1 ? -1 : 1);
+                          }
+                          else{
+                            setconfirm(data.data.sortData)
+                            setorder(order == 1 ? -1 : 1);
+                          }
+                      
+                      })
+                      .catch((error) => {
+                        console.error("API Request Error:", error);
+                      });
                   handleClosemenu();
+                  
                 }}
               >
                 Sort By Name
               </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/student/fillter?key=Rfees&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  handleClosemenu();
-                }}
-              >
-                Sort By RF
-              </MenuItem>
+            
             </Menu>
           </div>
+        </Grid>
+      </Grid>
 
-
-          </Grid>
-
-     
-    
-        
-          </Grid>
-
-          <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose}>
         <DialogContent>
-        {alertMsg.open && (<Alert severity="error" sx={{zIndex:9999}}>{alertMsg.message}</Alert>)}
+          {alertMsg.open && (
+            <Alert severity="error" sx={{ zIndex: 9999 }}>
+              {alertMsg.message}
+            </Alert>
+          )}
 
           <TextField
             id="outlined-basic"
             label="Full Name"
             variant="filled"
-
             value={data.FullName}
             onChange={(e) => {
               handleChange(e, "FullName");
@@ -677,7 +726,7 @@ const monthname = [
             variant="filled"
             value={data.Contact}
             onChange={(e) => {
-              console.log(e)
+              console.log(e);
               handleChange(e, "Contact");
             }}
             fullWidth
@@ -701,10 +750,9 @@ const monthname = [
                 <DatePicker
                   label="Choose Your Date"
                   defaultValue={id ? dayjs(data.Date) : null}
-                  sx={{ width: 530 }}
-                  slotProps={{ textField: { variant: 'filled' } }}
-          
-               onChange={handleDateChange}
+                  sx={{ width: 550 }}
+                  slotProps={{ textField: { variant: "filled" } }}
+                  onChange={handleDateChange}
                   fullWidth
                 ></DatePicker>
               </DemoContainer>
@@ -773,7 +821,7 @@ const monthname = [
           />
           <Button
             onClick={() => {
-             handleClose()
+              handleClose();
             }}
             sx={{ ml: 45 }}
           >
@@ -783,7 +831,6 @@ const monthname = [
             autoFocus
             onClick={() => {
               handlesubmit();
-              
             }}
           >
             Submit
@@ -793,29 +840,34 @@ const monthname = [
       </Dialog>
 
       <Box>
- 
-        <Box sx={{display: 'flex', justifyContent: 'center',mt:2}}>
-              <Tabs
-                value={value}
-                onChange={handlechange1}
-                aria-label="basic tabs example"
-              >
-                <Tab label="onGoing" {...a11yProps(0)} />
-                <Tab label="Reject" {...a11yProps(1)} />
-                <Tab label="Confirmed" {...a11yProps(2)} />
-              </Tabs>
-            </Box>
-      
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          <Tabs
+            value={value}
+            onChange={handlechange1}
+            aria-label="basic tabs example"
+          >
+            <Tab label="onGoing" {...a11yProps(0)} />
+            <Tab label="Reject" {...a11yProps(1)} />
+            <Tab label="Confirmed" {...a11yProps(2)} />
+          </Tabs>
+        </Box>
 
         <CustomTabPanel value={value} index={0}>
-        
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
-                                    }}
-                >Full Name</TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      position: "sticky",
+                      left: 0,
+                      backgroundColor: "white",
+                      zIndex: 1,
+                    }}
+                  >
+                    Full Name
+                  </TableCell>
                   <TableCell align="center">Contact</TableCell>
                   <TableCell align="center">Email</TableCell>
                   <TableCell align="center">Date</TableCell>
@@ -823,120 +875,108 @@ const monthname = [
                   <TableCell align="center">FollowUp</TableCell>
                   <TableCell align="center">Interaction</TableCell>
                   <TableCell align="center">Description</TableCell>
-                  <TableCell align="center" colSpan={3}>Actions</TableCell>
-                  
-                  
+                  <TableCell align="center" colSpan={3}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody sx={{height:ong && ong.length<1?220:0}}>
+              <TableBody sx={{ height: ong && ong.length < 1 ? 220 : 0 }}>
                 {ong &&
                   ong.map((row) => (
-                    <TableRow key={row._id}  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                      <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
-                                    }}
-                >
+                    <TableRow
+                      key={row._id}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell
+                        align="center"
+                        sx={{
+                          position: "sticky",
+                          left: 0,
+                          backgroundColor: "white",
+                          zIndex: 1,
+                        }}
+                      >
                         {row.FullName}
                       </TableCell>
+                      <TableCell align="center">{row.Contact}</TableCell>
+                      <TableCell align="center">{row.Email}</TableCell>
                       <TableCell align="center">
-                        {row.Contact}
+                        {row.Date && row.Date.split("T")[0]}
                       </TableCell>
+                      <TableCell align="center">{row.CollageName}</TableCell>
+                      <TableCell align="center">{row.FollowUp}</TableCell>
+                      <TableCell align="center">{row.Interaction}</TableCell>
+                      <TableCell align="center">{row.Description}</TableCell>
                       <TableCell align="center">
-                        {row.Email}
+                        <Tooltip title="Edit" arrow>
+                          <Button
+                   
+                            onClick={() => {
+                              setOpen(true);
+                              setData(row);
+                              setId(row._id);
+                            }}
+                          >
+                            <EditIcon />
+                          </Button>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell align="center">
-                      {row.Date && row.Date.split('T')[0]}
+
+                      <TableCell>
+                        <Tooltip title="Reject" arrow>
+                          <Button
+                           
+                            color="error"
+                            onClick={() => {
+                              axios
+                                .post(
+                                  `http://localhost:5000/Eventinquiry/RejectedInquiry?id=${row._id}`
+                                )
+
+                                .then((data) => {
+                                  console.log(data);
+                                  doUpdate(!update);
+                                })
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            }}
+                          >
+                            <CloseIcon />
+                          </Button>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell align="center">
-                        {row.CollageName}
+
+                      <TableCell>
+                        <Tooltip title="Confirm" arrow>
+                          <Button
+                         color="success"
+                            onClick={() => {
+                              axios
+                                .post(
+                                  `http://localhost:5000/Eventinquiry/ConfimInquiry?id=${row._id}`
+                                )
+                                .then((data) => {
+                                  console.log(data);
+                                  doUpdate(!update);
+                                })
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            }}
+                          >
+                            <DoneIcon />
+                          </Button>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell align="center">
-                        {row.FollowUp}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.Interaction}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.Description}
-                      </TableCell>
-                      <TableCell align="center">
-                      <Tooltip title="Edit" arrow>
-    
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      setOpen(true);
-                      setData(row);
-                      setId(row._id);
-
-                    }}
-                  >
-                    <EditIcon/>
-                  </Button>
-                  </Tooltip>
-                </TableCell>
-
-    
-
-                <TableCell>
-                <Tooltip title="Reject" arrow>
-    
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => {
-                      
-                      axios.post(`http://localhost:5000/Eventinquiry/RejectedInquiry?id=${row._id}`)
-
-
-                      .then((data)=>{
-                        console.log(data)
-                        doUpdate(!update)
-                      })
-                        .catch((err)=>{
-                          console.log(err)
-                        })
-                      
-                    }}
-                  >
-                    <CloseIcon/>
-                  </Button>
-                  </Tooltip>
-                </TableCell>
-
-                <TableCell>
-                <Tooltip title="Confirm" arrow>
-    
-                  <Button
-                    variant="contained"
-                    color="success"
-                    onClick={() => {
-                      axios.post(`http://localhost:5000/Eventinquiry/ConfimInquiry?id=${row._id}`)
-                      .then((data)=>{
-                        console.log(data)
-                        doUpdate(!update)
-                      })
-                        .catch((err)=>{
-                          console.log(err)
-                        })
-                      
-                    }}
-                  >
-                   <DoneIcon />
-                  </Button>
-                  </Tooltip>
-                </TableCell>
-
-                
                     </TableRow>
                   ))}
               </TableBody>
             </Table>
           </TableContainer>
-
-       
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-<TableContainer component={Paper}>
+          <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
@@ -949,66 +989,48 @@ const monthname = [
                   <TableCell align="center">Interaction</TableCell>
                   <TableCell align="center">Description</TableCell>
                   <TableCell align="center">Action</TableCell>
-                  
                 </TableRow>
               </TableHead>
-              <TableBody sx={{height:reject && reject.length<1?220:0}}>
+              <TableBody sx={{ height: reject && reject.length < 1 ? 220 : 0 }}>
                 {reject &&
                   reject.map((row) => (
-                    <TableRow key={row._id}  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                    <TableRow
+                      key={row._id}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell align="center">{row.FullName}</TableCell>
+                      <TableCell align="center">{row.Contact}</TableCell>
+                      <TableCell align="center">{row.Email}</TableCell>
                       <TableCell align="center">
-                        {row.FullName}
+                        {row.Date && row.Date.split("T")[0]}
                       </TableCell>
-                      <TableCell align="center">
-                        {row.Contact}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.Email}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.Date && row.Date.split('T')[0]}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.CollageName}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.FollowUp}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.Interaction}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.Description}
-                      </TableCell>
+                      <TableCell align="center">{row.CollageName}</TableCell>
+                      <TableCell align="center">{row.FollowUp}</TableCell>
+                      <TableCell align="center">{row.Interaction}</TableCell>
+                      <TableCell align="center">{row.Description}</TableCell>
                       <TableCell>
-
-                      <Tooltip title="Delete" arrow>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => {
-                 
-                      handleClickOpen1()
-                      setDeleteId(row._id);
-                      
-                    }}
-                  >
-                    <DeleteIcon/>
-                  </Button>
-                  </Tooltip>
-                </TableCell>
-
-                
+                        <Tooltip title="Delete" arrow>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            onClick={() => {
+                              handleClickOpen1();
+                              setDeleteId(row._id);
+                            }}
+                          >
+                            <DeleteIcon />
+                          </Button>
+                        </Tooltip>
+                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>
             </Table>
           </TableContainer>
-          
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={2}>
-        <TableContainer component={Paper}>
+          <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
@@ -1020,88 +1042,72 @@ const monthname = [
                   <TableCell align="center">FollowUp</TableCell>
                   <TableCell align="center">Interaction</TableCell>
                   <TableCell align="center">Description</TableCell>
-                  
                 </TableRow>
               </TableHead>
-              <TableBody sx={{height:confirm && confirm.length<1?220:0}}>
+              <TableBody
+                sx={{ height: confirm && confirm.length < 1 ? 220 : 0 }}
+              >
                 {confirm &&
                   confirm.map((row) => (
-                    <TableRow key={row._id}  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                    <TableRow
+                      key={row._id}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell align="center">{row.FullName}</TableCell>
+                      <TableCell align="center">{row.Contact}</TableCell>
+                      <TableCell align="center">{row.Email}</TableCell>
                       <TableCell align="center">
-                        {row.FullName}
+                        {row.Date && row.Date.split("T")[0]}
                       </TableCell>
-                      <TableCell align="center">
-                        {row.Contact}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.Email}
-                      </TableCell>
-                      <TableCell align="center">
-                      {row.Date && row.Date.split('T')[0]}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.CollageName}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.FollowUp}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.Interaction}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.Description}
-                      </TableCell>
-          
-                
+                      <TableCell align="center">{row.CollageName}</TableCell>
+                      <TableCell align="center">{row.FollowUp}</TableCell>
+                      <TableCell align="center">{row.Interaction}</TableCell>
+                      <TableCell align="center">{row.Description}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>
             </Table>
           </TableContainer>
-          
         </CustomTabPanel>
-     
       </Box>
-  
-      {alertSuccess.open  ? (
-        <Alert>{alertSuccess.message}</Alert>
-      ) : (
-        <div></div>
-      )}
 
+      {alertSuccess.open ? <Alert>{alertSuccess.message}</Alert> : <div></div>}
 
-                <Dialog
-                    open={open1} 
-                    onClose={handleClose1}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                  >
-                    <DialogTitle id="alert-dialog-title">
-                      {"Delete Event"}
-                    </DialogTitle>
-                    <DialogContent>
-                      <DialogContentText id="alert-dialog-description">
-                              Are you confirm to delete?
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={handleClose1}>Cancel</Button>
-                      <Button onClick={()=>{
-                        axios.delete(`http://localhost:5000/Eventinquiry/Delete?id=${deleteId}`)
-                         .then((data)=>{
-                         console.log(data)
-                        doUpdate(!update) 
-                       })
-                         .catch((err)=>{
-                         console.log(err)
-                         })
-                      
-                        handleClose1()
-                               }} >
-                        Confirm
-                      </Button>
-                    </DialogActions>
-                  </Dialog>  
+      <Dialog
+        open={open1}
+        onClose={handleClose1}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Delete Event"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you confirm to delete?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose1}>Cancel</Button>
+          <Button
+            onClick={() => {
+              axios
+                .delete(
+                  `http://localhost:5000/Eventinquiry/Delete?id=${deleteId}`
+                )
+                .then((data) => {
+                  console.log(data);
+                  doUpdate(!update);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+
+              handleClose1();
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </React.Fragment>
   );
 }

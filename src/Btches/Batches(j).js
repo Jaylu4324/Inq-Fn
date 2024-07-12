@@ -246,8 +246,21 @@ console.log('thid api')
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             label="Status"
-            variant="filled"
-          // sx={{fullWidth}}
+            renderValue={(data)=>{return(parent._id && data.Course+data.TypeOfEvent || '')}}
+            sx={{
+              borderRadius: "16px",
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  border: '2px solid #0063cc', // Default border color
+                },
+                '&:hover fieldset': {
+                  border: '2px solid #0063cc', // Border color on hover
+                },
+                '&.Mui-focused fieldset': {
+                  border: '2px solid #0063cc', // Border color when focused
+                },
+              },
+            }}
           >
             {arr1 &&
               arr1.map((row) => (
@@ -339,49 +352,49 @@ console.log('thid api')
                                     }}
                   >
                       {row.StuName.map((data, index) => (
-                        <TableRow>
+                     <Box align="center">
                           <TableCell align="center"> {data.FullName}</TableCell>
-                        </TableRow>
+                          </Box>
                       ))}
                     </TableCell>
 
                     <TableCell align="center">
                       {row.StuName.map((data) => (
-                        <TableRow>
+                  <Box align="center">
                           <TableCell align="center">{data.Contact}</TableCell>
-                        </TableRow>
+                          </Box>
                       ))}
                     </TableCell>
                     <TableCell align="center">
                       {row.EventId.Days &&
                         row.EventId.Days.map((data) => (
-                          <TableRow>
+                          <Box align="center">
                             <TableCell align="center">{data}</TableCell>
-                          </TableRow>
+                            </Box>
                         ))}
                     </TableCell>
                     <TableCell align="center">
-                      <TableRow>
+                    <Box align="center">
                         <TableCell align="center">
                           {row.EventId.StartDate.split("T")[0]}
                         </TableCell>
-                      </TableRow>
+                        </Box>
                     </TableCell>
                     <TableCell align="center">
-                      <TableRow>
+                    <Box align="center">
                         <TableCell align="center">
                           {row.EventId.BatchTime.split("T")[1]
                             .split(".")[0]
                             .slice(0, 5)}
                         </TableCell>
-                      </TableRow>
+                        </Box>
                     </TableCell>
 <Box sx={{display:'flex',justifyContent:'center',mt:2}}>
                     <TableCell align="center">
                     <Tooltip title="Edit" arrow>
                       
                       <Button
-                        variant="contained"
+                   
                         onClick={() => {
                           console.log("row")
 
@@ -406,7 +419,7 @@ console.log('thid api')
                     <Tooltip title="Delete" arrow>
                     
                       <Button
-                        variant="contained"
+                  
                         color="error"
                         onClick={() => {
                           console.log(row._id);
@@ -433,7 +446,7 @@ console.log('thid api')
                     <TableCell align="center">
                     <Tooltip title="Complete" arrow>
                       <Button
-                        variant="contained"
+                    
                         color="success"
                         onClick={() => {
                           axios

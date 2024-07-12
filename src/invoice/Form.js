@@ -341,7 +341,22 @@ export default function FormDialog() {
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         label="Status"
-        sx={{ minWidth: '100%', borderRadius: "16px", border: "2px solid #0063cc" }}
+        renderValue={(data)=>{return (parent._id && data.Course) || ''}}
+        sx={{
+          minWidth:'100%',
+          borderRadius: "16px",
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              border: '2px solid #0063cc', // Default border color
+            },
+            '&:hover fieldset': {
+              border: '2px solid #0063cc', // Border color on hover
+            },
+            '&.Mui-focused fieldset': {
+              border: '2px solid #0063cc', // Border color when focused
+            },
+          },
+        }}
       >
         {coursearr &&
           coursearr.map((row) => (
@@ -569,6 +584,7 @@ export default function FormDialog() {
 
           <TextField
             id="outlined-basic"
+            disabled={id ? true : false}
             type="Number"
             label="Amount"
             variant="filled"
@@ -886,7 +902,7 @@ export default function FormDialog() {
                     <TableCell align="center">
                       <Tooltip title="Send Email" arrow>
                         <Button
-                          sx={{ backgroundColor: "black" }}
+                          sx={{ color: "black" }}
                       
                           onClick={() => {
                             axios

@@ -218,8 +218,21 @@ function Batches() {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               label="Status"
-              variant="filled"
-              
+              renderValue={(data)=>{return (parent._id && data.Course || '')}}
+              sx={{
+                borderRadius: "16px",
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    border: '2px solid #0063cc', // Default border color
+                  },
+                  '&:hover fieldset': {
+                    border: '2px solid #0063cc', // Border color on hover
+                  },
+                  '&.Mui-focused fieldset': {
+                    border: '2px solid #0063cc', // Border color when focused
+                  },
+                },
+              }}
             >
               {course &&
                 course.map((row) => (

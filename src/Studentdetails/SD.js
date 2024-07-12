@@ -381,10 +381,21 @@ function SD() {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Status"
-                  sx={{ minWidth: '100%', borderRadius: "16px", border: "2px solid #0063cc"
-
-                   }}
-       
+                  sx={{
+                    minWidth:'100%',
+                    borderRadius: "16px",
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': {
+                        border: '2px solid #0063cc', // Default border color
+                      },
+                      '&:hover fieldset': {
+                        border: '2px solid #0063cc', // Border color on hover
+                      },
+                      '&.Mui-focused fieldset': {
+                        border: '2px solid #0063cc', // Border color when focused
+                      },
+                    },
+                  }}
                   renderValue={(data) => {
                     return (parent._id && data.Course) || "";
                   }}

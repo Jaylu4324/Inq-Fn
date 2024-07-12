@@ -109,7 +109,7 @@ export default function Old() {
                   <Tooltip title="Delete" arrow>
 
                     <Button
-                      variant="contained"
+                   
                       color="error"
                       onClick={() => {
                         axios

@@ -495,7 +495,7 @@ function Interform() {
                 <Tooltip title="Edit" arrow>
                       
                   <Button
-                    variant="contained"
+          
                     onClick={() => {
                       setopen(true);
                       setdata(row);
@@ -537,7 +537,7 @@ function Interform() {
                 <Tooltip title="Delete" arrow>
                       
                   <Button
-                    variant="contained"
+                 
                     color="error"
                     onClick={() => {
                       // handledelete(row);
@@ -553,7 +553,7 @@ function Interform() {
                 <Tooltip title="Complete" arrow>
                       
                   <Button
-                    variant="contained"
+                 
                     color="success"
                     onClick={() => {
                       axios
