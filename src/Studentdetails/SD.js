@@ -798,7 +798,12 @@ function SD() {
                 <TableCell align="center">Email</TableCell>
                 <TableCell align="center">College Name</TableCell>
                 <TableCell align="center">Academic Course</TableCell>
+                <TableCell align="center">Course</TableCell>
+                
                 <TableCell align="center">Paid Fees</TableCell>
+                <TableCell align="center">Remaining Fees</TableCell>
+                <TableCell align="center">Total Fees</TableCell>
+                
                 <TableCell align="center">Date</TableCell>
                 <TableCell align="center">Batch Days</TableCell>
                 <TableCell align="center">Batch Timing</TableCell>
@@ -832,9 +837,12 @@ function SD() {
                     <TableCell align="center">{row.Email}</TableCell>
                     <TableCell align="center">{row.CollegeName}</TableCell>
                     <TableCell align="center">{row.AcademicCourse}</TableCell>
+                    <TableCell align="center">{row.CourseId && row.CourseId.Course}</TableCell>
 
                     <TableCell align="center">{row.Pfees}</TableCell>
-
+                    <TableCell align="center">{row.Rfees}</TableCell>
+                    <TableCell align="center">{row.Tfees}</TableCell>
+                        
                     <TableCell align="center">
                       {row.Date && row.Date.split("T")[0]}
                     </TableCell>

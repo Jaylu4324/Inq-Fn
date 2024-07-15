@@ -27,6 +27,7 @@ import {
   Checkbox,
   ListItemText,
   FilledInput,
+  TableBody,
 } from "@mui/material";
 
 import Table from "@mui/material/Table";
@@ -85,7 +86,7 @@ function Addcourse() {
       .get("http://localhost:5000/batchEvent/DisplayBevent")
       .then((data) => {
         setarr(data.data.data);
-        console.log(data, "arrisset", arr);
+        
       })
       .catch((err) => {
         console.log(err);
@@ -94,7 +95,7 @@ function Addcourse() {
   const handleChange = (e, type) => {
     setdata({ ...data, [type]: e.target.value });
   };
-
+console.log(arr)
   const handleClose = () => {
     setopen(false);
   };
@@ -306,9 +307,10 @@ const handleDateChange = (val) => {
               
               {arr &&
               arr.map((row) => (
+                <TableBody sx={{height: arr && arr.length < 1 ? 200 : 0 }}>
               <TableRow
                 key={row.name}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 }}}
               >
               <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white",zIndex: 1
                          }}>{row.Course}</TableCell>
@@ -404,6 +406,7 @@ const handleDateChange = (val) => {
                    </TableCell>
               
               </TableRow>
+              </TableBody>
               ))}
               </Table>
               </TableContainer>

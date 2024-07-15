@@ -481,7 +481,7 @@ function Batches() {
                     <Tooltip title="Edit" arrow>
                         
                       <Button
-                        variant="contained"
+                    
                         onClick={() => {
                           console.log("row");
 
@@ -508,7 +508,7 @@ function Batches() {
                     <Tooltip title="Delete" arrow>
                         
                       <Button
-                        variant="contained"
+                 
                         color="error"
                         onClick={() => {
                           console.log(row._id);
@@ -545,7 +545,7 @@ function Batches() {
                     <Tooltip title="Complete" arrow>
                         
                       <Button
-                        variant="contained"
+                  
                         color="success"
                         onClick={() => {
                           axios
