@@ -203,9 +203,29 @@ function Batches() {
   return (
     <>
     <Grid container spacing={2}>
+    <Grid item xs={2} sx={{display:'flex',justifyContent:'flex-start',alignItems:'flex-start'}}>
+      <Box sx={{mt:1}}>
+        <Tooltip title="Add Batches" arrow>
+        <Button
+        sx={{ml:2}}
+         
+          onClick={() => {
+            setarr([...arr]);
+            console.log(arr);
 
-      <Grid xs={10}>
-        <Box sx={{ mt: 2,ml:4}}>
+            setopen(true);
+            setData({ StuName: [] });
+            setId("");
+          }}
+        >
+       <AddIcon/>
+        </Button>
+        </Tooltip>
+        </Box>
+      </Grid>
+      <Grid xs={5}></Grid>
+      <Grid xs={5}>
+        <Box sx={{ mt: 2,mr:2}}>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">
               {" "}
@@ -220,6 +240,7 @@ function Batches() {
               label="Status"
               renderValue={(data)=>{return (parent._id && data.Course || '')}}
               sx={{
+                height:50,
                 borderRadius: "16px",
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
@@ -268,24 +289,7 @@ function Batches() {
         </Box>
 
       </Grid>
-      <Grid item xs={2} sx={{display:'flex',justifyContent:'center'}}>
-        <Tooltip title="Add Batches" arrow>
-        <Button
-        sx={{ml:2}}
-         
-          onClick={() => {
-            setarr([...arr]);
-            console.log(arr);
-
-            setopen(true);
-            setData({ StuName: [] });
-            setId("");
-          }}
-        >
-       <AddIcon/>
-        </Button>
-        </Tooltip>
-      </Grid>
+     
 </Grid>
       <Dialog open={open}>
         <DialogContent>

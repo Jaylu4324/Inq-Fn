@@ -6,6 +6,9 @@ import Dialog from "@mui/material/Dialog";
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
 import Menu from "@mui/material/Menu";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import Tooltip from "@mui/material/Tooltip";
@@ -16,7 +19,7 @@ import utc from "dayjs/plugin/utc";
 
 import DoneIcon from "@mui/icons-material/Done";
 import {
-  Container,
+ 
   Box,
   FormControl,
   InputLabel,
@@ -94,20 +97,40 @@ function Form1() {
   const [value, setValue] = React.useState(0);
 
   const [data, setData] = React.useState({ Date: dayjs(), Course: [] });
-  const[type,settype]=React.useState('')
+  const [type, settype] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [arr, setArr] = React.useState([]);
   const [reject, setReject] = React.useState([]);
   const [confirm, setconfirm] = React.useState([]);
   const [update, doUpdate] = React.useState(false);
   const [id, setId] = React.useState();
+  
+  const [alertMsg, setAlertMsg] = React.useState("");
+  const [open1, setOpen1] = React.useState(false);
+  
+  const handleClickOpen1 = () => {
+    setOpen1(true);
+  };
+
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
+  
+  const handleClickOpen2 = () => {
+    setOpen1(true);
+  };
+
+  const handleClose2 = () => {
+    setOpen1(false);
+  };
+
 
   const [searchname, setseearchname] = React.useState("");
   const handlesearchname = (e) => {
     setseearchname(e.target.value);
   };
   console.log(searchname);
-  
+
   const handleChange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
   };
@@ -127,20 +150,18 @@ function Form1() {
   const handlechange1 = (event, newValue) => {
     setValue(newValue);
   };
-  
-console.log(value)
-React.useEffect(()=>{
-if(value==0){
-  settype('onGoing')
-}
-else if(value==1){
-  settype('Reject')
-}
-else {
-  settype('Confirm')
-}
-},[value])
-console.log(type)
+
+  console.log(value);
+  React.useEffect(() => {
+    if (value == 0) {
+      settype("onGoing");
+    } else if (value == 1) {
+      settype("Reject");
+    } else {
+      settype("Confirm");
+    }
+  }, [value]);
+  console.log(type);
   const Co = ["React", "Node", "C", "C++", "Python", "Mern Stack", "AWS"];
   const handlecourse = (e) => {
     let value = e.target.value;
@@ -200,6 +221,16 @@ console.log(type)
         })
         .catch((err) => {
           console.log(err);
+          if (err.data) {
+            setAlertMsg({
+              open: true,
+              message: err.data.error.details[0].message,
+            });
+            // setAlertMsg(err.response.data.error.details[0].message)
+            setTimeout(() => {
+              setAlertMsg("");
+            }, 3000);
+          }
         });
     } else {
       axios
@@ -221,6 +252,16 @@ console.log(type)
         })
         .catch((err) => {
           console.log(err);
+          if (err.data) {
+            setAlertMsg({
+              open: true,
+              message: err.data.data.error.details[0].message,
+            });
+
+            setTimeout(() => {
+              setAlertMsg("");
+            }, 3000);
+          }
         });
     }
   };
@@ -266,9 +307,9 @@ console.log(type)
   const handleClosemenu1 = () => {
     setAnchorEl1(null);
   };
-console.log(arr)
-console.log(reject)
-console.log(confirm)
+  console.log(arr);
+  console.log(reject);
+  console.log(confirm);
   const montharr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const monthname = [
     "January",
@@ -284,648 +325,648 @@ console.log(confirm)
     "November",
     "December",
   ];
-
+  console.log(id);
   return (
     <>
       <React.Fragment>
-      <Grid container spacing={2}>
-                <Grid
-                  xs={9}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "flex-start"
-                 
+        <Grid container spacing={2}>
+          <Grid
+            xs={3}
+            sx={{
+              display: "flex",
+              justifyContent: "center", // Adjusted to 'flex-end' for right alignment
+              alignItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                mr: 5,
+              }}
+            >
+              <div>
+                <Tooltip title="Add Inquiry" arrow>
+                  <Button onClick={handleopen}>
+                    <AddIcon />
+                  </Button>
+                </Tooltip>
+              </div>
+              <div>
+                <Tooltip title="Filter" arrow>
+                  <Button
+                    id="basic-button"
+                    aria-controls={openmenu1 ? "basic-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={openmenu1 ? "true" : undefined}
+                    onClick={handleClickmenu1}
+                  >
+                    <FilterAltIcon sx={{ color: "#0063cc" }} />
+                  </Button>
+                </Tooltip>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl1}
+                  open={openmenu1}
+                  onClose={handleClosemenu1}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
                   }}
                 >
-                  <Box sx={{ width: 400, ml: 2 }}>
-                    <TextField
-                      value={searchname}
-
-                      id="filled-hidden-label-small"
-                      placeholder="Search Inquiries..."
-                      variant="filled"
-                      size="small"
-                      onChange={handlesearchname}
-
-                      sx={{
-                        width: "100%",
-                        maxWidth: 400,
-                        "& .MuiFilledInput-root": {
-                          borderRadius: "16px",
-                          border: "2px solid #0063cc",
-                          backgroundColor: "white",
-                          padding: "0 16px", // Ensure background color is consistent
-                          "&:hover": {
-                            backgroundColor: "white",
-                          },
-                          "&.Mui-focused": {
-                            backgroundColor: "white",
-                          },
-                          "& input": {
-                            padding: "12px 0", // Adjust vertical padding to center text
-                            // Center the text horizontally
-                          },
-                        },
-                        "& .MuiFilledInput-underline:before": {
-                          borderBottom: "none", // Remove the default underline before focus
-                        },
-                        "& .MuiFilledInput-underline:after": {
-                          borderBottom: "none", // Remove the default underline after focus
-                        },
-                        "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before":
-                          {
-                            borderBottom: "none", // Remove underline on hover
-                          },
-                      }}
-                    />
-                  </Box>
-                  <Box sx={{mt:1}}>
-                  <Tooltip title="Search" arrow>
-                    <Button sx={{ color: "#0063cc" }}>
-                      <SearchIcon
+                  {montharr.map((val, index) => (
+                    <MenuItem
                       onClick={() => {
+                        console.log("clicked1");
                         axios
                           .get(
-                            `http://localhost:5000/inquiry/commansearchstu?FullName=${searchname}&type=${type}`
-                          )                                        
+                            `http://localhost:5000/inquiry/coursefillbymonth?month=${montharr[index]}&sort=${order1}&type=${type}`
+                          )
                           .then((data) => {
+                            console.log("click2");
                             console.log(data);
-                            if(type=='onGoing')
-                            {
-                              setArr(data.data.filterdata)
-                              
+                            if (type == "onGoing") {
+                              setArr(data.data);
+                              setorder1(order1 === 1 ? -1 : 1);
+                            } else if (type == "Reject") {
+                              setReject(data.data);
+                              setorder1(order1 === 1 ? -1 : 1);
+                            } else {
+                              setconfirm(data.data);
+                              setorder1(order1 === 1 ? -1 : 1);
                             }
-                            else if(type=='Reject')
-                            {
-                              setReject(data.data.filterdata)
-                            }
-                            else{
-                              setconfirm(data.data.filterdata)
-                            }
-                            console.log('coorect')
-                            setseearchname("");
-
+                            console.log("coorect");
                           })
-                          .catch((err) => {
-                            console.log(err);
+                          .catch((error) => {
+                            console.error("API Request Error:", error);
                           });
+
+                        handleClosemenu1();
                       }}
-
-                      />
-                    </Button>
-                  </Tooltip>
-                  </Box>
-                </Grid>
-                <Grid
-                  xs={3}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center", // Adjusted to 'flex-end' for right alignment
-                    alignItems: "center"
-                 
-                  }}
-                >
-                    <div>
-              <Tooltip title="Add Inquiry" arrow>
-              <Button  onClick={handleopen}>
-                <AddIcon /> 
-              </Button>
-              </Tooltip>
+                    >
+                      {monthname[index]}
+                    </MenuItem>
+                  ))}
+                </Menu>
               </div>
-                  <div>
-                    <Tooltip title="Filter" arrow>
-                      <Button
-                        id="basic-button"
-                        aria-controls={openmenu1 ? "basic-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={openmenu1 ? "true" : undefined}
-                        onClick={handleClickmenu1}
-                      >
-                        <FilterAltIcon sx={{ color: "#0063cc" }} />
-                      </Button>
-                    </Tooltip>
-                    <Menu
-              id="basic-menu"
-              anchorEl={anchorEl1}
-              open={openmenu1}
-              onClose={handleClosemenu1}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              {montharr.map((val, index) => (
-                <MenuItem
-                  onClick={() => {
-                    console.log("clicked1");
-                    axios
-                      .get(
-                        `http://localhost:5000/inquiry/coursefillbymonth?month=${montharr[index]}&sort=${order1}&type=${type}`
-                      )
-                      .then((data) => {
-                        console.log('click2')
-                        console.log(data)
-                        if(type=='onGoing')
-                        {
-                          setArr(data.data)
-                          setorder1(order1 === 1 ? -1 : 1);
-                        }
-                        else if(type=='Reject')
-                        {
-                          setReject(data.data)
-                          setorder1(order1 === 1 ? -1 : 1);
-                        }
-                        else{
-                          setconfirm(data.data)
-                          setorder1(order1 === 1 ? -1 : 1);
-                        }
-                        console.log('coorect')
-                    
 
-                      })
-                      .catch((error) => {
-                        console.error("API Request Error:", error);
-                      });
-
-                    handleClosemenu1();
+              <div>
+                <Tooltip title="Sort" arrow>
+                  <Button
+                    id="basic-button"
+                    aria-controls={openmenu ? "basic-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={openmenu ? "true" : undefined}
+                    onClick={handleClickmenu}
+                  >
+                    <SortIcon sx={{ color: "#0063cc" }} />
+                  </Button>
+                </Tooltip>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={openmenu}
+                  onClose={handleClosemenu}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
                   }}
                 >
-                  {monthname[index]}
-                </MenuItem>
-              ))}
-            </Menu>
-            
-                  </div>
+                  <MenuItem
+                    onClick={() => {
+                      axios
+                        .get(
+                          `http://localhost:5000/inquiry/Alldata?key=${type}`
+                        )
+                        .then((data) => {
+                          console.log(data);
+                          if (type == "onGoing") {
+                            setArr(data.data.allData);
+                          } else if (type == "Reject") {
+                            setReject(data.data.allData);
+                          } else {
+                            setconfirm(data.data.allData);
+                          }
+                        });
+                    }}
+                  >
+                    All
+                  </MenuItem>
 
-                  <div>
-                    <Tooltip title="Sort" arrow>
-                      <Button
-                        id="basic-button"
-                        aria-controls={openmenu ? "basic-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={openmenu ? "true" : undefined}
-                        onClick={handleClickmenu}
-                      >
-                        <SortIcon sx={{ color: "#0063cc" }} />
-                      </Button>
-                    </Tooltip>
-                     <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={openmenu}
-              onClose={handleClosemenu}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem
-                onClick={() => {
-                  axios.get(`http://localhost:5000/inquiry/Alldata?key=${type}`)
-                  .then((data)=>{
-                    console.log(data)
-                    if(type=='onGoing')
-                      {
-                        setArr(data.data.allData)
-                      }
-                      else if(type=='Reject')
-                      {
-                        setReject(data.data.allData)
-                      }
-                      else{
-                        setconfirm(data.data.allData)
-                        
-                      }
-                  })
-                }}
-              >
-                All
-              </MenuItem>
-
-              <MenuItem
-                onClick={() => {
-                  axios
-                  .get(
-                    `http://localhost:5000/inquiry/coursefillbydate?key=Date&sortby=${order}&type=${type}`
-                  )
-                  .then((data) => {
-                   
-                    console.log(data)
-                    if(type=='onGoing')
-                    {
-                      setArr(data.data.data)
-                      setorder(order === 1 ? -1 : 1);
-                    }
-                    else if(type=='Reject')
-                    {
-                      setReject(data.data.data)
-                      setorder(order === 1 ? -1 : 1);
-                    }
-                    else{
-                      setconfirm(data.data.data)
-                      setorder(order === 1 ? -1 : 1);
-                    }
-                  
-
-                  })
-                  .catch((error) => {
-                    console.error("API Request Error:", error);
-                  });
-                  handleClosemenu();
-                }}
-              >
-                Sort By Date
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  axios
-                  .get(
-                    `http://localhost:5000/inquiry/coursefillbydate?key=FullName&sortby=${order}&type=${type}`
-                  )
-                  .then((data) => {
-                   
-                    console.log(data)
-                    if(type=='onGoing')
-                    {
-                      setArr(data.data.data)
-                      setorder(order === 1 ? -1 : 1);
-                    }
-                    else if(type=='Reject')
-                    {
-                      setReject(data.data.data)
-                      setorder(order === 1 ? -1 : 1);
-                    }
-                    else{
-                      setconfirm(data.data.data)
-                      setorder(order === 1 ? -1 : 1);
-                    }
-                  
-
-                  })
-                  .catch((error) => {
-                    console.error("API Request Error:", error);
-                  });
-                  handleClosemenu();
-                }}
-              >
-                Sort By Name
-              </MenuItem>
-              
-            </Menu>
-             
-                  </div>
-                
-
-
-                </Grid>
-              </Grid>
-              
-        <Container>
-
-          <Box>
-            <Box sx={{ display: "flex", justifyContent: "center",mt:2}}>
-              <Tabs
-                value={value}
-                onChange={handlechange1}
-                aria-label="basic tabs example"
-              >
-                <Tab label="onGoing" {...a11yProps(0)} />
-                <Tab label="Reject" {...a11yProps(1)} />
-                <Tab label="Confirmed" {...a11yProps(2)} />
-              </Tabs>
+                  <MenuItem
+                    onClick={() => {
+                      axios
+                        .get(
+                          `http://localhost:5000/inquiry/coursefillbydate?key=Date&sortby=${order}&type=${type}`
+                        )
+                        .then((data) => {
+                          console.log(data);
+                          if (type == "onGoing") {
+                            setArr(data.data.data);
+                            setorder(order === 1 ? -1 : 1);
+                          } else if (type == "Reject") {
+                            setReject(data.data.data);
+                            setorder(order === 1 ? -1 : 1);
+                          } else {
+                            setconfirm(data.data.data);
+                            setorder(order === 1 ? -1 : 1);
+                          }
+                        })
+                        .catch((error) => {
+                          console.error("API Request Error:", error);
+                        });
+                      handleClosemenu();
+                    }}
+                  >
+                    Sort By Date
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      axios
+                        .get(
+                          `http://localhost:5000/inquiry/coursefillbydate?key=FullName&sortby=${order}&type=${type}`
+                        )
+                        .then((data) => {
+                          console.log(data);
+                          if (type == "onGoing") {
+                            setArr(data.data.data);
+                            setorder(order === 1 ? -1 : 1);
+                          } else if (type == "Reject") {
+                            setReject(data.data.data);
+                            setorder(order === 1 ? -1 : 1);
+                          } else {
+                            setconfirm(data.data.data);
+                            setorder(order === 1 ? -1 : 1);
+                          }
+                        })
+                        .catch((error) => {
+                          console.error("API Request Error:", error);
+                        });
+                      handleClosemenu();
+                    }}
+                  >
+                    Sort By Name
+                  </MenuItem>
+                </Menu>
+              </div>
             </Box>
+          </Grid>
+          <Grid
+            xs={9}
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
+            <Box sx={{ width: 400, ml: 2 }}>
+              <TextField
+                value={searchname}
+                id="filled-hidden-label-small"
+                placeholder="Search Inquiries..."
+                variant="filled"
+                size="small"
+                onChange={handlesearchname}
+                sx={{
+                  width: "100%",
+                  maxWidth: 400,
+                  "& .MuiFilledInput-root": {
+                    borderRadius: "16px",
+                    border: "2px solid #0063cc",
+                    backgroundColor: "white",
+                    padding: "0 16px", // Ensure background color is consistent
+                    "&:hover": {
+                      backgroundColor: "white",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "white",
+                    },
+                    "& input": {
+                      padding: "12px 0", // Adjust vertical padding to center text
+                      // Center the text horizontally
+                    },
+                  },
+                  "& .MuiFilledInput-underline:before": {
+                    borderBottom: "none", // Remove the default underline before focus
+                  },
+                  "& .MuiFilledInput-underline:after": {
+                    borderBottom: "none", // Remove the default underline after focus
+                  },
+                  "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before":
+                    {
+                      borderBottom: "none", // Remove underline on hover
+                    },
+                }}
+              />
+            </Box>
+            <Box sx={{ mt: 1 }}>
+              <Tooltip title="Search" arrow>
+                <Button sx={{ color: "#0063cc" }}>
+                  <SearchIcon
+                    onClick={() => {
+                      axios
+                        .get(
+                          `http://localhost:5000/inquiry/commansearchstu?FullName=${searchname}&type=${type}`
+                        )
+                        .then((data) => {
+                          console.log(data);
+                          if (type == "onGoing") {
+                            setArr(data.data.filterdata);
+                          } else if (type == "Reject") {
+                            setReject(data.data.filterdata);
+                          } else {
+                            setconfirm(data.data.filterdata);
+                          }
+                          console.log("coorect");
+                          setseearchname("");
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
+                    }}
+                  />
+                </Button>
+              </Tooltip>
+            </Box>
+          </Grid>
+        </Grid>
 
-            <CustomTabPanel value={value} index={0}>
-            
-                  <Box>
-                    <TableContainer component={Paper}>
-                      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell
-                              align="center"
-                              sx={{
-                                position: "sticky",
-                                left: 0,
-                                backgroundColor: "white",
-                              }}
-                            >
-                              Full Name
-                            </TableCell>
-                            <TableCell align="center">Contact</TableCell>
-                            <TableCell align="center">Email</TableCell>
-                            <TableCell align="center">Date</TableCell>
-                            <TableCell align="center">College Name</TableCell>
-                            <TableCell align="center">
-                              Interested Course
-                            </TableCell>
-                            <TableCell align="center">Description</TableCell>
-                            <TableCell align="center">Follow-Up</TableCell>
-                            <TableCell align="center">Interaction</TableCell>
-                            <TableCell align="center" colSpan={3}>
-                              Actions
-                            </TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody
-                          sx={{ height: arr && arr.length < 1 ? 220 : 0 }}
-                        >
-                          {arr &&
-                            arr.map((row) => (
-                              <TableRow
-                                key={row.name}
-                                sx={{
-                                  "&:last-child td, &:last-child th": {
-                                    border: 0,
-                                  },
-                                }}
-                              >
-                                <TableCell
-                                  align="center"
-                                  sx={{
-                                    position: "sticky",
-                                    left: 0,
-                                    backgroundColor: "white",
-                                    zIndex: 1,
-                                  }}
-                                >
-                                  {row.FullName}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row.Contact}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row.Email}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row.Date && row.Date.split("T")[0]}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row.CollageName}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row.Course}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row.Description}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  style={{
-                                    color:
-                                      row.FollowUp == "Yes" ? "green" : "red",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  {row.FollowUp}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row.Interaction}
-                                </TableCell>
-                                <TableCell align="center">
-                                  <Tooltip title="Edit" arrow>
-                                    <Button
-                                      onClick={() => {
-                                        setData(row);
-                                        setId(row._id);
-                                        setOpen(true);
-                                      }}
-                                  
-                                    >
-                                      <EditIcon />
-                                    </Button>
-                                  </Tooltip>
-                                </TableCell>
-                                <TableCell align="center">
-                                  <Tooltip title="Reject" arrow>
-                                    <Button
-                                      onClick={() => {
-                                        axios
-                                          .post(
-                                            `http://localhost:5000/inquiry/RejectedInquiry?id=${row._id}`
-                                          )
-                                          .then((data) => {
-                                            console.log(data);
-                                            doUpdate(!update);
-                                          })
-                                          .catch((err) => {
-                                            console.log(err);
-                                          });
-                                      }}
-                               
-                                      color="error"
-                                    >
-                                      <CloseIcon />
-                                    </Button>
-                                  </Tooltip>
-                                </TableCell>
-                                <TableCell align="center">
-                                  <Tooltip title="Confirm" arrow>
-                                    <Button
-                                      onClick={() => {
-                                        axios
-                                          .post(
-                                            `http://localhost:5000/inquiry/ConfimInquiry?id=${row._id}`
-                                          )
-                                          .then((data) => {
-                                            doUpdate(!update);
-                                          })
-                                          .catch((err) => {
-                                            console.log(err);
-                                          });
-                                      }}
-                             
-                                      color="success"
-                                    >
-                                      <DoneIcon />
-                                    </Button>
-                                  </Tooltip>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Box>
-              
-            </CustomTabPanel>
+        <Box>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <Tabs
+              value={value}
+              onChange={handlechange1}
+              aria-label="basic tabs example"
+            >
+              <Tab label="onGoing" {...a11yProps(0)} />
+              <Tab label="Reject" {...a11yProps(1)} />
+              <Tab label="Confirmed" {...a11yProps(2)} />
+            </Tabs>
+          </Box>
 
-            <CustomTabPanel value={value} index={1}>
-            
-
-              <Box>
-                <TableContainer component={Paper}>
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell
-                          align="center"
+          <CustomTabPanel value={value} index={0}>
+            <Box>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          position: "sticky",
+                          left: 0,
+                          backgroundColor: "white",
+                        }}
+                      >
+                        Full Name
+                      </TableCell>
+                      <TableCell align="center">Contact</TableCell>
+                      <TableCell align="center">Email</TableCell>
+                      <TableCell align="center">Date</TableCell>
+                      <TableCell align="center">College Name</TableCell>
+                      <TableCell align="center">Interested Course</TableCell>
+                      <TableCell align="center">Description</TableCell>
+                      <TableCell align="center">Follow-Up</TableCell>
+                      <TableCell align="center">Interaction</TableCell>
+                      <TableCell align="center" colSpan={3}>
+                        Actions
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody sx={{ height: arr && arr.length < 1 ? 220 : 0 }}>
+                    {arr &&
+                      arr.map((row) => (
+                        <TableRow
+                          key={row.name}
                           sx={{
-                            position: "sticky",
-                            left: 0,
-                            backgroundColor: "white",
+                            "&:last-child td, &:last-child th": {
+                              border: 0,
+                            },
                           }}
                         >
-                          Full Name
-                        </TableCell>
-                        <TableCell align="center">Contact</TableCell>
-                        <TableCell align="center">Email</TableCell>
-                        <TableCell align="center">Date</TableCell>
-                        <TableCell align="center">College Name</TableCell>
-                        <TableCell align="center">Interested Course</TableCell>
-                        <TableCell align="center">Description</TableCell>
-                        <TableCell align="center">Action</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody
-                      sx={{ height: reject && reject.length < 1 ? 220 : 0 }}
-                    >
-                      {reject &&
-                        reject.map((row) => (
-                          <TableRow
-                            key={row.name}
+                          <TableCell
+                            align="center"
                             sx={{
-                              "&:last-child td, &:last-child th": { border: 0 },
+                              position: "sticky",
+                              left: 0,
+                              backgroundColor: "white",
+                              zIndex: 1,
                             }}
                           >
-                            <TableCell
-                              align="center"
-                              sx={{
-                                position: "sticky",
-                                left: 0,
-                                backgroundColor: "white",
-                                zIndex: 1,
-                              }}
-                            >
-                              {row.FullName}
-                            </TableCell>
-                            <TableCell align="center">{row.Contact}</TableCell>
-                            <TableCell align="center">{row.Email}</TableCell>
-                            <TableCell align="center">
-                              {row.Date && row.Date.split("T")[0]}
-                            </TableCell>
-                            <TableCell align="center">
-                              {row.CollageName}
-                            </TableCell>
-                            <TableCell align="center">{row.Course}</TableCell>
-                            <TableCell align="center">
-                              {row.Description}
-                            </TableCell>
-                            <TableCell>
-                              <Tooltip title="Delete" arrow>
-                                <Button
-                                  onClick={() => {
-                                    axios
-                                      .delete(
-                                        "http://localhost:5000/inquiry/Delete"
-                                      )
-                                      .then((data) => {
-                                        doUpdate(!update);
-                                        console.log(data);
-                                      })
-                                      .catch((err) => {
-                                        console.log(err);
-                                      });
-                                  }}
-                               
-                                  color="error"
-                                >
-                                  <DeleteIcon />
-                                </Button>
-                              </Tooltip>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Box>
-            </CustomTabPanel>
-
-            <CustomTabPanel value={value} index={2}>
-          
-
-
-                  <Box>
-                    <TableContainer component={Paper}>
-                      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell
-                              align="center"
-                              sx={{
-                                position: "sticky",
-                                left: 0,
-                                backgroundColor: "white",
-                              }}
-                            >
-                              Full Name
-                            </TableCell>
-                            <TableCell align="center">Contact</TableCell>
-                            <TableCell align="center">Email</TableCell>
-                            <TableCell align="center">Date</TableCell>
-                            <TableCell align="center">College Name</TableCell>
-                            <TableCell align="center">
-                              Interested Course
-                            </TableCell>
-                            <TableCell align="center">Description</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody
-                          sx={{
-                            height: confirm && confirm.length < 1 ? 220 : 0,
-                          }}
-                        >
-                          {confirm &&
-                            confirm.map((row) => (
-                              <TableRow
-                                key={row.name}
-                                sx={{
-                                  "&:last-child td, &:last-child th": {
-                                    border: 0,
-                                  },
+                            {row.FullName}
+                          </TableCell>
+                          <TableCell align="center">{row.Contact}</TableCell>
+                          <TableCell align="center">{row.Email}</TableCell>
+                          <TableCell align="center">
+                            {row.Date && row.Date.split("T")[0]}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.CollageName}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.Course &&
+                              row.Course.map((val) => <Box>{val}</Box>)}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.Description}
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            style={{
+                              color: row.FollowUp == "Yes" ? "green" : "red",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {row.FollowUp}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.Interaction}
+                          </TableCell>
+                          <TableCell align="center">
+                            <Tooltip title="Edit" arrow>
+                              <Button
+                                onClick={() => {
+                                  setData(row);
+                                  setId(row._id);
+                                  setOpen(true);
                                 }}
                               >
-                                <TableCell
-                                  align="center"
-                                  sx={{
-                                    position: "sticky",
-                                    left: 0,
-                                    backgroundColor: "white",
-                                  }}
-                                >
-                                  {row.FullName}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row.Contact}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row.Email}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row.date && row.Date.split("T")[0]}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row.CollageName}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row.Course}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row.Description}
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Box>
-             
-            </CustomTabPanel>
-          </Box>
-        </Container>
+                                <EditIcon />
+                              </Button>
+                            </Tooltip>
+                          </TableCell>
+                          <Dialog
+                  open={open1}
+                  onClose={handleClose1}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {"Reject Student"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Do you Want to Reject ?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose1}>Cancel</Button>
+                    <Button
+                  onClick={() => {
+                    axios
+                      .post(
+                        `http://localhost:5000/inquiry/RejectedInquiry?id=${row._id}`
+                      )
+                      .then((data) => {
+                        console.log(data);
+                        doUpdate(!update);
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                      handleClose1()
+                  }}
+                     
+                     
+                    
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                <Dialog
+                  open={open1}
+                  onClose={handleClose2}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {"Confirm Student"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Do you want to Confirm Student ?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose2}>Cancel</Button>
+                    <Button
+               onClick={() => {
+                axios
+                  .post(
+                    `http://localhost:5000/inquiry/ConfimInquiry?id=${row._id}`
+                  )
+                  .then((data) => {
+                    doUpdate(!update);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+                  handleClose2()
+              }}
+                     
+                     
+                    
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                
+                          <TableCell align="center">
+                            <Tooltip title="Reject" arrow>
+                              <Button
+                               onClick={()=>{handleClickOpen1()}}
+                                color="error"
+                              >
+                                <CloseIcon />
+                              </Button>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Tooltip title="Confirm" arrow>
+                              <Button
+                                onClick={()=>{handleClickOpen2()}}
+                                color="success"
+                              >
+                                <DoneIcon />
+                              </Button>
+                            </Tooltip>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+          </CustomTabPanel>
+
+          <CustomTabPanel value={value} index={1}>
+            <Box>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          position: "sticky",
+                          left: 0,
+                          backgroundColor: "white",
+                        }}
+                      >
+                        Full Name
+                      </TableCell>
+                      <TableCell align="center">Contact</TableCell>
+                      <TableCell align="center">Email</TableCell>
+                      <TableCell align="center">Date</TableCell>
+                      <TableCell align="center">College Name</TableCell>
+                      <TableCell align="center">Interested Course</TableCell>
+                      <TableCell align="center">Description</TableCell>
+                      <TableCell align="center">Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody
+                    sx={{ height: reject && reject.length < 1 ? 220 : 0 }}
+                  >
+                    {reject &&
+                      reject.map((row) => (
+                        <TableRow
+                          key={row.name}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell
+                            align="center"
+                            sx={{
+                              position: "sticky",
+                              left: 0,
+                              backgroundColor: "white",
+                              zIndex: 1,
+                            }}
+                          >
+                            {row.FullName}
+                          </TableCell>
+                          <TableCell align="center">{row.Contact}</TableCell>
+                          <TableCell align="center">{row.Email}</TableCell>
+                          <TableCell align="center">
+                            {row.Date && row.Date.split("T")[0]}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.CollageName}
+                          </TableCell>
+                          <TableCell align="center">{row.Course}</TableCell>
+                          <TableCell align="center">
+                            {row.Description}
+                          </TableCell>
+                          <TableCell>
+                            <Tooltip title="Delete" arrow>
+                              <Button
+                                onClick={() => {
+                                  axios
+                                    .delete(
+                                      "http://localhost:5000/inquiry/Delete"
+                                    )
+                                    .then((data) => {
+                                      doUpdate(!update);
+                                      console.log(data);
+                                    })
+                                    .catch((err) => {
+                                      console.log(err);
+                                    });
+                                }}
+                                color="error"
+                              >
+                                <DeleteIcon />
+                              </Button>
+                            </Tooltip>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+          </CustomTabPanel>
+
+          <CustomTabPanel value={value} index={2}>
+            <Box>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          position: "sticky",
+                          left: 0,
+                          backgroundColor: "white",
+                        }}
+                      >
+                        Full Name
+                      </TableCell>
+                      <TableCell align="center">Contact</TableCell>
+                      <TableCell align="center">Email</TableCell>
+                      <TableCell align="center">Date</TableCell>
+                      <TableCell align="center">College Name</TableCell>
+                      <TableCell align="center">Interested Course</TableCell>
+                      <TableCell align="center">Description</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody
+                    sx={{
+                      height: confirm && confirm.length < 1 ? 220 : 0,
+                    }}
+                  >
+                    {confirm &&
+                      confirm.map((row) => (
+                        <TableRow
+                          key={row.name}
+                          sx={{
+                            "&:last-child td, &:last-child th": {
+                              border: 0,
+                            },
+                          }}
+                        >
+                          <TableCell
+                            align="center"
+                            sx={{
+                              position: "sticky",
+                              left: 0,
+                              backgroundColor: "white",
+                            }}
+                          >
+                            {row.FullName}
+                          </TableCell>
+                          <TableCell align="center">{row.Contact}</TableCell>
+                          <TableCell align="center">{row.Email}</TableCell>
+                          <TableCell align="center">
+                            {row.date && row.Date.split("T")[0]}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.CollageName}
+                          </TableCell>
+                          <TableCell align="center">{row.Course}</TableCell>
+                          <TableCell align="center">
+                            {row.Description}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+          </CustomTabPanel>
+        </Box>
 
         <Dialog open={open} onClose={handleClose}>
           <DialogContent>
+          {alertMsg.open && (
+            <Alert severity="error" sx={{ zIndex: 9999 }}>
+              {alertMsg.message}
+            </Alert>
+          )}
+
             <TextField
               id="outlined-basic"
               label="Full Name"

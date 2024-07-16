@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Tooltip from "@mui/material/Tooltip";
-
+import { Box } from "@mui/material";
 function convertToIST(utcDateStr) {
   const date = new Date(utcDateStr);
 
@@ -99,7 +99,7 @@ export default function Old() {
                 </TableCell>
                 <TableCell align="center">
                   {row.Days.map((val) => (
-                    <TableCell align="center">{val}</TableCell>
+                   <Box>{val}</Box>
                   ))}
                 </TableCell>
                 <TableCell align="center">

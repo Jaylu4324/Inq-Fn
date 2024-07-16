@@ -14,11 +14,12 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import EmailIcon from "@mui/icons-material/Email";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-
+import autoTable from "jspdf-autotable";
 import SearchIcon from "@mui/icons-material/Search";
 
 import Tooltip from "@mui/material/Tooltip";
 import DownloadIcon from "@mui/icons-material/Download";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -259,137 +260,17 @@ export default function FormDialog() {
     <React.Fragment>
      <Grid container spacing={2}>
       {/* Left Section */}
-      <Grid item xs={12} sm={4} sx={{
+      <Grid item xs={12} sm={3} sx={{
         display: "flex",
-        justifyContent: "left",
-        alignItems: "center",
-   
-      }}>
-          <Box sx={{ width: 400, ml: 3 }}>
-            <TextField
-              value={searchname}
-              id="filled-hidden-label-small"
-              placeholder="Search Students..."
-              variant="filled"
-              size="small"
-              onChange={handlesearchname}
-              sx={{
-                width: "100%",
-                maxWidth: 400,
-                "& .MuiFilledInput-root": {
-                  borderRadius: "16px",
-                  border: "2px solid #0063cc",
-                  backgroundColor: "white",
-                  padding: "0 16px", // Ensure background color is consistent
-                  "&:hover": {
-                    backgroundColor: "white",
-                  },
-                  "&.Mui-focused": {
-                    backgroundColor: "white",
-                  },
-                  "& input": {
-                    padding: "12px 0", // Adjust vertical padding to center text
-                    // Center the text horizontally
-                  },
-                },
-                "& .MuiFilledInput-underline:before": {
-                  borderBottom: "none", // Remove the default underline before focus
-                },
-                "& .MuiFilledInput-underline:after": {
-                  borderBottom: "none", // Remove the default underline after focus
-                },
-                "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
-                  borderBottom: "none", // Remove underline on hover
-                },
-              }}
-            />
-          </Box>
+        justifyContent: "flex-start", // Adjusted for right alignment
+        alignItems: "flex-start",
+      
 
-          <Tooltip title="Search" arrow>
-            <Button sx={{ color: "#0063cc" }}>
-              <SearchIcon
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/invoice/searchinstu?name=${searchname}`
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setArr(data.data.filterdata);
-                      setseearchname("");
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                }}
-              />
-            </Button>
-          </Tooltip>
-        </Grid>
-        <Grid item xs={12} sm={5} sx={{
-
-      }}>
-  <Box>
-    <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">
-        Select Course
-      </InputLabel>
-      <Select
-        onChange={(e) => {
-          handleparent(e);
-        }}
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        label="Status"
-        renderValue={(data)=>{return (parent._id && data.Course) || ''}}
-        sx={{
-          minWidth:'100%',
-          borderRadius: "16px",
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              border: '2px solid #0063cc', // Default border color
-            },
-            '&:hover fieldset': {
-              border: '2px solid #0063cc', // Border color on hover
-            },
-            '&.Mui-focused fieldset': {
-              border: '2px solid #0063cc', // Border color when focused
-            },
-          },
-        }}
-      >
-        {coursearr &&
-          coursearr.map((row) => (
-            <MenuItem key={row.name} value={row}>
-              <TableRow
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                }}
-              >
-                <TableCell align="center">{row.Course}</TableCell>
-                <TableCell align="center">{row.Amount}</TableCell>
-                <TableCell align="center">{row.Days}</TableCell>
-                <TableCell align="center">
-                  {row.StartDate && row.StartDate.split("T")[0]}
-                </TableCell>
-                <TableCell align="center">
-                  {row.BatchTime && convertToIST(row.BatchTime)}
-                </TableCell>
-              </TableRow>
-            </MenuItem>
-          ))}
-      </Select>
-    </FormControl>
-  </Box>
-</Grid>
-<Grid item xs={12} sm={3} sx={{
-        display: "flex",
-        justifyContent: "flex-end", // Adjusted for right alignment
-        alignItems: "center",
       
       }}>
-        
+        <Box sx={{display:'flex',mt:1}}>
           <div>
+            <Tooltip title="Add Invoice" arrow>
           <Button
        
         
@@ -397,6 +278,7 @@ export default function FormDialog() {
      >
      <AddIcon/>
      </Button>
+     </Tooltip>
           </div>
           <div>
             <Tooltip title="Filter" arrow>
@@ -544,9 +426,138 @@ export default function FormDialog() {
               </MenuItem>
             </Menu>
           </div>
+          </Box>
         </Grid>
+        <Grid item xs={12} sm={5} sx={{
+    
+        
+      }}>
+  <Box>
+    <FormControl fullWidth>
+      <InputLabel id="demo-simple-select-label">
+        Select Course
+      </InputLabel>
+      <Select
+        onChange={(e) => {
+          handleparent(e);
+        }}
+         
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        label="Status"
+        renderValue={(data)=>{return (parent._id && data.Course) || ''}}
+        sx={{
+          height:50,
+          minWidth:'100%',
+          borderRadius: "16px",
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              border: '2px solid #0063cc', // Default border color
+            },
+            '&:hover fieldset': {
+              border: '2px solid #0063cc', // Border color on hover
+            },
+            '&.Mui-focused fieldset': {
+              border: '2px solid #0063cc', // Border color when focused
+            },
+          },
+        }}
+      >
+        {coursearr &&
+          coursearr.map((row) => (
+            <MenuItem key={row.name} value={row}>
+              <TableRow
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                }}
+              >
+                <TableCell align="center">{row.Course}</TableCell>
+                <TableCell align="center">{row.Amount}</TableCell>
+                <TableCell align="center">{row.Days}</TableCell>
+                <TableCell align="center">
+                  {row.StartDate && row.StartDate.split("T")[0]}
+                </TableCell>
+                <TableCell align="center">
+                  {row.BatchTime && convertToIST(row.BatchTime)}
+                </TableCell>
+              </TableRow>
+            </MenuItem>
+          ))}
+      </Select>
+    </FormControl>
+  </Box>
+</Grid>
+
       
-     
+        <Grid item xs={12} sm={4} sx={{
+        display: "flex",
+        justifyContent: "left",
+        alignItems: "center",
+      
+        
+   
+      }}>
+          <Box sx={{ width: 400, ml: 3 }}>
+            <TextField
+              value={searchname}
+              id="filled-hidden-label-small"
+              placeholder="Search Students..."
+              variant="filled"
+              size="small"
+              onChange={handlesearchname}
+              sx={{
+                width: "100%",
+                maxWidth: 400,
+                "& .MuiFilledInput-root": {
+                  borderRadius: "16px",
+                  border: "2px solid #0063cc",
+                  backgroundColor: "white",
+                  padding: "0 16px", // Ensure background color is consistent
+                  "&:hover": {
+                    backgroundColor: "white",
+                  },
+                  "&.Mui-focused": {
+                    backgroundColor: "white",
+                  },
+                  "& input": {
+                    padding: "12px 0", // Adjust vertical padding to center text
+                    // Center the text horizontally
+                  },
+                },
+                "& .MuiFilledInput-underline:before": {
+                  borderBottom: "none", // Remove the default underline before focus
+                },
+                "& .MuiFilledInput-underline:after": {
+                  borderBottom: "none", // Remove the default underline after focus
+                },
+                "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
+                  borderBottom: "none", // Remove underline on hover
+                },
+              }}
+            />
+          </Box>
+
+          <Tooltip title="Search" arrow>
+            <Button sx={{ color: "#0063cc" }}>
+              <SearchIcon
+                onClick={() => {
+                  axios
+                    .get(
+                      `http://localhost:5000/invoice/searchinstu?name=${searchname}`
+                    )
+                    .then((data) => {
+                      console.log(data);
+                      setArr(data.data.filterdata);
+                      setseearchname("");
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }}
+              />
+            </Button>
+          </Tooltip>
+        </Grid>
       </Grid>
 
       <Dialog open={open} onClose={handleClose}>
@@ -584,7 +595,7 @@ export default function FormDialog() {
 
           <TextField
             id="outlined-basic"
-            disabled={id ? true : false}
+         
             type="Number"
             label="Amount"
             variant="filled"

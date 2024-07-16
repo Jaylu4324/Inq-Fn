@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import Alert from '@mui/material/Alert';
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -17,7 +18,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Tooltip from "@mui/material/Tooltip";
 import utc from 'dayjs/plugin/utc';
 import AddIcon from "@mui/icons-material/Add";
-
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import {
   Box,
   FormControl,
@@ -44,10 +46,26 @@ function Addcourse() {
   const [open, setopen] = React.useState(false);
   const [update, doUpdate] = React.useState(false);
   const [arr, setarr] = React.useState([]);
+  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
+  const [open1, setOpen1] = React.useState(false);
   const[id,setid]=React.useState()
   const[alertSuccess,setAlertSuccess]=React.useState({
     open:false,message:"",severity:"",
   })
+  const handleClickOpen1 = () => {
+    setOpen1(true);
+  };
+
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
+  const handleClickOpen2 = () => {
+    setOpen1(true);
+  };
+
+  const handleClose2 = () => {
+    setOpen1(false);
+  };
 
   const [data, setdata] = React.useState({
     StartDate: dayjs(''),
@@ -98,6 +116,8 @@ function Addcourse() {
 console.log(arr)
   const handleClose = () => {
     setopen(false);
+    setid(null)
+    setdata({})
   };
 
   function convertToIST(utcDateStr) {
@@ -121,22 +141,33 @@ const handlesubmit=()=>{
   axios.post(url,data)
   .then((data)=>{
     doUpdate(!update)
-    setopen(false)
-    setdata({})
-    setid(null)
+   
     setAlertSuccess({
       open: true,      
       severity: "success",
-      message:id==undefined?'Event Added Successfully':'Event Updated Successfully'
+      message:id==undefined?'Batch Added Successfully':'Batch Updated Successfully'
     });
     
     setTimeout(()=>{
       setAlertSuccess("");
     },3000);
+    setopen(false)
+    setdata({})
+    setid(null)
     console.log(data)
   })
 .catch((err)=>{
   console.log(err)
+  if (err.response.data) {
+    // setAlertMsg(err.response.data.error.details[0].message)
+    setAlertMsg({
+      open: true,
+      message: err.response.data.error.details[0].message,
+    });
+    setTimeout(() => {
+      setAlertMsg("");
+    }, 3000);
+  }
 })
 
 }
@@ -153,9 +184,9 @@ const handleDateChange = (val) => {
 
   return (
     <>
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={1} sx={{ mb: 3 }}>
-          <Tooltip title="Add Course" arrow>
+      <Grid container spacing={2} justifyContent="right">
+        <Grid item xs={1} sx={{ mb: 3,mr:3 }}>
+          <Tooltip title="Add Batch" arrow>
           <Button
         
             onClick={() => {
@@ -170,6 +201,11 @@ const handleDateChange = (val) => {
 
       <Dialog open={open}>
         <DialogContent>
+        {alertMsg.open && (
+              <Alert severity="error" sx={{ zIndex: 9999 }}>
+                {alertMsg.message}
+              </Alert>
+            )}
           <Box sx={{ minWidth: 120, mb: 2 }}>
             <FormControl variant="filled" fullWidth>
               <InputLabel id="demo-simple-select-label">Course</InputLabel>
@@ -192,18 +228,7 @@ const handleDateChange = (val) => {
             </FormControl>
           </Box>
 
-          <TextField
-            id="outlined-basic"
-            type="number"
-            label="Amount"
-            variant="filled"
-            value={data.Amount}
-            onChange={(e) => {
-              handleChange(e, "Amount");
-            }}
-            fullWidth
-            sx={{ mb: 2 }}
-          />
+        
 
           <Box sx={{ mb: 2 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -220,7 +245,7 @@ const handleDateChange = (val) => {
             </LocalizationProvider>
           </Box>
 
-          <Box sx={{ minWidth: 120, mb: 2 }} >
+          <Box sx={{ minWidth: 120, mb: 1 }} >
             <FormControl variant="filled" fullWidth>
               <InputLabel id="demo-multiple-checkbox-label"> Days</InputLabel>
               <Select
@@ -246,7 +271,7 @@ const handleDateChange = (val) => {
               </Select>
             </FormControl>
           </Box>
-          <box sx={{ mt: 3 }}>
+          <Box sx={{ mt: 1 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
               <DemoContainer components={["TimePicker"]} fullWidth>
                 <TimePicker
@@ -262,7 +287,20 @@ const handleDateChange = (val) => {
                 />
               </DemoContainer>
             </LocalizationProvider>
-          </box>
+          </Box>
+                  
+          <TextField
+            id="outlined-basic"
+          
+            label="Batch Name"
+            variant="filled"
+            value={data.batchName}
+            onChange={(e) => {
+              handleChange(e, "batchName");
+            }}
+            fullWidth
+            sx={{ mb: 2,mt:2 }}
+          />
 
           <DialogActions>
             <Button
@@ -282,24 +320,27 @@ const handleDateChange = (val) => {
               </DialogActions>
               </DialogContent>
               </Dialog>
+            
               {alertSuccess.open  ? (
         <Alert>{alertSuccess.message}</Alert>
       ) : (
         <div></div>
       )}
-              
+              <Box sx={{mx:2}}>
               <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
               <TableRow>
               <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" }}>Course</TableCell>
               
-              <TableCell align="center">Amount</TableCell>
               
+
               <TableCell align="center">Start Date</TableCell>
               
               <TableCell align="center">Days</TableCell>
               <TableCell align="center">Batch Time</TableCell>
+              <TableCell align="center">Batch Name</TableCell>
+              
               <TableCell align="center" colSpan={3}>Actions</TableCell>
               
               </TableRow>
@@ -315,7 +356,6 @@ const handleDateChange = (val) => {
               <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white",zIndex: 1
                          }}>{row.Course}</TableCell>
               
-              <TableCell align="center">{row.Amount}</TableCell>
               
               <TableCell align="center">
                 {row.StartDate && row.StartDate.split("T")[0]}
@@ -331,6 +371,8 @@ const handleDateChange = (val) => {
                 {row.BatchTime && convertToIST(row.BatchTime)}
 
               </TableCell>
+              <TableCell align="center">{row.batchName}</TableCell>
+              
               <TableCell align="center">
               <Tooltip title="Edit" arrow>
                
@@ -348,31 +390,101 @@ const handleDateChange = (val) => {
               </Button>
               </Tooltip>
                    </TableCell>
-              
+                   <Dialog
+                  open={open1}
+                  onClose={handleClose1}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {"Delete Event"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Are you confirm to delete?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose1}>Cancel</Button>
+                    <Button
+                      onClick={() => {
+                     
+                        axios.delete(`http://localhost:5000/batchEvent/DeleteBevent?id=${row._id}`)
+                        .then((data)=>{
+                          doUpdate(!update)
+                          setAlertSuccess({
+                            open: true,
+                            message: "Deleted Successfully",
+                            severity: "success",
+                          });
+                          setTimeout(()=>{
+                            setAlertSuccess("");
+                          },3000);
+                            console.log('data delted',data)
+                            handleClose1();
+                        })
+                        .catch((err)=>{
+                          console.log('error',err)
+                    
+                        })
+                      }}
+                    
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                <Dialog
+                  open={open1}
+                  onClose={handleClose2}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {"Complete Batch"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Are you confirm to complete?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose2}>Cancel</Button>
+                    <Button
+                      onClick={() => {
+                     
+                        axios.post(`http://localhost:5000/batchEvent/completedBevent?id=${row._id}`)
+                        .then((data)=>{
+                          doUpdate(!update)
+                          setAlertSuccess({
+                            open: true,
+                            message: "Completed Successfully",
+                            severity: "success",
+                          });
+                          setTimeout(()=>{
+                            setAlertSuccess("");
+                          },3000);
+                            console.log('data completed',data)
+                        })
+                        .catch((err)=>{
+                          console.log('error',err)
+                      
+                        })
+                      }}
+                    
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                
               <TableCell align="center">
               <Tooltip title="Delete" arrow>
                
               <Button
-             
                 color="error"
                 onClick={() => {
-                  axios.delete(`http://localhost:5000/batchEvent/DeleteBevent?id=${row._id}`)
-                  .then((data)=>{
-                    doUpdate(!update)
-                    setAlertSuccess({
-                      open: true,
-                      message: "Deleted Successfully",
-                      severity: "success",
-                    });
-                    setTimeout(()=>{
-                      setAlertSuccess("");
-                    },3000);
-                      console.log('data delted',data)
-                  })
-                  .catch((err)=>{
-                    console.log('error',err)
-              
-                  })
+                  handleClickOpen1()
                 }}
               >
               <DeleteIcon/>
@@ -387,15 +499,7 @@ const handleDateChange = (val) => {
            
               color="success"
               onClick={() => {
-                axios.post(`http://localhost:5000/batchEvent/completedBevent?id=${row._id}`)
-                .then((data)=>{
-                  doUpdate(!update)
-                    console.log('data completed',data)
-                })
-                .catch((err)=>{
-                  console.log('error',err)
-              
-                })
+              handleClickOpen2()
               }}
               >
               <DoneAllIcon/>
@@ -410,6 +514,7 @@ const handleDateChange = (val) => {
               ))}
               </Table>
               </TableContainer>
+              </Box>
               </>
               );
               }

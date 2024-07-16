@@ -229,11 +229,29 @@ console.log('thid api')
   return (
     <>
    <Grid container spacing={2}>
-   <Grid item xs={12} sx={{display: 'flex', alignItems: 'center' }}>
-
-   <Grid item xs={10}>
+   <Grid item  xs={2} sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
+   <Box sx={{mt:1}}>
+  <Tooltip title="Add Batches" arrow>
+          <Button
        
-   <Box sx={{ mt: 2, mx: 2 }}>
+            onClick={() => {
+              setarr([...arr])
+              console.log(arr)
+
+              setopen(true);
+              setData({ StuName: [] })
+              setId("");
+            }}
+          >
+    <AddIcon/>
+          </Button>
+          </Tooltip>
+          </Box>
+       </Grid>
+     <Grid xs={5}></Grid>
+   <Grid item xs={5}>
+       
+   <Box sx={{ mr: 3 }}>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">
             {" "}
@@ -246,8 +264,9 @@ console.log('thid api')
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             label="Status"
-            renderValue={(data)=>{return(parent._id && data.Course+data.TypeOfEvent || '')}}
+            renderValue={(data)=>{return(parent._id && data.Course || '')}}
             sx={{
+              height:50,
               borderRadius: "16px",
               '& .MuiOutlinedInput-root': {
                 '& fieldset': {
@@ -300,25 +319,10 @@ console.log('thid api')
       </Box>
 </Grid>
 
-<Grid item  xs={2} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-  <Tooltip title="Add Batches" arrow>
-          <Button
-       
-            onClick={() => {
-              setarr([...arr])
-              console.log(arr)
 
-              setopen(true);
-              setData({ StuName: [] })
-              setId("");
-            }}
-          >
-    <AddIcon/>
-          </Button>
-          </Tooltip>
-       </Grid>
-     
-</Grid></Grid>
+
+
+</Grid>
       <Box>
         <Box sx={{ mt: 4 }}>
           <TableContainer>

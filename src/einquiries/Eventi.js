@@ -115,6 +115,7 @@ function Eventi() {
   const [reject, setReject] = React.useState([]);
   const [confirm, setconfirm] = React.useState([]);
   const [update, doUpdate] = React.useState(false);
+  
   const [alertMsg, setAlertMsg] = React.useState("");
   const [open1, setOpen1] = React.useState(false);
   const [alertSuccess, setAlertSuccess] = React.useState({
@@ -347,176 +348,24 @@ function Eventi() {
   return (
     <React.Fragment>
       <Grid container spacing={2}>
-        <Grid
-          item
-          xs={12}
-          sm={4}
-          sx={{
-            display: "flex",
-            justifyContent: "left",
-            alignItems: "center",
-          }}
-        >
-          <Box sx={{ width: 400, ml: 3 }}>
-            <TextField
-              value={searchname}
-              id="filled-hidden-label-small"
-              placeholder="Search Students..."
-              variant="filled"
-              size="small"
-              onChange={handlesearchname}
-              sx={{
-                width: "100%",
-                maxWidth: 400,
-                "& .MuiFilledInput-root": {
-                  borderRadius: "16px",
-                  border: "2px solid #0063cc",
-                  backgroundColor: "white",
-                  padding: "0 16px", // Ensure background color is consistent
-                  "&:hover": {
-                    backgroundColor: "white",
-                  },
-                  "&.Mui-focused": {
-                    backgroundColor: "white",
-                  },
-                  "& input": {
-                    padding: "12px 0", // Adjust vertical padding to center text
-                    // Center the text horizontally
-                  },
-                },
-                "& .MuiFilledInput-underline:before": {
-                  borderBottom: "none", // Remove the default underline before focus
-                },
-                "& .MuiFilledInput-underline:after": {
-                  borderBottom: "none", // Remove the default underline after focus
-                },
-                "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
-                  borderBottom: "none", // Remove underline on hover
-                },
-              }}
-            />
-          </Box>
-          <Tooltip title="Search" arrow>
-            <Button sx={{ color: "#0063cc" }}>
-              <SearchIcon
-              onClick={() => {
-                axios
-                  .get(
-                    `http://localhost:5000/Eventinquiry/search?FullName=${searchname}&type=${type}`
-                  )
-                  .then((data) => {
-                    console.log(data);
-                    if(type=='onGoing')
-                    {
-                      setong(data.data.filterdata)
-                      
-                    }
-                    else if(type=='Reject')
-                    {
-                      setReject(data.data.filterdata)
-                    }
-                    else{
-                      setconfirm(data.data.filterdata)
-                    }
-                    console.log('coorect')
-                    setseearchname("");
-
-                  })
-              .catch((err)=>{
-                console.log(err)
-              })
-            }}
-
-              />
-            </Button>
-          </Tooltip>
-        </Grid>
-        <Grid item xs={12} sm={5}>
-          <Box sx={{ mx: 2 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                {" "}
-                Select Event Type
-              </InputLabel>
-              <Select
-                onChange={(e) => {
-                  handleparent(e);
-                }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Status"
-                renderValue={(data)=>{return (parent._id && data.Course || '')}}
-                sx={{
-                  borderRadius: "16px",
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      border: '2px solid #0063cc', // Default border color
-                    },
-                    '&:hover fieldset': {
-                      border: '2px solid #0063cc', // Border color on hover
-                    },
-                    '&.Mui-focused fieldset': {
-                      border: '2px solid #0063cc', // Border color when focused
-                    },
-                  },
-                }}
-              >
-                {arr &&
-                  arr.map((row) => (
-                    <MenuItem value={row}>
-                      <TableRow
-                        key={row.name}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell align="center">{row.Course}</TableCell>
-
-                        <TableCell align="center">{row.TypeOfEvent}</TableCell>
-                        <TableCell align="center">
-                          {row.TypeOfPayment}
-                        </TableCell>
-
-                        <TableCell align="center">{row.Amount}</TableCell>
-
-                        <TableCell align="center">
-                          {row.StartDate && row.StartDate.split("T")[0]}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.EndtDate && row.EndtDate.split("T")[0]}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.Days.map((val) => (
-                            <TableCell align="center">{val}</TableCell>
-                          ))}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.BatchTime && convertToIST(row.BatchTime)}
-                        </TableCell>
-                      </TableRow>
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </Grid>
-
-        <Grid
+      <Grid
           item
           xs={12}
           sm={3}
           sx={{
             display: "flex",
-            justifyContent: "flex-end", // Adjusted for right alignment
-            alignItems: "center",
+            justifyContent: "flex-start", // Adjusted for right alignment
+            alignItems: "flex-start",
           }}
         >
+          <Box sx={{display:'flex',mt:1}}>
+          <div>
           <Tooltip title="Add Event Inquiries">
             <Button onClick={handleopen} disabled={parent._id ? false : true}>
               <AddIcon />
             </Button>
           </Tooltip>
-
+          </div>
           <div>
             <Tooltip title="Filter" arrow>
               <Button
@@ -697,7 +546,164 @@ function Eventi() {
             
             </Menu>
           </div>
+          </Box>
         </Grid>
+      
+        <Grid item xs={12} sm={5}>
+          <Box sx={{ mx: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                {" "}
+                Select Event Type
+              </InputLabel>
+              <Select
+                onChange={(e) => {
+                  handleparent(e);
+                }}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Status"
+                renderValue={(data)=>{return (parent._id && data.Course || '')}}
+                sx={{
+                  height:50,
+                  borderRadius: "16px",
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      border: '2px solid #0063cc', // Default border color
+                    },
+                    '&:hover fieldset': {
+                      border: '2px solid #0063cc', // Border color on hover
+                    },
+                    '&.Mui-focused fieldset': {
+                      border: '2px solid #0063cc', // Border color when focused
+                    },
+                  },
+                }}
+              >
+                {arr &&
+                  arr.map((row) => (
+                    <MenuItem value={row}>
+                      <TableRow
+                        key={row.name}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell align="center">{row.Course}</TableCell>
+
+                        <TableCell align="center">{row.TypeOfEvent}</TableCell>
+                        <TableCell align="center">
+                          {row.TypeOfPayment}
+                        </TableCell>
+
+                        <TableCell align="center">{row.Amount}</TableCell>
+
+                        <TableCell align="center">
+                          {row.StartDate && row.StartDate.split("T")[0]}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.EndtDate && row.EndtDate.split("T")[0]}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.Days.map((val) => (
+                            <TableCell align="center">{val}</TableCell>
+                          ))}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.BatchTime && convertToIST(row.BatchTime)}
+                        </TableCell>
+                      </TableRow>
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          sx={{
+            display: "flex",
+            justifyContent: "left",
+            alignItems: "center",
+          }}
+        >
+          <Box sx={{ width: 400, ml: 3 }}>
+            <TextField
+              value={searchname}
+              id="filled-hidden-label-small"
+              placeholder="Search Students..."
+              variant="filled"
+              size="small"
+              onChange={handlesearchname}
+              sx={{
+                width: "100%",
+                maxWidth: 400,
+                "& .MuiFilledInput-root": {
+                  borderRadius: "16px",
+                  border: "2px solid #0063cc",
+                  backgroundColor: "white",
+                  padding: "0 16px", // Ensure background color is consistent
+                  "&:hover": {
+                    backgroundColor: "white",
+                  },
+                  "&.Mui-focused": {
+                    backgroundColor: "white",
+                  },
+                  "& input": {
+                    padding: "12px 0", // Adjust vertical padding to center text
+                    // Center the text horizontally
+                  },
+                },
+                "& .MuiFilledInput-underline:before": {
+                  borderBottom: "none", // Remove the default underline before focus
+                },
+                "& .MuiFilledInput-underline:after": {
+                  borderBottom: "none", // Remove the default underline after focus
+                },
+                "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
+                  borderBottom: "none", // Remove underline on hover
+                },
+              }}
+            />
+          </Box>
+          <Tooltip title="Search" arrow>
+            <Button sx={{ color: "#0063cc" }}>
+              <SearchIcon
+              onClick={() => {
+                axios
+                  .get(
+                    `http://localhost:5000/Eventinquiry/search?FullName=${searchname}&type=${type}`
+                  )
+                  .then((data) => {
+                    console.log(data);
+                    if(type=='onGoing')
+                    {
+                      setong(data.data.filterdata)
+                      
+                    }
+                    else if(type=='Reject')
+                    {
+                      setReject(data.data.filterdata)
+                    }
+                    else{
+                      setconfirm(data.data.filterdata)
+                    }
+                    console.log('coorect')
+                    setseearchname("");
+
+                  })
+              .catch((err)=>{
+                console.log(err)
+              })
+            }}
+
+              />
+            </Button>
+          </Tooltip>
+        </Grid>
+       
       </Grid>
 
       <Dialog open={open} onClose={handleClose}>
@@ -975,6 +981,7 @@ function Eventi() {
             </Table>
           </TableContainer>
         </CustomTabPanel>
+        
         <CustomTabPanel value={value} index={1}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">

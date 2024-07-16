@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
+import DownloadIcon from "@mui/icons-material/Download";
 
 import Dialog from "@mui/material/Dialog";
 import {
@@ -307,128 +308,14 @@ function SD() {
         spacing={2}
         
       >
-        <Grid
-       xs={12} sm={4} 
-          sx={{ display: "flex", justifyContent: "center", alignItems: "center"}}
-        >
-          <Box sx={{ width: 400,ml:3,mt:2 }}>
-            <TextField
-              // value={searchname}
-
-              id="filled-hidden-label-small"
-              placeholder="Search Students..."
-              variant="filled"
-              size="small"
-              // onChange={handlesearchname}
-
-              sx={{
-                width: "100%",
-                maxWidth: 400,
-                "& .MuiFilledInput-root": {
-                  borderRadius: "16px",
-                  border: "2px solid #0063cc",
-                  backgroundColor: "white",
-                  padding: "0 16px", // Ensure background color is consistent
-                  "&:hover": {
-                    backgroundColor: "white",
-                  },
-                  "&.Mui-focused": {
-                    backgroundColor: "white",
-                  },
-                  "& input": {
-                    padding: "12px 0", // Adjust vertical padding to center text
-                    // Center the text horizontally
-                  },
-                },
-                "& .MuiFilledInput-underline:before": {
-                  borderBottom: "none", // Remove the default underline before focus
-                },
-                "& .MuiFilledInput-underline:after": {
-                  borderBottom: "none", // Remove the default underline after focus
-                },
-                "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
-                  borderBottom: "none", // Remove underline on hover
-                },
-              }}
-            />
-          </Box>
-          <Box sx={{mt:2}}>
-          <Tooltip title="Search" arrow>
-            <Button sx={{ color: "#0063cc" }}>
-              <SearchIcon
-                onClick={() => {
-                  console.log("hi");
-                }}
-              />
-            </Button>
-          </Tooltip>
-          </Box>
-        </Grid>
-        <Grid
-           item xs={12} sm={5}
-
-        >
-           <Box sx={{ mx: 2 }}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  {" "}
-                  Select Course
-                </InputLabel>
-                <Select
-                  onChange={(e) => {
-                    handleparent(e);
-                  }}
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Status"
-                  sx={{
-                    minWidth:'100%',
-                    borderRadius: "16px",
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': {
-                        border: '2px solid #0063cc', // Default border color
-                      },
-                      '&:hover fieldset': {
-                        border: '2px solid #0063cc', // Border color on hover
-                      },
-                      '&.Mui-focused fieldset': {
-                        border: '2px solid #0063cc', // Border color when focused
-                      },
-                    },
-                  }}
-                  renderValue={(data) => {
-                    return (parent._id && data.Course) || "";
-                  }}
-                >
-                  {coursearr &&
-                    coursearr.map((row) => (
-                      <MenuItem key={row._id} value={row}>
-                        <TableRow>
-                          <TableCell align="center">{row.Course}</TableCell>
-                          <TableCell align="center">{row.Amount}</TableCell>
-                          <TableCell align="center">{row.Days}</TableCell>
-                          <TableCell align="center">
-                            {row.StartDate && row.StartDate.split("T")[0]}
-                          </TableCell>
-                          <TableCell align="center">
-                            {row.BatchTime && convertToIST(row.BatchTime)}
-                          </TableCell>
-                        </TableRow>
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            </Box>
-         
-        </Grid>
-
-          <Grid item xs={12} sm={3} sx={{ display: "flex",
-        justifyContent: "flex-end", // Adjusted for right alignment
-        alignItems: "center",}}>
-          
+  <Grid item xs={12} sm={3} sx={{ display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "flex-start"}}>
+          <Box sx={{display:'flex',mt:1}}>
+          <div>
           <Tooltip title="Add Student Details" arrow>
             <Button
-              sx={{ my: 1 }}
+            
         
               onClick={() => {
                 handleopen();
@@ -437,6 +324,7 @@ function SD() {
         <AddIcon/>
             </Button>
             </Tooltip>
+            </div>
           <div>
             <Tooltip title="Filter" arrow>
               <Button
@@ -580,8 +468,126 @@ function SD() {
               </MenuItem>
             </Menu>
           </div>
+          </Box>
           </Grid>
+       
+        <Grid
+           item xs={12} sm={5}
 
+        >
+           <Box sx={{ mx: 2 }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  {" "}
+                  Select Course
+                </InputLabel>
+                <Select
+                  onChange={(e) => {
+                    handleparent(e);
+                  }}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Status"
+                  sx={{
+                    height:50,
+                    minWidth:'100%',
+                    borderRadius: "16px",
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': {
+                        border: '2px solid #0063cc', // Default border color
+                      },
+                      '&:hover fieldset': {
+                        border: '2px solid #0063cc', // Border color on hover
+                      },
+                      '&.Mui-focused fieldset': {
+                        border: '2px solid #0063cc', // Border color when focused
+                      },
+                    },
+                  }}
+                  renderValue={(data) => {
+                    return (parent._id && data.Course) || "";
+                  }}
+                >
+                  {coursearr &&
+                    coursearr.map((row) => (
+                      <MenuItem key={row._id} value={row}>
+                        <TableRow>
+                          <TableCell align="center">{row.Course}</TableCell>
+                          <TableCell align="center">{row.Amount}</TableCell>
+                          <TableCell align="center">{row.Days}</TableCell>
+                          <TableCell align="center">
+                            {row.StartDate && row.StartDate.split("T")[0]}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.BatchTime && convertToIST(row.BatchTime)}
+                          </TableCell>
+                        </TableRow>
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+            </Box>
+         
+        </Grid>
+
+        
+        <Grid
+       xs={12} sm={4} 
+          sx={{ display: "flex", justifyContent: "center", alignItems: "center"}}
+        >
+          <Box sx={{ width: 400,ml:3,mt:2 }}>
+            <TextField
+              // value={searchname}
+
+              id="filled-hidden-label-small"
+              placeholder="Search Students..."
+              variant="filled"
+              size="small"
+              // onChange={handlesearchname}
+
+              sx={{
+                width: "100%",
+                maxWidth: 400,
+                "& .MuiFilledInput-root": {
+                  borderRadius: "16px",
+                  border: "2px solid #0063cc",
+                  backgroundColor: "white",
+                  padding: "0 16px", // Ensure background color is consistent
+                  "&:hover": {
+                    backgroundColor: "white",
+                  },
+                  "&.Mui-focused": {
+                    backgroundColor: "white",
+                  },
+                  "& input": {
+                    padding: "12px 0", // Adjust vertical padding to center text
+                    // Center the text horizontally
+                  },
+                },
+                "& .MuiFilledInput-underline:before": {
+                  borderBottom: "none", // Remove the default underline before focus
+                },
+                "& .MuiFilledInput-underline:after": {
+                  borderBottom: "none", // Remove the default underline after focus
+                },
+                "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
+                  borderBottom: "none", // Remove underline on hover
+                },
+              }}
+            />
+          </Box>
+          <Box sx={{mt:2}}>
+          <Tooltip title="Search" arrow>
+            <Button sx={{ color: "#0063cc" }}>
+              <SearchIcon
+                onClick={() => {
+                  console.log("hi");
+                }}
+              />
+            </Button>
+          </Tooltip>
+          </Box>
+        </Grid>
       
       </Grid>
 
@@ -635,6 +641,19 @@ function SD() {
               handlechange(e, "Parentcontact");
             }}
           />
+          <TextField
+            type="number"
+            id="outlined-basic"
+            label="Total Fees"
+            variant="filled"
+            value={data.Tfees}
+            fullWidth
+            sx={{ mb: 2 }}
+            onChange={(e) => {
+              handlechange(e, "Tfees");
+            }}
+          />
+          
           <TextField
             id="outlined-basic"
             label="Email"
@@ -703,7 +722,7 @@ function SD() {
           </Box>
 
           <Box>
-            <FormControl variant="filled" sx={{ width: 260, mt: 2 }} fullWidth>
+            <FormControl variant="filled" sx={{ mt: 2 }} fullWidth>
               <InputLabel id="demo-multiple-checkbox-label">
                 Batch days
               </InputLabel>
@@ -750,7 +769,7 @@ function SD() {
                   }}
                 />
               </Button>
-              <img src={data.baseString} />
+          
             </Grid>
           </Grid>
         </DialogContent>
@@ -794,6 +813,7 @@ function SD() {
                 <TableCell align="center">Contact</TableCell>
 
                 <TableCell align="center">Parent Contact</TableCell>
+                <TableCell align="center">Total Fees</TableCell>
                 
                 <TableCell align="center">Email</TableCell>
                 <TableCell align="center">College Name</TableCell>
@@ -807,9 +827,9 @@ function SD() {
                 <TableCell align="center">Date</TableCell>
                 <TableCell align="center">Batch Days</TableCell>
                 <TableCell align="center">Batch Timing</TableCell>
-                <TableCell align="center">Aadhar</TableCell>
 
-                <TableCell align="center" colSpan={2}>
+
+                <TableCell align="center" colSpan={3}>
                   Actions
                 </TableCell>
               </TableRow>
@@ -834,6 +854,8 @@ function SD() {
                     </TableCell>
                     <TableCell align="center">{row.Contact}</TableCell>
                     <TableCell align="center">{row.Parentcontact}</TableCell>
+                    <TableCell align="center">{row.Tfees}</TableCell>
+                    
                     <TableCell align="center">{row.Email}</TableCell>
                     <TableCell align="center">{row.CollegeName}</TableCell>
                     <TableCell align="center">{row.AcademicCourse}</TableCell>
@@ -851,26 +873,31 @@ function SD() {
                       {row.btime && convertToIST(row.btime)}
                     </TableCell>
                     <TableCell align="center">
-                      <Tooltip title="Click here to download">
-                        <img
-                        style={{cursor:"pointer"}}
-                          onClick={() => {
-                            var a = document.createElement("a"); //Create <a>
-                            a.href = row.baseString; //Image Base64 Goes here
-                            console.log(row);
-                            a.download = "Image.png"; //File name Here
-                            a.click(); //Downloaded file
-                          }}
-                          src={row.baseString}
-                        />
+                                            <Tooltip title="Download Aadhar">
+                                              <Button
+                                              onClick={() => {
+                                                var a = document.createElement("a"); //Create <a>
+                                                a.href = row.baseString; //Image Base64 Goes here
+                                                console.log(row);
+                                                a.download =   `${row.Name}Aadhar.png`//File name Here
+                                                a.click(); //Downloaded file
+                                              }}
+                                              
+
+
+                                              >
+                        
+                    <DownloadIcon/>
+                          
+                          </Button>
+                          
                       </Tooltip>
                     </TableCell>
 
                     <TableCell align="center">
                       <Tooltip title="Edit" arrow>
                         <Button
-  
-                          onClick={() => {
+         onClick={() => {
                             handleupdate(row);
                           }}
                         >
@@ -881,7 +908,6 @@ function SD() {
                     <TableCell align="center">
                       <Tooltip title="Delete" arrow>
                         <Button
-                      
                           color="error"
                           onClick={() => {
                             handledelete(row);
@@ -891,6 +917,7 @@ function SD() {
                         </Button>
                       </Tooltip>
                     </TableCell>
+                    
                   </TableRow>
                 ))}
             </TableBody>

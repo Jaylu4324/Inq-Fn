@@ -239,8 +239,8 @@ function Interform() {
   
   return (
     <React.Fragment>
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={1} sx={{ mb: 3 }}>
+      <Grid container spacing={2} justifyContent="right">
+        <Grid item xs={1} sx={{ mb: 3,mr:1 }}>
           <Tooltip title="Add Events">
           <Button
          
@@ -484,7 +484,7 @@ function Interform() {
                 </TableCell>
                 <TableCell align="center">
                   {row.Days.map((val) => (
-                    <TableCell align="center">{val}</TableCell>
+                   <Box>{val}</Box>
                   ))}
                 </TableCell>
                 <TableCell align="center">
