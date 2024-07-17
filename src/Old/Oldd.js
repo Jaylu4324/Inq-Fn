@@ -9,6 +9,15 @@ import TableRow from "@mui/material/TableRow";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Tooltip from "@mui/material/Tooltip";
 import { Box } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+
+
+
+import DialogActions from "@mui/material/DialogActions";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
 function convertToIST(utcDateStr) {
   const date = new Date(utcDateStr);
 
@@ -24,6 +33,16 @@ function convertToIST(utcDateStr) {
 }
 
 export default function Old() {
+  const [open1, setOpen1] = React.useState(false);
+  
+  const handleClickOpen1 = () => {
+    setOpen1(true);
+  };
+
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
+  
   const [arr, setarr] = React.useState([]);
 
   const [update, doupdate] = React.useState(false);
@@ -105,25 +124,47 @@ export default function Old() {
                 <TableCell align="center">
                   {row.BatchTime && convertToIST(row.BatchTime)}
                 </TableCell>
+                <Dialog
+        open={open1}
+        onClose={handleClose1}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Delete Event"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+           Do You Want To delete?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose1}>Cancel</Button>
+          <Button
+          onClick={() => {
+            axios
+              .delete(
+                `http://localhost:5000/event/Deleteevent?id=${row._id}`
+              )
+              .then((data) => {
+                doupdate(!update);
+                console.log("data delted", data);
+              })
+              .catch((err) => {
+                console.log("error", err);
+              });
+              handleClose1()
+          }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
                 <TableCell align="center">
                   <Tooltip title="Delete" arrow>
 
                     <Button
-                   
+                   onClick={()=>{handleClickOpen1()}}
                       color="error"
-                      onClick={() => {
-                        axios
-                          .delete(
-                            `http://localhost:5000/event/Deleteevent?id=${row._id}`
-                          )
-                          .then((data) => {
-                            doupdate(!update);
-                            console.log("data delted", data);
-                          })
-                          .catch((err) => {
-                            console.log("error", err);
-                          });
-                      }}
+                    
                     >
                       <DeleteIcon />
                     </Button>

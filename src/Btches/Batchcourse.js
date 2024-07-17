@@ -29,6 +29,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Alert from "@mui/material/Alert";
 import { Grid } from "@mui/material";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 import axios from "axios";
 
@@ -94,6 +96,8 @@ function Batches() {
     message: "",
     severity: "",
   });
+  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
+  
   React.useEffect(() => {
     axios
       .get("http://localhost:5000/batchEvent/DisplayBevent")
@@ -168,6 +172,15 @@ function Batches() {
       },
     },
   };
+  const [open1, setOpen1] = React.useState(false);
+  
+  const handleClickOpen1 = () => {
+    setOpen1(true);
+  };
+
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
   const handleChange = (event) => {
     const {
       target: { value },
@@ -208,7 +221,7 @@ function Batches() {
         <Tooltip title="Add Batches" arrow>
         <Button
         sx={{ml:2}}
-         
+         disabled={parent._id?false:true}
           onClick={() => {
             setarr([...arr]);
             console.log(arr);
@@ -293,6 +306,11 @@ function Batches() {
 </Grid>
       <Dialog open={open}>
         <DialogContent>
+        {alertMsg.open && (
+              <Alert severity="error" sx={{ zIndex: 9999 }}>
+                {alertMsg.message}
+              </Alert>
+            )}
           <Box sx={{ maxWidth: 300 }}>
             <FormControl sx={{ mt: 3 }} fullWidth>
               <InputLabel id="demo-multiple-checkbox-label">
@@ -372,6 +390,16 @@ function Batches() {
                     })
                     .catch((err) => {
                       console.log(err);
+                      if (err.response.data) {
+                        // setAlertMsg(err.response.data.error.details[0].message)
+                        setAlertMsg({
+                          open: true,
+                          message: err.response.data.error.details[0].message,
+                        });
+                        setTimeout(() => {
+                          setAlertMsg("");
+                        }, 3000);
+                      }
                     });
                 } else {
                   axios
@@ -397,6 +425,16 @@ function Batches() {
 
                     .catch((err) => {
                       console.log(err);
+                      if (err.response.data) {
+                        // setAlertMsg(err.response.data.error.details[0].message)
+                        setAlertMsg({
+                          open: true,
+                          message: err.response.data.error.details[0].message,
+                        });
+                        setTimeout(() => {
+                          setAlertMsg("");
+                        }, 3000);
+                      }
                     });
                 }
               }}
@@ -509,43 +547,67 @@ function Batches() {
                       </Tooltip>
                     </TableCell>
                     <TableCell align="center">
+                    <Dialog
+                  open={open1}
+                  onClose={handleClose1}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {"Delete Batch"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Do you Want to delete?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose1}>Cancel</Button>
+                    <Button
+                      onClick={() => {
+                        console.log(row._id);
+                        axios
+                          .delete(
+                            `http://localhost:5000/regBatch/Delete?id=${row._id}&course=${parent.Course}`
+                          )
+                          .then((data) => {
+                            console.log("delet", data);
+                            setUpdate(!update);
+                            setAlertSuccess({
+                              open: true,
+                              message: "Deleted Successfully",
+                              severity: "success",
+                            });
+                            setTimeout(()=>{
+                              setAlertSuccess("");
+                            },3000);
+   setUpdate(!update);
+   setAdd("SAomething13")
+
+
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                          });
+                      }}
+                    
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
                     <Tooltip title="Delete" arrow>
                         
                       <Button
-                 
+                  onClick={()=>{handleClickOpen1()}}
                         color="error"
-                        onClick={() => {
-                          console.log(row._id);
-                          axios
-                            .delete(
-                              `http://localhost:5000/regBatch/Delete?id=${row._id}&course=${parent.Course}`
-                            )
-                            .then((data) => {
-                              console.log("delet", data);
-                              setUpdate(!update);
-                              setAlertSuccess({
-                                open: true,
-                                message: "Deleted Successfully",
-                                severity: "success",
-                              });
-                              setTimeout(()=>{
-                                setAlertSuccess("");
-                              },3000);
-     setUpdate(!update);
-     setAdd("SAomething13")
-
-
-                            })
-                            .catch((err) => {
-                              console.log(err);
-                            });
-                        }}
+                      
                       >
                         <DeleteIcon/>
                       </Button>
                       </Tooltip>
                     </TableCell>
-                    <TableCell align="center">
+                    {/* <TableCell align="center">
                     <Tooltip title="Complete" arrow>
                         
                       <Button
@@ -569,7 +631,8 @@ function Batches() {
                         <DoneAllIcon/>
                       </Button>
                       </Tooltip>
-                    </TableCell>
+                    </TableCell> */}
+
                   </TableRow>
                 ))}
                 </TableBody>
@@ -578,7 +641,11 @@ function Batches() {
           </TableContainer>
         </Box>
       </Box>
-       
+      {alertSuccess.open  ? (
+        <Alert>{alertSuccess.message}</Alert>
+      ) : (
+        <div></div>
+      )}
 
 
     </>

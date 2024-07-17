@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import DownloadIcon from "@mui/icons-material/Download";
+import DialogContentText from "@mui/material/DialogContentText";
 
 import Dialog from "@mui/material/Dialog";
 import {
@@ -78,38 +79,25 @@ function SD() {
   const [update, doupdate] = React.useState(false);
   const [coursearr, setcoursearr] = React.useState([]);
   const [parent, setParent] = React.useState({});
+  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
+  
+  const [open1, setOpen1] = React.useState(false);
+  const handleClickOpen1 = () => {
+    setOpen1(true);
+  };
+
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
+  
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
     severity: "",
   });
 
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  };
+  
 
-  const days = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
-
-  const handleChange1 = (event) => {
-    const {
-      target: { value },
-    } = event;
-    let val = typeof value === "string" ? value.split(",") : value;
-    setData({ ...data, days: val });
-  };
 
   const handleparent = (e) => {
     setParent({ ...e.target.value });
@@ -167,6 +155,7 @@ function SD() {
         });
     }
   }, [parent, update]);
+  const [searchname, setseearchname] = React.useState("");
 
   const handlesubmit = () => {
     if (id) {
@@ -183,9 +172,22 @@ function SD() {
           setTimeout(() => {
             setAlertSuccess("");
           }, 3000);
+          setOpen(!open);
+          setData({});
+          setId("");
         })
         .catch((err) => {
           console.log(err);
+          if (err.response.data) {
+            // setAlertMsg(err.response.data.error.details[0].message)
+            setAlertMsg({
+              open: true,
+              message: err.response.data.error.details[0].message,
+            });
+            setTimeout(() => {
+              setAlertMsg("");
+            }, 3000);
+          }
         });
     } else {
       axios
@@ -204,15 +206,26 @@ function SD() {
           setTimeout(() => {
             setAlertSuccess("");
           }, 3000);
+          setOpen(!open);
+          setData({});
+          setId("");
         })
         .catch((err) => {
           console.log(err);
+          if (err.response.data) {
+            // setAlertMsg(err.response.data.error.details[0].message)
+            setAlertMsg({
+              open: true,
+              message: err.response.data.error.details[0].message,
+            });
+            setTimeout(() => {
+              setAlertMsg("");
+            }, 3000);
+          }
         });
     }
 
-    setOpen(!open);
-    setData({});
-    setId("");
+   
   };
 
 
@@ -224,30 +237,12 @@ function SD() {
     };
     reader.readAsDataURL(event.target.files[0]);
   };
-  console.log(data.baseString);
 
   const handleopen = () => {
     setOpen(!open);
   };
-  const handledelete = (row) => {
-    axios
-      .delete(`http://localhost:5000/student/deleteStu?id=${row._id}`)
-      .then((data) => {
-        console.log("data deleted", data);
-        doupdate(!update);
-        setAlertSuccess({
-          open: true,
-          message: "Deleted Successfully",
-          severity: "success",
-        });
-        setTimeout(() => {
-          setAlertSuccess("");
-        }, 3000);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  
+
   const handleupdate = (row) => {
     setData(row);
     setId(row._id);
@@ -270,7 +265,11 @@ function SD() {
   const handleClickmenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+  const handlesearchname = (e) => {
+    setseearchname(e.target.value);
+  };
+  console.log(searchname);
+  
   const handleClosemenu = () => {
     setAnchorEl(null);
   };
@@ -300,7 +299,7 @@ function SD() {
     "December",
   ];
   console.log(arr);
-
+console.log(data.baseString)
   return (
     <React.Fragment>
       <Grid
@@ -316,7 +315,7 @@ function SD() {
           <Tooltip title="Add Student Details" arrow>
             <Button
             
-        
+            disabled={parent._id?false:true}
               onClick={() => {
                 handleopen();
               }}
@@ -346,7 +345,7 @@ function SD() {
                 "aria-labelledby": "basic-button",
               }}
             >
-              {montharr.map((val, index) => (
+              {montharr && montharr.map((val, index) => (
                 <MenuItem
                   onClick={() => {
                     axios
@@ -537,13 +536,13 @@ function SD() {
         >
           <Box sx={{ width: 400,ml:3,mt:2 }}>
             <TextField
-              // value={searchname}
+              value={searchname}
 
               id="filled-hidden-label-small"
               placeholder="Search Students..."
               variant="filled"
               size="small"
-              // onChange={handlesearchname}
+              onChange={handlesearchname}
 
               sx={{
                 width: "100%",
@@ -581,7 +580,15 @@ function SD() {
             <Button sx={{ color: "#0063cc" }}>
               <SearchIcon
                 onClick={() => {
-                  console.log("hi");
+                  axios.get(`http://localhost:5000/student/stusearch?Name=${searchname}`)
+                  .then((data)=>{
+                    console.log(data)
+                    setarr(data.data.data)
+                    
+                  })
+                  .catch((err)=>{
+                    console.log(err)
+                  })
                 }}
               />
             </Button>
@@ -606,6 +613,12 @@ function SD() {
       >
         <DialogTitle></DialogTitle>
         <DialogContent>
+        {alertMsg.open && (
+            <Alert severity="error" sx={{ zIndex: 9999 }}>
+              {alertMsg.message}
+            </Alert>
+          )}
+
           <TextField
             fullWidth
             label="Full Name"
@@ -704,53 +717,7 @@ function SD() {
               </DemoContainer>
             </LocalizationProvider>
           </Box>
-          <Box>
-            <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
-              <DemoContainer components={["TimePicker"]} fullWidth>
-                <TimePicker
-                  label="Batch Timings"
-                  defaultValue={id ? dayjs(data.btime) : null}
-                  slotProps={{ textField: { variant: "filled" } }}
-                  sx={{ width: 530,mb:1 }}
-                  fullWidth
-                  onChange={(val) => {
-                    setData({ ...data, btime: val });
-                  }}
-                />
-              </DemoContainer>
-            </LocalizationProvider>
-          </Box>
-
-          <Box>
-            <FormControl variant="filled" sx={{ mt: 2 }} fullWidth>
-              <InputLabel id="demo-multiple-checkbox-label">
-                Batch days
-              </InputLabel>
-              <Select
-                labelId="demo-multiple-checkbox-label"
-                id="demo-multiple-checkbox"
-                multiple
-                value={data.days || []}
-                onChange={handleChange1}
-                
-                fullWidth
-                input={<FilledInput />}
-                renderValue={(selected) => selected.join(", ")}
-                MenuProps={MenuProps}
-              >
-                {days &&
-                  days.map((name) => (
-                    <MenuItem key={name} value={name}>
-                      <Checkbox
-                        checked={data.days && data.days.indexOf(name) > -1}
-                      />
-                      <ListItemText primary={name} />
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          </Box>
-
+    
           <Grid container spacing={2} justifyContent="center">
             <Grid item xs={4} sx={{ mb: 2, mt: 2 }}>
               <Button
@@ -813,16 +780,15 @@ function SD() {
                 <TableCell align="center">Contact</TableCell>
 
                 <TableCell align="center">Parent Contact</TableCell>
-                <TableCell align="center">Total Fees</TableCell>
                 
                 <TableCell align="center">Email</TableCell>
                 <TableCell align="center">College Name</TableCell>
                 <TableCell align="center">Academic Course</TableCell>
                 <TableCell align="center">Course</TableCell>
+                <TableCell align="center">Total Fees</TableCell>
                 
                 <TableCell align="center">Paid Fees</TableCell>
                 <TableCell align="center">Remaining Fees</TableCell>
-                <TableCell align="center">Total Fees</TableCell>
                 
                 <TableCell align="center">Date</TableCell>
                 <TableCell align="center">Batch Days</TableCell>
@@ -854,24 +820,32 @@ function SD() {
                     </TableCell>
                     <TableCell align="center">{row.Contact}</TableCell>
                     <TableCell align="center">{row.Parentcontact}</TableCell>
-                    <TableCell align="center">{row.Tfees}</TableCell>
                     
                     <TableCell align="center">{row.Email}</TableCell>
                     <TableCell align="center">{row.CollegeName}</TableCell>
                     <TableCell align="center">{row.AcademicCourse}</TableCell>
-                    <TableCell align="center">{row.CourseId && row.CourseId.Course}</TableCell>
-
+                     <TableCell align="center">{row.CourseId && row.CourseId.Course}</TableCell>
+                     
+                     
+                    <TableCell align="center">{row.Tfees}</TableCell>
+                    
                     <TableCell align="center">{row.Pfees}</TableCell>
                     <TableCell align="center">{row.Rfees}</TableCell>
-                    <TableCell align="center">{row.Tfees}</TableCell>
                         
                     <TableCell align="center">
                       {row.Date && row.Date.split("T")[0]}
                     </TableCell>
-                    <TableCell align="center">{row.days}</TableCell>
-                    <TableCell align="center">
-                      {row.btime && convertToIST(row.btime)}
+                     <TableCell align="center">
+                      
+                      {row.CourseId && row.CourseId.Days.map((val)=>(
+                        <Box>{val}</Box>
+                      ))}
+
                     </TableCell>
+                    <TableCell align="center">
+                      {row.CourseId && convertToIST(row.CourseId.BatchTime)}
+                    </TableCell>
+                     
                     <TableCell align="center">
                                             <Tooltip title="Download Aadhar">
                                               <Button
@@ -905,12 +879,55 @@ function SD() {
                         </Button>
                       </Tooltip>
                     </TableCell>
+                    <Dialog
+                  open={open1}
+                  onClose={handleClose1}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {"Delete Student"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Do you Want to Delete ?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose1}>Cancel</Button>
+                    <Button
+                  onClick={()=>{
+                    axios
+                    .delete(`http://localhost:5000/student/deleteStu?id=${row._id}`)
+                    .then((data) => {
+                      console.log("data deleted", data);
+                      doupdate(!update);
+                      setAlertSuccess({
+                        open: true,
+                        message: "Deleted Successfully",
+                        severity: "success",
+                      });
+                      setTimeout(() => {
+                        setAlertSuccess("");
+                      }, 3000);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                    handleClose1()
+                  }}  
+                  
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
                     <TableCell align="center">
                       <Tooltip title="Delete" arrow>
                         <Button
                           color="error"
                           onClick={() => {
-                            handledelete(row);
+                            handleClickOpen1()
                           }}
                         >
                           <DeleteIcon />
@@ -924,7 +941,13 @@ function SD() {
           </Table>
         </TableContainer>
       </Box>
+      
+      {alertSuccess.open ? (
+          <Alert>{alertSuccess.message}</Alert>
+        ) : (
+          <div></div>)}
     </React.Fragment>
+    
   );
 }
 

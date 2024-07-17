@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 
@@ -11,6 +12,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import AddIcon from "@mui/icons-material/Add";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 import EditIcon from '@mui/icons-material/Edit';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
@@ -226,6 +229,26 @@ console.log('thid api')
   };
   console.log(confirm);
 
+  const [open2, setOpen2] = React.useState(false);
+  
+  const [open3, setOpen3] = React.useState(false);
+  
+  const handleClickOpen2 = () => {
+    setOpen2(true);
+  };
+
+  const handleClose2 = () => {
+    setOpen2(false);
+  };
+  
+  const handleClickOpen3 = () => {
+    setOpen3(true);
+  };
+
+  const handleClose3 = () => {
+    setOpen3(false);
+  };
+
   return (
     <>
    <Grid container spacing={2}>
@@ -233,7 +256,7 @@ console.log('thid api')
    <Box sx={{mt:1}}>
   <Tooltip title="Add Batches" arrow>
           <Button
-       
+       disabled={parent._id?false:true}
             onClick={() => {
               setarr([...arr])
               console.log(arr)
@@ -305,7 +328,7 @@ console.log('thid api')
                     </TableCell>
                     <TableCell align="center">
                       {row.Days.map((val) => (
-                        <TableCell align="center">{val}</TableCell>
+                        <Box>{val}</Box>
                       ))}
                     </TableCell>
                     <TableCell align="center">
@@ -373,7 +396,7 @@ console.log('thid api')
                       {row.EventId.Days &&
                         row.EventId.Days.map((data) => (
                           <Box align="center">
-                            <TableCell align="center">{data}</TableCell>
+                            {data}
                             </Box>
                         ))}
                     </TableCell>
@@ -418,27 +441,83 @@ console.log('thid api')
                       </Tooltip>
                     </TableCell>
                     
-                    
+                    <Dialog
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Delete Batch"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+           Do You Want To delete?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose2}>Cancel</Button>
+          <Button
+           onClick={() => {
+           
+            axios
+              .delete(
+                `http://localhost:5000/Batch/Delete?id=${row._id}`
+              )
+              .then((data) => {
+                console.log("delet", data);
+                doupdate(!update);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+              handleClose2()
+          }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={open3}
+        onClose={handleClose3}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Complete Batch"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+           Do You Want To Complete?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose3}>Cancel</Button>
+          <Button
+         onClick={() => {
+          axios
+            .post(
+              `http://localhost:5000/Batch/isCompleted?id=${row._id}`
+            )
+            .then((data) => {
+              doupdate(!update);
+
+              console.log(data);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+            handleClose3()
+        }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
                     <TableCell align="center">
                     <Tooltip title="Delete" arrow>
                     
                       <Button
-                  
+                  onClick={()=>{handleClickOpen2()}}
                         color="error"
-                        onClick={() => {
-                          console.log(row._id);
-                          axios
-                            .delete(
-                              `http://localhost:5000/Batch/Delete?id=${row._id}`
-                            )
-                            .then((data) => {
-                              console.log("delet", data);
-                              doupdate(!update);
-                            })
-                            .catch((err) => {
-                              console.log(err);
-                            });
-                        }}
+                      
                       >
                         
                       <DeleteIcon />
@@ -450,22 +529,9 @@ console.log('thid api')
                     <TableCell align="center">
                     <Tooltip title="Complete" arrow>
                       <Button
-                    
+                    onClick={()=>{handleClickOpen3()}}
                         color="success"
-                        onClick={() => {
-                          axios
-                            .post(
-                              `http://localhost:5000/Batch/isCompleted?id=${row._id}`
-                            )
-                            .then((data) => {
-                              doupdate(!update);
-
-                              console.log(data);
-                            })
-                            .catch((err) => {
-                              console.log(err);
-                            });
-                        }}
+                       
                       >
                     <DoneAllIcon/>
                       </Button>
@@ -484,6 +550,11 @@ console.log('thid api')
 
       <Dialog open={open}>
         <DialogContent>
+        {alertMsg.open && (
+            <Alert severity="error" sx={{ zIndex: 9999 }}>
+              {alertMsg.message}
+            </Alert>
+          )}
           <Grid container spacing={2} justifyContent="left">
             <Grid item xs={4}>
               <Box>
@@ -558,6 +629,16 @@ console.log('thid api')
                     })
                     .catch((err) => {
                       console.log(err);
+                      if (err.response.data) {
+                        setAlertMsg({
+                          open: true,
+                          message: err.response.data.error.details[0].message,
+                        });
+            
+                        setTimeout(() => {
+                          setAlertMsg("");
+                        }, 3000);
+                      }
                     });
                 } else {
                   axios
@@ -577,6 +658,16 @@ console.log('thid api')
                     })
                     .catch((err) => {
                       console.log(err);
+                      if (err.response.data) {
+                        setAlertMsg({
+                          open: true,
+                          message: err.response.data.error.details[0].message,
+                        });
+            
+                        setTimeout(() => {
+                          setAlertMsg("");
+                        }, 3000);
+                      }
                     });
                 }
               }}

@@ -103,11 +103,11 @@ console.log(arr)
           
              
               <TableCell align="center">
-                <Tooltip title="Get Students" arrow>
+                <Tooltip title="Get Batch Students" arrow>
 
                  <Button
                  
-                    color="success"
+                    color="primary"
                    
                   >
                     <RemoveRedEyeIcon/>

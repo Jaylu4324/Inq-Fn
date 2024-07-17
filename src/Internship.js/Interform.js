@@ -74,6 +74,8 @@ function Interform() {
   const [update, doUpdate] = React.useState(false);
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   const [open1, setOpen1] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
+  
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
@@ -86,6 +88,14 @@ function Interform() {
 
   const handleClose1 = () => {
     setOpen1(false);
+  };
+
+  const handleClickOpen2 = () => {
+    setOpen2(true);
+  };
+
+  const handleClose2 = () => {
+    setOpen2(false);
   };
 
   const handleChange = (e, type) => {
@@ -517,7 +527,7 @@ function Interform() {
                   </DialogTitle>
                   <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                      Are you confirm to delete?
+                    Do You Want To delete?
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
@@ -533,29 +543,24 @@ function Interform() {
                     </Button>
                   </DialogActions>
                 </Dialog>
-                <TableCell>
-                <Tooltip title="Delete" arrow>
-                      
-                  <Button
-                 
-                    color="error"
-                    onClick={() => {
-                      // handledelete(row);
-                      handleClickOpen1();
-                    }}
-                  >
-                    <DeleteIcon/>
-                  </Button>
-                  </Tooltip>
-                </TableCell>
-
-                <TableCell>
-                <Tooltip title="Complete" arrow>
-                      
-                  <Button
-                 
-                    color="success"
-                    onClick={() => {
+                <Dialog
+                  open={open2}
+                  onClose={handleClose2}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {"Complete Event"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Do You Want To Complete Event?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose2}>Cancel</Button>
+                    <Button
+                     onClick={() => {
                       axios
                         .post(
                           `http://localhost:5000/event/Completed/?id=${row._id}`,
@@ -568,7 +573,40 @@ function Interform() {
                         .catch((err) => {
                           console.log(err);
                         });
+                        handleClose2()
                     }}
+                  
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                
+                <TableCell>
+                <Tooltip title="Delete" arrow>
+                      
+                  <Button
+                 
+                    color="error"
+                    onClick={() => {
+                   
+                      handleClickOpen1();
+                    }}
+                  >
+                    <DeleteIcon/>
+                  </Button>
+                  </Tooltip>
+                </TableCell>
+
+                <TableCell>
+                <Tooltip title="Complete" arrow>
+                      
+                  <Button
+                  onClick={()=>{
+                    handleClickOpen2()
+                  }}
+                    color="success"
+                    
                   >
                     <DoneAllIcon/>
                   </Button>

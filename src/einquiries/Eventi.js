@@ -8,6 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -345,6 +346,27 @@ function Eventi() {
     "November",
     "December",
   ];
+
+  const [open2, setOpen2] = React.useState(false);
+  
+  const [open3, setOpen3] = React.useState(false);
+  
+  const handleClickOpen2 = () => {
+    setOpen2(true);
+  };
+
+  const handleClose2 = () => {
+    setOpen2(false);
+  };
+  
+  const handleClickOpen3 = () => {
+    setOpen3(true);
+  };
+
+  const handleClose3 = () => {
+    setOpen3(false);
+  };
+
   return (
     <React.Fragment>
       <Grid container spacing={2}>
@@ -747,7 +769,7 @@ function Eventi() {
               handleChange(e, "Email");
             }}
             fullWidth
-            sx={{ mb: 2 }}
+            sx={{ mb: 1 }}
           />
 
           <Box sx={{ mb: 2 }}>
@@ -756,7 +778,7 @@ function Eventi() {
                 <DatePicker
                   label="Choose Your Date"
                   defaultValue={id ? dayjs(data.Date) : null}
-                  sx={{ width: 550 }}
+                  sx={{ width: 533 }}
                   slotProps={{ textField: { variant: "filled" } }}
                   onChange={handleDateChange}
                   fullWidth
@@ -927,26 +949,82 @@ function Eventi() {
                           </Button>
                         </Tooltip>
                       </TableCell>
+                      <Dialog
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Reject Student"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+           Do You Want To Reject?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose2}>Cancel</Button>
+          <Button
+            onClick={() => {
+              axios
+                .post(
+                  `http://localhost:5000/Eventinquiry/RejectedInquiry?id=${row._id}`
+                )
 
+                .then((data) => {
+                  console.log(data);
+                  doUpdate(!update);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+                handleClose2()
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+        
+      <Dialog
+        open={open3}
+        onClose={handleClose3}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Student"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+           Do You Want To Confirm?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose3}>Cancel</Button>
+          <Button
+             onClick={() => {
+              axios
+                .post(
+                  `http://localhost:5000/Eventinquiry/ConfimInquiry?id=${row._id}`
+                )
+                .then((data) => {
+                  console.log(data);
+                  doUpdate(!update);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+                handleClose3()
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
                       <TableCell>
                         <Tooltip title="Reject" arrow>
                           <Button
                            
                             color="error"
-                            onClick={() => {
-                              axios
-                                .post(
-                                  `http://localhost:5000/Eventinquiry/RejectedInquiry?id=${row._id}`
-                                )
-
-                                .then((data) => {
-                                  console.log(data);
-                                  doUpdate(!update);
-                                })
-                                .catch((err) => {
-                                  console.log(err);
-                                });
-                            }}
+                            onClick={()=>{handleClickOpen2()}}
                           >
                             <CloseIcon />
                           </Button>
@@ -957,19 +1035,7 @@ function Eventi() {
                         <Tooltip title="Confirm" arrow>
                           <Button
                          color="success"
-                            onClick={() => {
-                              axios
-                                .post(
-                                  `http://localhost:5000/Eventinquiry/ConfimInquiry?id=${row._id}`
-                                )
-                                .then((data) => {
-                                  console.log(data);
-                                  doUpdate(!update);
-                                })
-                                .catch((err) => {
-                                  console.log(err);
-                                });
-                            }}
+                         onClick={()=>{handleClickOpen3()}}
                           >
                             <DoneIcon />
                           </Button>
@@ -1018,7 +1084,7 @@ function Eventi() {
                       <TableCell>
                         <Tooltip title="Delete" arrow>
                           <Button
-                            variant="contained"
+                            
                             color="error"
                             onClick={() => {
                               handleClickOpen1();
@@ -1089,7 +1155,7 @@ function Eventi() {
         <DialogTitle id="alert-dialog-title">{"Delete Event"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you confirm to delete?
+           Do You Want To delete?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -1115,6 +1181,7 @@ function Eventi() {
           </Button>
         </DialogActions>
       </Dialog>
+   
     </React.Fragment>
   );
 }

@@ -149,6 +149,9 @@ export default function FormDialog() {
             setAlertSuccess("");
           }, 3000);
           console.log(data);
+          setData({});
+          setId();
+          setOpen(false);
         })
         .catch((err) => {
           console.log(err);
@@ -261,6 +264,7 @@ export default function FormDialog() {
     setseearchname(e.target.value);
   };
   console.log(searchname);
+  
   console.log(arr);
   
   const montharr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -278,6 +282,7 @@ export default function FormDialog() {
     "November",
     "December",
   ];
+  
   return (
     <React.Fragment>
        
@@ -752,7 +757,7 @@ export default function FormDialog() {
                       {row.invoiceDate && row.invoiceDate.split("T")[0]}
                     </TableCell>
                     <TableCell align="center">
-                      {row.stuId && row.stuId.course}
+                      {row.courseId && row.courseId.Course}
                     </TableCell>
                     <TableCell align="center">{row.TypeOfPayment}</TableCell>
                     <TableCell align="center">{row.Amount}</TableCell>

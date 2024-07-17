@@ -20,6 +20,7 @@ import utc from 'dayjs/plugin/utc';
 import AddIcon from "@mui/icons-material/Add";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+
 import {
   Box,
   FormControl,
@@ -45,13 +46,16 @@ import axios from "axios";
 function Addcourse() {
   const [open, setopen] = React.useState(false);
   const [update, doUpdate] = React.useState(false);
+
   const [arr, setarr] = React.useState([]);
-  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
-  
-  const [open1, setOpen1] = React.useState(false);
+
   const [open2, setOpen2] = React.useState(false);
   
   const[id,setid]=React.useState()
+  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
+  
+  const [open1, setOpen1] = React.useState(false);
+
   const[alertSuccess,setAlertSuccess]=React.useState({
     open:false,message:"",severity:"",
   })
@@ -62,6 +66,7 @@ function Addcourse() {
   const handleClose1 = () => {
     setOpen1(false);
   };
+  
   const handleClickOpen2 = () => {
     setOpen2(true);
   };
@@ -400,7 +405,7 @@ const handleDateChange = (val) => {
                   aria-describedby="alert-dialog-description"
                 >
                   <DialogTitle id="alert-dialog-title">
-                    {"Delete Event"}
+                    {"Delete Batch"}
                   </DialogTitle>
                   <DialogContent>
                     <DialogContentText id="alert-dialog-description">
