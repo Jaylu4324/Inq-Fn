@@ -59,7 +59,8 @@ export default function FormDialog() {
     setParent({ ...e.target.value });
     setS("hahahh");
   };
-
+  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
+  
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
@@ -151,6 +152,16 @@ export default function FormDialog() {
         })
         .catch((err) => {
           console.log(err);
+          if (err.response.data) {
+            // setAlertMsg(err.response.data.error.details[0].message)
+            setAlertMsg({
+              open: true,
+              message: err.response.data.error.details[0].message,
+            });
+            setTimeout(() => {
+              setAlertMsg("");
+            }, 3000);
+          }
         });
     } else {
       axios
@@ -169,18 +180,29 @@ export default function FormDialog() {
             setAlertSuccess("");
           }, 3000);
           console.log("data post api ", data);
+          setData({});
+          setId();
+          setOpen(false);
         })
         .catch((err) => {
           console.log(err);
+          if (err.response.data) {
+            // setAlertMsg(err.response.data.error.details[0].message)
+            setAlertMsg({
+              open: true,
+              message: err.response.data.error.details[0].message,
+            });
+            setTimeout(() => {
+              setAlertMsg("");
+            }, 3000);
+          }
         });
     }
-    setData({});
-    setId();
     setSeverity(severity);
     setMessage(message);
     setalertopen(true);
 
-    setOpen(false);
+    
   };
 
   function convertToIST(utcDateStr) {
@@ -258,6 +280,7 @@ export default function FormDialog() {
   ];
   return (
     <React.Fragment>
+       
      <Grid container spacing={2}>
       {/* Left Section */}
       <Grid item xs={12} sm={3} sx={{
@@ -273,7 +296,8 @@ export default function FormDialog() {
             <Tooltip title="Add Invoice" arrow>
           <Button
        
-        
+       disabled={parent._id ? false : true}
+
        onClick={handleopenclose}
      >
      <AddIcon/>
@@ -562,6 +586,11 @@ export default function FormDialog() {
 
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
+        {alertMsg.open && (
+              <Alert severity="error" sx={{ zIndex: 9999 }}>
+                {alertMsg.message}
+              </Alert>
+            )}
           <Box>
             <FormControl sx={{ my: 2 }} fullWidth>
               <InputLabel id="demo-multiple-checkbox-label">
@@ -592,7 +621,8 @@ export default function FormDialog() {
               </Select>
             </FormControl>
           </Box>
-
+       
+            
           <TextField
             id="outlined-basic"
          
@@ -920,6 +950,17 @@ export default function FormDialog() {
                               .post("http://localhost:5000/invoice/pdf", row)
                               .then((data) => {
                                 console.log(data);
+                                if(data.data){
+                                  setAlertSuccess({
+                                    open: true,
+                                    message: "Email Sent Successfully",
+                                    severity: "success",
+                                  });
+                                  setTimeout(() => {
+                                    setAlertSuccess("");
+                                  }, 3000);
+                                  console.log(data.data)
+                                }
                               })
                               .catch((err) => {
                                 console.log(err);

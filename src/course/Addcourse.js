@@ -47,7 +47,10 @@ function Addcourse() {
   const [update, doUpdate] = React.useState(false);
   const [arr, setarr] = React.useState([]);
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
+  
   const [open1, setOpen1] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
+  
   const[id,setid]=React.useState()
   const[alertSuccess,setAlertSuccess]=React.useState({
     open:false,message:"",severity:"",
@@ -60,11 +63,11 @@ function Addcourse() {
     setOpen1(false);
   };
   const handleClickOpen2 = () => {
-    setOpen1(true);
+    setOpen2(true);
   };
 
   const handleClose2 = () => {
-    setOpen1(false);
+    setOpen2(false);
   };
 
   const [data, setdata] = React.useState({
@@ -435,7 +438,7 @@ const handleDateChange = (val) => {
                   </DialogActions>
                 </Dialog>
                 <Dialog
-                  open={open1}
+                  open={open2}
                   onClose={handleClose2}
                   aria-labelledby="alert-dialog-title"
                   aria-describedby="alert-dialog-description"

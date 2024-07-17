@@ -96,7 +96,7 @@ function a11yProps(index) {
 function Form1() {
   const [value, setValue] = React.useState(0);
 
-  const [data, setData] = React.useState({ Date: dayjs(), Course: [] });
+  const [data, setData] = React.useState({ Date: dayjs(""), Course: [] });
   const [type, settype] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [arr, setArr] = React.useState([]);
@@ -107,6 +107,7 @@ function Form1() {
   
   const [alertMsg, setAlertMsg] = React.useState("");
   const [open1, setOpen1] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
   
   const handleClickOpen1 = () => {
     setOpen1(true);
@@ -117,11 +118,11 @@ function Form1() {
   };
   
   const handleClickOpen2 = () => {
-    setOpen1(true);
+    setOpen2(true);
   };
 
   const handleClose2 = () => {
-    setOpen1(false);
+    setOpen2(false);
   };
 
 
@@ -221,12 +222,12 @@ function Form1() {
         })
         .catch((err) => {
           console.log(err);
-          if (err.data) {
+          if (err.response.data) {
+            // setAlertMsg(err.response.data.error.details[0].message)
             setAlertMsg({
               open: true,
-              message: err.data.error.details[0].message,
+              message: err.response.data.error.details[0].message,
             });
-            // setAlertMsg(err.response.data.error.details[0].message)
             setTimeout(() => {
               setAlertMsg("");
             }, 3000);
@@ -252,12 +253,12 @@ function Form1() {
         })
         .catch((err) => {
           console.log(err);
-          if (err.data) {
+          if (err.response.data) {
+            // setAlertMsg(err.response.data.error.details[0].message)
             setAlertMsg({
               open: true,
-              message: err.data.data.error.details[0].message,
+              message: err.response.data.error.details[0].message,
             });
-
             setTimeout(() => {
               setAlertMsg("");
             }, 3000);
@@ -734,7 +735,7 @@ function Form1() {
                   </DialogActions>
                 </Dialog>
                 <Dialog
-                  open={open1}
+                  open={open2}
                   onClose={handleClose2}
                   aria-labelledby="alert-dialog-title"
                   aria-describedby="alert-dialog-description"
