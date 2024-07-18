@@ -436,10 +436,7 @@ export default function FormDialog() {
                 onClick={() => {
                   axios
                     .get(
-                      `http://localhost:5000/student/fillter?key=Rfees&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`
-                    )
+                      `http://localhost:5000/invoice/filterinvocedate?key=Rfees&sortby=${order}&courseid=${parent._id ? parent._id : ""}`)
                     .then((data) => {
                       console.log(data);
                       setorder(order == 1 ? -1 : 1);
