@@ -427,9 +427,8 @@ console.log(data.baseString)
                 onClick={() => {
                   axios
                     .get(
-                      `http://localhost:5000/student/fillter?key=Name&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`
+                      `http://localhost:5000/student/fillter?key=Name&sortby=${order}&courseid=${parent._id ? parent._id : ""}`
+
                     )
                     .then((data) => {
                       console.log(data);
@@ -582,13 +581,15 @@ console.log(data.baseString)
                 onClick={() => {
                   axios.get(`http://localhost:5000/student/stusearch?Name=${searchname}`)
                   .then((data)=>{
-                    console.log(data)
+                    console.log('newdata',data.data.data)
                     setarr(data.data.data)
-                    
+                    setseearchname("");
+                      
                   })
                   .catch((err)=>{
                     console.log(err)
                   })
+                
                 }}
               />
             </Button>
@@ -763,185 +764,167 @@ console.log(data.baseString)
       </Dialog>
 
       <Box sx={{ mx: 2, my: 2 }}>
-        <TableContainer>
-          <Table sx={{ minWidth: 650, mx: 3 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  align="center"
-                  sx={{
-                    position: "sticky",
-                    left: 0,
-                    backgroundColor: "white",
-                    zIndex: 1,
-                  }}
-                >
-                  Student Name
-                </TableCell>
-                <TableCell align="center">Contact</TableCell>
-
-                <TableCell align="center">Parent Contact</TableCell>
-                
-                <TableCell align="center">Email</TableCell>
-                <TableCell align="center">College Name</TableCell>
-                <TableCell align="center">Academic Course</TableCell>
-                <TableCell align="center">Course</TableCell>
-                <TableCell align="center">Total Fees</TableCell>
-                
-                <TableCell align="center">Paid Fees</TableCell>
-                <TableCell align="center">Remaining Fees</TableCell>
-                
-                <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Batch Days</TableCell>
-                <TableCell align="center">Batch Timing</TableCell>
-
-
-                <TableCell align="center" colSpan={3}>
-                  Actions
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody sx={{ height: arr && arr.length < 1 ? 300 : 0 }}>
-              {arr &&
-                arr.map((row) => (
-                  <TableRow
-                    key={row.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+  <TableContainer>
+    <Table sx={{ minWidth: 650, mx: 3 }} aria-label="simple table">
+      <TableHead>
+        <TableRow>
+          <TableCell
+            align="center"
+            sx={{
+              position: "sticky",
+              left: 0,
+              backgroundColor: "white",
+              zIndex: 1,
+            }}
+          >
+            Student Name
+          </TableCell>
+          <TableCell align="center">Contact</TableCell>
+          <TableCell align="center">Parent Contact</TableCell>
+          <TableCell align="center">Email</TableCell>
+          <TableCell align="center">College Name</TableCell>
+          <TableCell align="center">Academic Course</TableCell>
+          <TableCell align="center">Course</TableCell>
+          <TableCell align="center">Total Fees</TableCell>
+          <TableCell align="center">Paid Fees</TableCell>
+          <TableCell align="center">Remaining Fees</TableCell>
+          <TableCell align="center">Date</TableCell>
+          <TableCell align="center">Batch Days</TableCell>
+          <TableCell align="center">Batch Timing</TableCell>
+          <TableCell align="center" colSpan={3}>
+            Actions
+          </TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody sx={{ height: arr && arr.length < 1 ? 300 : 0 }}>
+        {arr && arr.length > 0 ? (
+          arr.map((row) => (
+            <TableRow
+              key={row.name}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              <TableCell
+                align="center"
+                sx={{
+                  position: "sticky",
+                  left: 0,
+                  backgroundColor: "white",
+                  zIndex: 1,
+                }}
+              >
+                {row.Name}
+              </TableCell>
+              <TableCell align="center">{row.Contact}</TableCell>
+              <TableCell align="center">{row.Parentcontact}</TableCell>
+              <TableCell align="center">{row.Email}</TableCell>
+              <TableCell align="center">{row.CollegeName}</TableCell>
+              <TableCell align="center">{row.AcademicCourse}</TableCell>
+              <TableCell align="center">
+                {row && row.CourseId && row.CourseId.Course}
+              </TableCell>
+              <TableCell align="center">{row.Tfees}</TableCell>
+              <TableCell align="center">{row.Pfees}</TableCell>
+              <TableCell align="center">{row.Rfees}</TableCell>
+              <TableCell align="center">
+                {row.Date && row.Date.split("T")[0]}
+              </TableCell>
+              <TableCell align="center">
+                {row &&
+                  row.CourseId &&
+                  row.CourseId.Days.map((val) => (
+                    <Box key={val}>{val}</Box>
+                  ))}
+              </TableCell>
+              <TableCell align="center">
+                {row && row.CourseId && convertToIST(row.CourseId.BatchTime)}
+              </TableCell>
+              <TableCell align="center">
+                <Tooltip title="Download Aadhar">
+                  <Button
+                    onClick={() => {
+                      var a = document.createElement("a"); // Create <a>
+                      a.href = row.baseString; // Image Base64 Goes here
+                      console.log(row);
+                      a.download = `${row.Name}Aadhar.png`; // File name Here
+                      a.click(); // Downloaded file
+                    }}
                   >
-                    <TableCell
-                      align="center"
-                      sx={{
-                        position: "sticky",
-                        left: 0,
-                        backgroundColor: "white",
-                        zIndex: 1,
-                      }}
-                    >
-                      {row.Name}
-                    </TableCell>
-                    <TableCell align="center">{row.Contact}</TableCell>
-                    <TableCell align="center">{row.Parentcontact}</TableCell>
-                    
-                    <TableCell align="center">{row.Email}</TableCell>
-                    <TableCell align="center">{row.CollegeName}</TableCell>
-                    <TableCell align="center">{row.AcademicCourse}</TableCell>
-                     <TableCell align="center">{row.CourseId && row.CourseId.Course}</TableCell>
-                     
-                     
-                    <TableCell align="center">{row.Tfees}</TableCell>
-                    
-                    <TableCell align="center">{row.Pfees}</TableCell>
-                    <TableCell align="center">{row.Rfees}</TableCell>
-                        
-                    <TableCell align="center">
-                      {row.Date && row.Date.split("T")[0]}
-                    </TableCell>
-                     <TableCell align="center">
-                      
-                      {row.CourseId && row.CourseId.Days.map((val)=>(
-                        <Box>{val}</Box>
-                      ))}
+                    <DownloadIcon />
+                  </Button>
+                </Tooltip>
+              </TableCell>
+              <TableCell align="center">
+                <Tooltip title="Edit" arrow>
+                  <Button onClick={() => handleupdate(row)}>
+                    <EditIcon />
+                  </Button>
+                </Tooltip>  
+              </TableCell>
+              <Dialog
+                open={open1}
+                onClose={handleClose1}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {"Delete Student"}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    Do you want to delete this student?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose1}>Cancel</Button>
+                  <Button
+                    onClick={() => {
+                      axios
+                        .delete(
+                          `http://localhost:5000/student/deleteStu?id=${row._id}`
+                        )
+                        .then((data) => {
+                          console.log("data deleted", data);
+                          doupdate(!update);
+                          setAlertSuccess({
+                            open: true,
+                            message: "Deleted Successfully",
+                            severity: "success",
+                          });
+                          setTimeout(() => {
+                            setAlertSuccess("");
+                          }, 3000);
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
+                      handleClose1();
+                    }}
+                  >
+                    Confirm
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <TableCell align="center">
+                <Tooltip title="Delete" arrow>
+                  <Button color="error" onClick={handleClickOpen1}>
+                    <DeleteIcon />
+                  </Button>
+                </Tooltip>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={14} align="center">
+              No data available
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  </TableContainer>
+</Box>;
 
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.CourseId && convertToIST(row.CourseId.BatchTime)}
-                    </TableCell>
-                     
-                    <TableCell align="center">
-                                            <Tooltip title="Download Aadhar">
-                                              <Button
-                                              onClick={() => {
-                                                var a = document.createElement("a"); //Create <a>
-                                                a.href = row.baseString; //Image Base64 Goes here
-                                                console.log(row);
-                                                a.download =   `${row.Name}Aadhar.png`//File name Here
-                                                a.click(); //Downloaded file
-                                              }}
-                                              
-
-
-                                              >
-                        
-                    <DownloadIcon/>
-                          
-                          </Button>
-                          
-                      </Tooltip>
-                    </TableCell>
-
-                    <TableCell align="center">
-                      <Tooltip title="Edit" arrow>
-                        <Button
-         onClick={() => {
-                            handleupdate(row);
-                          }}
-                        >
-                          <EditIcon />
-                        </Button>
-                      </Tooltip>
-                    </TableCell>
-                    <Dialog
-                  open={open1}
-                  onClose={handleClose1}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    {"Delete Student"}
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      Do you Want to Delete ?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleClose1}>Cancel</Button>
-                    <Button
-                  onClick={()=>{
-                    axios
-                    .delete(`http://localhost:5000/student/deleteStu?id=${row._id}`)
-                    .then((data) => {
-                      console.log("data deleted", data);
-                      doupdate(!update);
-                      setAlertSuccess({
-                        open: true,
-                        message: "Deleted Successfully",
-                        severity: "success",
-                      });
-                      setTimeout(() => {
-                        setAlertSuccess("");
-                      }, 3000);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                    handleClose1()
-                  }}  
-                  
-                    >
-                      Confirm
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-                    <TableCell align="center">
-                      <Tooltip title="Delete" arrow>
-                        <Button
-                          color="error"
-                          onClick={() => {
-                            handleClickOpen1()
-                          }}
-                        >
-                          <DeleteIcon />
-                        </Button>
-                      </Tooltip>
-                    </TableCell>
-                    
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
       
       {alertSuccess.open ? (
           <Alert>{alertSuccess.message}</Alert>

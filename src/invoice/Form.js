@@ -575,6 +575,7 @@ export default function FormDialog() {
                       console.log(data);
                       setArr(data.data.filterdata);
                       setseearchname("");
+
                     })
                     .catch((err) => {
                       console.log(err);
@@ -733,248 +734,257 @@ export default function FormDialog() {
               </TableRow>
             </TableHead>
             <TableBody sx={{ height: arr && arr.length < 1 ? 300 : 0 }}>
-              {arr &&
-                arr.map((row) => (
-                  <TableRow
-                    key={row.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell
-                      align="center"
-                      sx={{
-                        position: "sticky",
-                        left: 0,
-                        backgroundColor: "white",
-                        zIndex: 1,
-                      }}
-                    >
-                      {row.stuId && row.stuId.Name}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.invoiceDate && row.invoiceDate.split("T")[0]}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.courseId && row.courseId.Course}
-                    </TableCell>
-                    <TableCell align="center">{row.TypeOfPayment}</TableCell>
-                    <TableCell align="center">{row.Amount}</TableCell>
+              {arr&&arr.length>0?
+            arr.map((row)=>(
+              <TableRow
+key={row.name}
+sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+>
+<TableCell
+  align="center"
+  sx={{
+    position: "sticky",
+    left: 0,
+    backgroundColor: "white",
+    zIndex: 1,
+  }}
+>
+  {row.stuId && row.stuId.Name}
+</TableCell>
+<TableCell align="center">
+  {row.invoiceDate && row.invoiceDate.split("T")[0]}
+</TableCell>
+<TableCell align="center">
+  {row.courseId && row.courseId.Course}
+</TableCell>
+<TableCell align="center">{row.TypeOfPayment}</TableCell>
+<TableCell align="center">{row.Amount}</TableCell>
 
-                    <TableCell align="center">
-                      {row.stuId && row.stuId.Pfees}
-                    </TableCell>
+<TableCell align="center">
+  {row.stuId && row.stuId.Pfees}
+</TableCell>
 
-                    <TableCell align="center">
-                      {row.stuId && row.stuId.Tfees}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.stuId && row.stuId.Rfees}
-                    </TableCell>
-                    <TableCell align="center">
-                      <Tooltip title="Edit" arrow>
-                        <Button
-                      
-                          onClick={() => {
-                            setData(row);
-                            setId(row._id);
+<TableCell align="center">
+  {row.stuId && row.stuId.Tfees}
+</TableCell>
+<TableCell align="center">
+  {row.stuId && row.stuId.Rfees}
+</TableCell>
+<TableCell align="center">
+  <Tooltip title="Edit" arrow>
+    <Button
+  
+      onClick={() => {
+        setData(row);
+        setId(row._id);
 
-                            setOpen(true);
-                          }}
-                        >
-                          <EditIcon />
-                        </Button>
-                      </Tooltip>
-                    </TableCell>
+        setOpen(true);
+      }}
+    >
+      <EditIcon />
+    </Button>
+  </Tooltip>
+</TableCell>
 
-                    <TableCell align="center">
-                      {" "}
-                      <Tooltip title="Download Receipt" arrow>
-                        <Button
-                     
-                          color="warning"
-                          onClick={() => {
-                            const doc = new jsPDF();
+<TableCell align="center">
+  {" "}
+  <Tooltip title="Download Receipt" arrow>
+    <Button
+ 
+      color="warning"
+      onClick={() => {
+        const doc = new jsPDF();
 
-                            // Set background color
-                            doc.setFillColor(255, 255, 255);
-                            doc.rect(
-                              0,
-                              0,
-                              doc.internal.pageSize.width,
-                              doc.internal.pageSize.height,
-                              "F"
-                            );
+        // Set background color
+        doc.setFillColor(255, 255, 255);
+        doc.rect(
+          0,
+          0,
+          doc.internal.pageSize.width,
+          doc.internal.pageSize.height,
+          "F"
+        );
 
-                            // Add a logo at the top center
-                            const logoWidth = 50;
-                            const logoHeight = 20;
-                            const centerX =
-                              doc.internal.pageSize.width / 2 - logoWidth / 2;
-                            doc.addImage(
-                              Img,
-                              "PNG",
-                              centerX,
-                              10,
-                              logoWidth,
-                              logoHeight
-                            );
+        // Add a logo at the top center
+        const logoWidth = 50;
+        const logoHeight = 20;
+        const centerX =
+          doc.internal.pageSize.width / 2 - logoWidth / 2;
+        doc.addImage(
+          Img,
+          "PNG",
+          centerX,
+          10,
+          logoWidth,
+          logoHeight
+        );
 
-                            // Title
-                            doc.setFont("helvetica", "bold");
-                            doc.setFontSize(24);
-                            doc.setTextColor(0, 0, 110);
-                            doc.text(
-                              "Fees Receipt".toUpperCase(),
-                              doc.internal.pageSize.width / 2,
-                              40,
-                              { align: "center" }
-                            );
+        // Title
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(24);
+        doc.setTextColor(0, 0, 110);
+        doc.text(
+          "Fees Receipt".toUpperCase(),
+          doc.internal.pageSize.width / 2,
+          40,
+          { align: "center" }
+        );
 
-                            // Create a table with 2 columns and 8 rows
-                            const table = {
-                              headers: ["Field", "Value"],
-                              body: [
-                                ["Invoice ID", row.invoiceId],
-                                [
-                                  "Date",
-                                  row.invoiceDate &&
-                                    row.invoiceDate.split("T")[0],
-                                ],
-                                [
-                                  "Student Name",
-                                  row.stuId.Name && row.stuId.Name,
-                                ],
-                                [
-                                  "Course Name",
-                                  row.stuId.course && row.stuId.course,
-                                ],
-                                ["Payment Method", row.TypeOfPayment],
-                                ["Paid Amount", row.Amount],
-                              ],
-                            };
+        // Create a table with 2 columns and 8 rows
+        const table = {
+          headers: ["Field", "Value"],
+          body: [
+            ["Invoice ID", row.invoiceId],
+            [
+              "Date",
+              row.invoiceDate &&
+                row.invoiceDate.split("T")[0],
+            ],
+            [
+              "Student Name",
+              row.stuId.Name && row.stuId.Name,
+            ],
+            [
+              "Course Name",
+              row.stuId.course && row.stuId.course,
+            ],
+            ["Payment Method", row.TypeOfPayment],
+            ["Paid Amount", row.Amount],
+          ],
+        };
 
-                            // Add the table to the PDF with borders and colors
-                            doc.autoTable({
-                              startY: 60,
-                              head: [table.headers],
-                              body: table.body,
-                              theme: "striped",
-                              styles: {
-                                cellPadding: 3,
-                                fontSize: 10,
-                                valign: "middle",
-                                halign: "center",
-                                fontStyle: "normal",
-                                lineWidth: 0.1,
-                              },
-                              headStyles: {
-                                fillColor: [255, 255, 255],
-                                textColor: [0, 0, 110],
-                                fontStyle: "bold",
-                              },
-                              columnStyles: {
-                                0: {
-                                  cellWidth: 40,
-                                },
-                                1: {
-                                  cellWidth: "auto",
-                                },
-                              },
-                            });
+        // Add the table to the PDF with borders and colors
+        doc.autoTable({
+          startY: 60,
+          head: [table.headers],
+          body: table.body,
+          theme: "striped",
+          styles: {
+            cellPadding: 3,
+            fontSize: 10,
+            valign: "middle",
+            halign: "center",
+            fontStyle: "normal",
+            lineWidth: 0.1,
+          },
+          headStyles: {
+            fillColor: [255, 255, 255],
+            textColor: [0, 0, 110],
+            fontStyle: "bold",
+          },
+          columnStyles: {
+            0: {
+              cellWidth: 40,
+            },
+            1: {
+              cellWidth: "auto",
+            },
+          },
+        });
 
-                            // Add footer
-                            const footerText = [
-                              "Email: info@technishal.com",
-                              "Contact: +91 9313386475",
-                              "Address: H-1210, Titanium City Center Business Park,",
-                              "Nr. Prahlad Nagar Rd, Jodhpur Village,",
-                              "Ahmedabad, Gujarat 380015.",
-                            ];
+        // Add footer
+        const footerText = [
+          "Email: info@technishal.com",
+          "Contact: +91 9313386475",
+          "Address: H-1210, Titanium City Center Business Park,",
+          "Nr. Prahlad Nagar Rd, Jodhpur Village,",
+          "Ahmedabad, Gujarat 380015.",
+        ];
 
-                            doc.setFontSize(10);
-                            doc.setTextColor(0, 0, 0);
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
 
-                            // Add horizontal line
-                            doc.setDrawColor(0, 0, 0);
-                            doc.setLineWidth(0.5);
-                            doc.line(
-                              10,
-                              doc.internal.pageSize.height - 30,
-                              doc.internal.pageSize.width - 10,
-                              doc.internal.pageSize.height - 30
-                            );
+        // Add horizontal line
+        doc.setDrawColor(0, 0, 0);
+        doc.setLineWidth(0.5);
+        doc.line(
+          10,
+          doc.internal.pageSize.height - 30,
+          doc.internal.pageSize.width - 10,
+          doc.internal.pageSize.height - 30
+        );
 
-                            // Add footer text with spacing
-                            let footerY = doc.internal.pageSize.height - 25;
-                            footerText.forEach((text, index) => {
-                              doc.text(
-                                text,
-                                doc.internal.pageSize.width / 2,
-                                footerY,
-                                { align: "center" }
-                              );
-                              footerY += 5;
-                            });
-                            doc.setFontSize(10);
-                            doc.setTextColor(100);
-                            doc.text(
-                              "This is a computer-generated invoice. Signature not required.",
-                              doc.internal.pageSize.width / 2,
-                              doc.internal.pageSize.height - 50,
-                              { align: "center" }
-                            );
+        // Add footer text with spacing
+        let footerY = doc.internal.pageSize.height - 25;
+        footerText.forEach((text, index) => {
+          doc.text(
+            text,
+            doc.internal.pageSize.width / 2,
+            footerY,
+            { align: "center" }
+          );
+          footerY += 5;
+        });
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text(
+          "This is a computer-generated invoice. Signature not required.",
+          doc.internal.pageSize.width / 2,
+          doc.internal.pageSize.height - 50,
+          { align: "center" }
+        );
 
-                            // Copyright notice
-                            doc.setTextColor(100);
-                            doc.setFontSize(8);
-                            doc.text(
-                              "© 2023 TechNishal. All Rights Reserved.",
-                              doc.internal.pageSize.width / 2,
-                              doc.internal.pageSize.height - 2,
-                              { align: "center" }
-                            );
+        // Copyright notice
+        doc.setTextColor(100);
+        doc.setFontSize(8);
+        doc.text(
+          "© 2023 TechNishal. All Rights Reserved.",
+          doc.internal.pageSize.width / 2,
+          doc.internal.pageSize.height - 2,
+          { align: "center" }
+        );
 
-                            doc.save(
-                              `${row.stuId.Name}-${row.stuId.course}.pdf`
-                            );
-                          }}
-                        >
-                          <DownloadIcon />
-                        </Button>
-                      </Tooltip>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Tooltip title="Send Email" arrow>
-                        <Button
-                          sx={{ color: "black" }}
-                      
-                          onClick={() => {
-                            axios
-                              .post("http://localhost:5000/invoice/pdf", row)
-                              .then((data) => {
-                                console.log(data);
-                                if(data.data){
-                                  setAlertSuccess({
-                                    open: true,
-                                    message: "Email Sent Successfully",
-                                    severity: "success",
-                                  });
-                                  setTimeout(() => {
-                                    setAlertSuccess("");
-                                  }, 3000);
-                                  console.log(data.data)
-                                }
-                              })
-                              .catch((err) => {
-                                console.log(err);
-                              });
-                          }}
-                        >
-                          <EmailIcon />
-                        </Button>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))}
+        doc.save(
+          `${row.stuId.Name}-${row.stuId.course}.pdf`
+        );
+      }}
+    >
+      <DownloadIcon />
+    </Button>
+  </Tooltip>
+</TableCell>
+<TableCell align="center">
+  <Tooltip title="Send Email" arrow>
+    <Button
+      sx={{ color: "black" }}
+  
+      onClick={() => {
+        axios
+          .post("http://localhost:5000/invoice/pdf", row)
+          .then((data) => {
+            console.log(data);
+            if(data.data){
+              setAlertSuccess({
+                open: true,
+                message: "Email Sent Successfully",
+                severity: "success",
+              });
+              setTimeout(() => {
+                setAlertSuccess("");
+              }, 3000);
+              console.log(data.data)
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }}
+    >
+      <EmailIcon />
+    </Button>
+  </Tooltip>
+</TableCell>
+</TableRow> 
+            )):
+            <TableRow>
+            <TableCell colSpan={14} align="center">
+              No data available
+            </TableCell>
+          </TableRow>
+            }
+              
+
+                
             </TableBody>
           </Table>
         </TableContainer>
@@ -992,3 +1002,4 @@ export default function FormDialog() {
 // </Routes>
 // // </BrowserRouter>
 // setData({...data,[type]:e.target.value})
+
