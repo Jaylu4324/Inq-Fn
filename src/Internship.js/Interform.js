@@ -527,7 +527,7 @@ function Interform() {
                   </DialogTitle>
                   <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                    Do You Want To delete?
+                    Do You Want To delete Event?
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>

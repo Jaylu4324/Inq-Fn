@@ -103,7 +103,7 @@ console.log(arr)
           
              
               <TableCell align="center">
-                <Tooltip title="Get Batch Students" arrow>
+                <Tooltip title="View Batch Students" arrow>
 
                  <Button
                  

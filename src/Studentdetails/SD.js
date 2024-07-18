@@ -654,18 +654,7 @@ console.log(data.baseString)
               handlechange(e, "Parentcontact");
             }}
           />
-          <TextField
-            type="number"
-            id="outlined-basic"
-            label="Total Fees"
-            variant="filled"
-            value={data.Tfees}
-            fullWidth
-            sx={{ mb: 2 }}
-            onChange={(e) => {
-              handlechange(e, "Tfees");
-            }}
-          />
+         
           
           <TextField
             id="outlined-basic"
@@ -688,6 +677,18 @@ console.log(data.baseString)
             sx={{ mb: 2 }}
             onChange={(e) => {
               handlechange(e, "CollegeName");
+            }}
+          />
+           <TextField
+            type="number"
+            id="outlined-basic"
+            label="Total Fees"
+            variant="filled"
+            value={data.Tfees}
+            fullWidth
+            sx={{ mb: 2 }}
+            onChange={(e) => {
+              handlechange(e, "Tfees");
             }}
           />
           <TextField
