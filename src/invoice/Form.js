@@ -70,7 +70,7 @@ export default function FormDialog() {
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/batchEvent/DisplayBevent")
+      .get("http://localhost:5000/batchEvent/allcourse")
       .then((data) => {
         setcoursearr(data.data.data);
 
@@ -102,7 +102,7 @@ export default function FormDialog() {
     }
     if (parent._id) {
       axios
-        .get(`http://localhost:5000/student/allStuden?id=${parent._id}`)
+        .get(`http://localhost:5000/student/InvoiceGet?id=${parent._id}`)
         .then((data) => {
           setstuarr(data.data.data);
         })

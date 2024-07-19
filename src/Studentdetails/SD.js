@@ -123,7 +123,7 @@ function SD() {
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/batchEvent/DisplayBevent")
+      .get("http://localhost:5000/batchEvent/allcourse")
       .then((data) => {
         setcoursearr(data.data.data);
         console.log("arr is set");

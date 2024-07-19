@@ -449,6 +449,8 @@ function Form1() {
                           } else {
                             setconfirm(data.data.allData);
                           }
+                          handleClosemenu()
+                          
                         });
                     }}
                   >

@@ -27,8 +27,8 @@ export default function ButtonAppBar() {
   const [open, setOpen] = React.useState(false);
   const Nav=useNavigate("")
 
-    let arr=["/dashBoard/AddCourse","/dashBoard/CourInq",'/dashBoard/Batch-For-Course',"/dashBoard/Invoice","/dashBoard/Studentdetails","/dashBoard/Completedcourse"]
-  let arr1=["/dashBoard/Events","/dashBoard/einquiries","/dashBoard/Batches","/dashBoard/Old"]
+    let arr=["/course/AddCourse","/course/CourInq",'/course/Batch-For-Course',"/course/Invoice","/course/Studentdetails","/course/Completedcourse"]
+  let arr1=["/events/Events","/events/einquiries","/events/Batches","/events/Old"]
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
