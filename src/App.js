@@ -15,6 +15,7 @@ import {BrowserRouter,Routes,Route} from"react-router-dom"
 import Batchcourse from './Btches/Batchcourse'
 import CourInq from './Inquiries/CourInq'
 import Login from "./Login/Login"
+import Dashboard from './dashboard/Dashboard'
 function App() {
   return (
     <BrowserRouter>
@@ -22,21 +23,10 @@ function App() {
       
 <Route path='/login' element={<Login/>}/>      
 <Route path='/dashBoard' element={<Navbar/>}>
-
-  {/* <Route path='/dashBoard/Invoice' element={<Invoice/>}/>
-   <Route path='/dashBoard/CourInq' element={<CourInq/>}/>
-   <Route path='/dashBoard/Studentdetails' element={<Studentdetails/>}/>
-   <Route path='/dashBoard/Events' element={<Internship/>}/>
-   <Route path='/dashBoard/einquiries' element={<Eventi/>}/>
-   <Route path='/dashBoard/Old' element={<Old/>}/>
-   <Route path='/dashBoard/Batches' element={<Batches/>}/>
-   <Route path='/dashBoard/AddCourse' element={<Addcourse/>}/>
-   <Route path='/dashBoard/Batch-For-Course' element={<Batchcourse/>}/>
-
-   <Route path='/dashBoard/Completedcourse' element={<Completedcourse/>}/> */}
-
+<Route path='/dashBoard/dashBoard' element={<Dashboard/>}/>
 </Route>
 <Route path='/course' element={<Navbar/>}>
+
 <Route path='/course/Invoice' element={<Invoice/>}/>
    <Route path='/course/CourInq' element={<CourInq/>}/>
    <Route path='/course/Studentdetails' element={<Studentdetails/>}/>

@@ -53,7 +53,6 @@ import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
-import { AlignHorizontalRightSharp } from "@mui/icons-material";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -126,7 +125,7 @@ function Eventi() {
   });
   const [deleteId, setDeleteId] = React.useState("");
 
-  const [id, setId] = React.useState();
+  const [id, setId] = React.useState(0);
 
   const handleClickOpen1 = () => {
     setOpen1(true);
@@ -162,7 +161,7 @@ function Eventi() {
               open: true,
               message: err.response.data.error.details[0].message,
             });
-            // setAlertMsg(err.response.data.error.details[0].message)
+            
             setTimeout(() => {
               setAlertMsg("");
             }, 3000);
@@ -245,16 +244,17 @@ function Eventi() {
         })
         .catch((err) => {
           console.log(err);
-          if (err.response.data) {
-            setAlertMsg({
-              open: true,
-              message: err.response.data.error.details[0].message,
-            });
-            // setAlertMsg(err.response.data.error.details[0].message)
-            setTimeout(() => {
-              setAlertMsg("");
-            }, 3000);
-          }
+          // if (err.response.data) {
+          //   setAlertMsg({
+          //     open: true,
+          //     message: err.response.data.error.details[0].message,
+          //   });
+            
+          //   setTimeout(() => {
+          //     setAlertMsg("");
+          //   }, 3000);
+          // }
+
         });
     }
   }, [update, parent._id]);
@@ -278,7 +278,7 @@ function Eventi() {
   dayjs.extend(utc);
   const handleDateChange = (val, type) => {
     const selectedDate = new Date(val);
-    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
+    const timezoneOffset = 5.5 * 60;
     const adjustedDate = new Date(
       selectedDate.getTime() + timezoneOffset * 60 * 1000
     );

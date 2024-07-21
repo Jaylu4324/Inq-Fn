@@ -683,6 +683,7 @@ console.log(data.baseString)
            <TextField
             type="number"
             id="outlined-basic"
+            disabled={id?true:false}
             label="Total Fees"
             variant="filled"
             value={data.Tfees}

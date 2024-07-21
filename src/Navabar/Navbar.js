@@ -10,7 +10,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Drawer from '@mui/material/Drawer';
 
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
+
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -26,7 +26,7 @@ export default function ButtonAppBar() {
   
   const [open, setOpen] = React.useState(false);
   const Nav=useNavigate("")
-
+let dasharr=['/dashBoard/dashBoard']
     let arr=["/course/AddCourse","/course/CourInq",'/course/Batch-For-Course',"/course/Invoice","/course/Studentdetails","/course/Completedcourse"]
   let arr1=["/events/Events","/events/einquiries","/events/Batches","/events/Old"]
 
@@ -42,11 +42,28 @@ export default function ButtonAppBar() {
     >
 
 <SimpleTreeView>
-      <TreeItem itemId="charts-community" label="Dashboard" />
-        
-    
-        <TreeItem itemId="grid" label="Course" 
+      {/* <TreeItem itemId="charts-community" label="Dashboard" />
+         */}
+      <List>
+         {['Dashboard'].map(
+           (text, index) => (
+             <ListItem key={text} disablePadding onClick={()=>{Nav(`${dasharr[index]}`)}}>
+               <ListItemButton onClick={()=>{
+      setOpen(false)
+    }}
+
     >
+                 {/* <ListItemIcon>
+                   {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                 </ListItemIcon>
+                  */}
+                 <ListItemText primary={text} />
+               </ListItemButton>
+            </ListItem>
+           )
+         )}
+       </List>
+        <TreeItem itemId="grid" label="Course">
         <List>
          {['Add Batches','Course-Inquiries','Assign-Students to Batch', 'Invoice', 'Student Details','Completed-courses'].map(
            (text, index) => (
