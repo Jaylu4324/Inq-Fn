@@ -60,20 +60,6 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
-
 function Batches() {
   const [parent, setParent] = React.useState({});
   const [data, setData] = React.useState({ StuName: [] });
@@ -441,81 +427,12 @@ console.log('thid api')
                       </Tooltip>
                     </TableCell>
                     
-                    <Dialog
-        open={open2}
-        onClose={handleClose2}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Delete Batch"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-           Do You Want To delete?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose2}>Cancel</Button>
-          <Button
-           onClick={() => {
-           
-            axios
-              .delete(
-                `http://localhost:5000/Batch/Delete?id=${row._id}`
-              )
-              .then((data) => {
-                console.log("delet", data);
-                doupdate(!update);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-              handleClose2()
-          }}
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={open3}
-        onClose={handleClose3}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Complete Batch"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-           Do You Want To Complete?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose3}>Cancel</Button>
-          <Button
-         onClick={() => {
-          axios
-            .post(
-              `http://localhost:5000/Batch/isCompleted?id=${row._id}`
-            )
-            .then((data) => {
-              doupdate(!update);
-
-              console.log(data);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-            handleClose3()
-        }}
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+    
                     <TableCell align="center">
                     <Tooltip title="Delete" arrow>
                     
                       <Button
-                  onClick={()=>{handleClickOpen2()}}
+                  onClick={()=>{setId(row._id);handleClickOpen2()}}
                         color="error"
                       
                       >
@@ -529,7 +446,7 @@ console.log('thid api')
                     <TableCell align="center">
                     <Tooltip title="Complete" arrow>
                       <Button
-                    onClick={()=>{handleClickOpen3()}}
+                    onClick={()=>{setId(row._id);handleClickOpen3()}}
                         color="success"
                        
                       >
@@ -558,7 +475,7 @@ console.log('thid api')
           <Grid container spacing={2} justifyContent="left">
             <Grid item xs={4}>
               <Box>
-                <FormControl sx={{ width: 560, mt: 3 }}>
+                <FormControl sx={{ width: 300, mt: 3 }}>
                   <InputLabel id="demo-multiple-checkbox-label">
                     Select Students
                   </InputLabel>
@@ -572,7 +489,7 @@ console.log('thid api')
                     )}
                     onChange={handleChange}
                   
-                    sx={{ width: 530 }}
+                    sx={{ width: 300 }}
                     fullWidth
                     input={<FilledInput/>}
                     renderValue={renderSelectedValue}
@@ -682,6 +599,76 @@ console.log('thid api')
       ) : (
         <div></div>
       )}
+                      <Dialog
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Delete Batch"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+           Do You Want To delete?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose2}>Cancel</Button>
+          <Button
+           onClick={() => {
+           
+            axios
+              .delete(
+                `http://localhost:5000/Batch/Delete?id=${id}`
+              )
+              .then((data) => {
+                console.log("delet", data);
+                doupdate(!update);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+              handleClose2()
+          }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={open3}
+        onClose={handleClose3}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Complete Batch"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+           Do You Want To Complete?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose3}>Cancel</Button>
+          <Button
+         onClick={() => {
+          axios
+            .post(
+              `http://localhost:5000/Batch/isCompleted?id=${id}`
+            )
+            .then((data) => {
+              doupdate(!update);
+
+              console.log(data);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+            handleClose3()
+        }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

@@ -949,82 +949,13 @@ function Eventi() {
                           </Button>
                         </Tooltip>
                       </TableCell>
-                      <Dialog
-        open={open2}
-        onClose={handleClose2}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Reject Student"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-           Do You Want To Reject?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose2}>Cancel</Button>
-          <Button
-            onClick={() => {
-              axios
-                .post(
-                  `http://localhost:5000/Eventinquiry/RejectedInquiry?id=${row._id}`
-                )
-
-                .then((data) => {
-                  console.log(data);
-                  doUpdate(!update);
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-                handleClose2()
-            }}
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-        
-      <Dialog
-        open={open3}
-        onClose={handleClose3}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Confirm Student"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-           Do You Want To Confirm?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose3}>Cancel</Button>
-          <Button
-             onClick={() => {
-              axios
-                .post(
-                  `http://localhost:5000/Eventinquiry/ConfimInquiry?id=${row._id}`
-                )
-                .then((data) => {
-                  console.log(data);
-                  doUpdate(!update);
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-                handleClose3()
-            }}
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+     
                       <TableCell>
                         <Tooltip title="Reject" arrow>
                           <Button
                            
                             color="error"
-                            onClick={()=>{handleClickOpen2()}}
+                            onClick={()=>{setId(row._id);handleClickOpen2()}}
                           >
                             <CloseIcon />
                           </Button>
@@ -1035,7 +966,7 @@ function Eventi() {
                         <Tooltip title="Confirm" arrow>
                           <Button
                          color="success"
-                         onClick={()=>{handleClickOpen3()}}
+                         onClick={()=>{setId(row._id);handleClickOpen3()}}
                           >
                             <DoneIcon />
                           </Button>
@@ -1152,7 +1083,7 @@ function Eventi() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Delete Event"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Delete Student"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
            Do You Want To delete?
@@ -1181,7 +1112,76 @@ function Eventi() {
           </Button>
         </DialogActions>
       </Dialog>
-   
+      <Dialog
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Reject Student"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+           Do You Want To Reject?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose2}>Cancel</Button>
+          <Button
+            onClick={() => {
+              axios
+                .post(
+                  `http://localhost:5000/Eventinquiry/RejectedInquiry?id=${id}`
+                )
+
+                .then((data) => {
+                  console.log(data);
+                  doUpdate(!update);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+                handleClose2()
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+        
+      <Dialog
+        open={open3}
+        onClose={handleClose3}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Student"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+           Do You Want To Confirm?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose3}>Cancel</Button>
+          <Button
+             onClick={() => {
+              axios
+                .post(
+                  `http://localhost:5000/Eventinquiry/ConfimInquiry?id=${id}`
+                )
+                .then((data) => {
+                  console.log(data);
+                  doUpdate(!update);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+                handleClose3()
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </React.Fragment>
   );
 }

@@ -861,7 +861,28 @@ console.log(data.baseString)
                   </Button>
                 </Tooltip>  
               </TableCell>
-              <Dialog
+            
+              <TableCell align="center">
+                <Tooltip title="Delete" arrow>
+                  <Button color="error" onClick={()=>{  setId(row._id);handleClickOpen1()}}>
+                    <DeleteIcon />
+                  </Button>
+                </Tooltip>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={14} align="center">
+              No data available
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  </TableContainer>
+</Box>;
+<Dialog
                 open={open1}
                 onClose={handleClose1}
                 aria-labelledby="alert-dialog-title"
@@ -881,7 +902,7 @@ console.log(data.baseString)
                     onClick={() => {
                       axios
                         .delete(
-                          `http://localhost:5000/student/deleteStu?id=${row._id}`
+                          `http://localhost:5000/student/deleteStu?id=${id}`
                         )
                         .then((data) => {
                           console.log("data deleted", data);
@@ -905,27 +926,6 @@ console.log(data.baseString)
                   </Button>
                 </DialogActions>
               </Dialog>
-              <TableCell align="center">
-                <Tooltip title="Delete" arrow>
-                  <Button color="error" onClick={handleClickOpen1}>
-                    <DeleteIcon />
-                  </Button>
-                </Tooltip>
-              </TableCell>
-            </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell colSpan={14} align="center">
-              No data available
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
-  </TableContainer>
-</Box>;
-
       
       {alertSuccess.open ? (
           <Alert>{alertSuccess.message}</Alert>

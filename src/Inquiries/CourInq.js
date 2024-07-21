@@ -107,7 +107,7 @@ function Form1() {
   const [confirm, setconfirm] = React.useState([]);
   const [update, doUpdate] = React.useState(false);
   const [id, setId] = React.useState();
-  
+
   const [alertMsg, setAlertMsg] = React.useState("");
   
   const [open1, setOpen1] = React.useState(false);
@@ -134,7 +134,7 @@ function Form1() {
   const handlesearchname = (e) => {
     setseearchname(e.target.value);
   };
-  console.log(searchname);
+ 
 
   const handleChange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
@@ -145,7 +145,7 @@ function Form1() {
     message: "",
     severity: "",
   });
-console.log(alertSuccess)
+
   const handleopen = () => {
     setOpen(!open);
   };
@@ -156,7 +156,6 @@ console.log(alertSuccess)
     setValue(newValue);
   };
 
-  console.log(value);
   React.useEffect(() => {
     if (value == 0) {
       settype("onGoing");
@@ -166,7 +165,7 @@ console.log(alertSuccess)
       settype("Confirm");
     }
   }, [value]);
-  console.log(type);
+ 
   const Co = ["React", "Node", "C", "C++", "Python", "Mern Stack", "AWS"];
   const handlecourse = (e) => {
     let value = e.target.value;
@@ -202,7 +201,7 @@ console.log(alertSuccess)
       });
   }, [update]);
 
-  console.log("arr is setted", arr);
+
   const handlesubmit = () => {
     if (id) {
       axios
@@ -312,9 +311,7 @@ console.log(alertSuccess)
   const handleClosemenu1 = () => {
     setAnchorEl1(null);
   };
-  console.log(arr);
-  console.log(reject);
-  console.log(confirm);
+  
   const montharr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const monthname = [
     "January",
@@ -330,7 +327,7 @@ console.log(alertSuccess)
     "November",
     "December",
   ];
-  console.log(id);
+
   return (
     <>
       <React.Fragment>
@@ -382,13 +379,13 @@ console.log(alertSuccess)
                   {montharr.map((val, index) => (
                     <MenuItem
                       onClick={() => {
-                        console.log("clicked1");
+                    
                         axios
                           .get(
                             `http://localhost:5000/inquiry/coursefillbymonth?month=${montharr[index]}&sort=${order1}&type=${type}`
                           )
                           .then((data) => {
-                            console.log("click2");
+                          
                             console.log(data);
                             if (type == "onGoing") {
                               setArr(data.data);
@@ -400,7 +397,7 @@ console.log(alertSuccess)
                               setconfirm(data.data);
                               setorder1(order1 === 1 ? -1 : 1);
                             }
-                            console.log("coorect");
+                           
                           })
                           .catch((error) => {
                             console.error("API Request Error:", error);
@@ -583,7 +580,7 @@ console.log(alertSuccess)
                           } else {
                             setconfirm(data.data.filterdata);
                           }
-                          console.log("coorect");
+                          
                           setseearchname("");
                         })
                         .catch((err) => {
@@ -701,88 +698,15 @@ console.log(alertSuccess)
                               </Button>
                             </Tooltip>
                           </TableCell>
-                          <Dialog
-                  open={open1}
-                  onClose={handleClose1}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    {"Reject Student"}
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      Do you Want to Reject ?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleClose1}>Cancel</Button>
-                    <Button
-                  onClick={() => {
-                    axios
-                      .post(
-                        `http://localhost:5000/inquiry/RejectedInquiry?id=${row._id}`
-                      )
-                      .then((data) => {
-                        console.log(data);
-                        doUpdate(!update);
-                      })
-                      .catch((err) => {
-                        console.log(err);
-                      });
-                      handleClose1()
-                  }}
-                     
-                     
-                    
-                    >
-                      Confirm
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-                <Dialog
-                  open={open2}
-                  onClose={handleClose2}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    {"Confirm Student"}
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      Do you want to Confirm Student ?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleClose2}>Cancel</Button>
-                    <Button
-               onClick={() => {
-                axios
-                  .post(
-                    `http://localhost:5000/inquiry/ConfimInquiry?id=${row._id}`
-                  )
-                  .then((data) => {
-                    doUpdate(!update);
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
-                  handleClose2()
-              }}
-                     
-                     
-                    
-                    >
-                      Confirm
-                    </Button>
-                  </DialogActions>
-                </Dialog>
+                
                 
                           <TableCell align="center">
                             <Tooltip title="Reject" arrow>
                               <Button
-                               onClick={()=>{handleClickOpen1()}}
+                               onClick={()=>{
+                                setId(row._id);
+                                handleClickOpen1()
+                              }}
                                 color="error"
                               >
                                 <CloseIcon />
@@ -792,7 +716,11 @@ console.log(alertSuccess)
                           <TableCell align="center">
                             <Tooltip title="Confirm" arrow>
                               <Button
-                                onClick={()=>{handleClickOpen2()}}
+                                onClick={()=>{
+                                  setId(row._id);
+                                  handleClickOpen2()
+
+                                }}
                                 color="success"
                               >
                                 <DoneIcon />
@@ -877,6 +805,7 @@ console.log(alertSuccess)
                                     .then((data) => {
                                       doUpdate(!update);
                                       console.log(data);
+
                                     })
                                     .catch((err) => {
                                       console.log(err);
@@ -1143,6 +1072,83 @@ console.log(alertSuccess)
           <div></div>
         )}
       </React.Fragment>
+      <Dialog
+                  open={open1}
+                  onClose={handleClose1}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {"Reject Student"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Do you Want to Reject ?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose1}>Cancel</Button>
+                    <Button
+                  onClick={() => {
+                    axios
+                      .post(
+                        `http://localhost:5000/inquiry/RejectedInquiry?id=${id}`
+                      )
+                      .then((data) => {
+                        console.log(data);
+                        doUpdate(!update);
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                      handleClose1()
+                  }}
+                     
+                     
+                    
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                <Dialog
+                  open={open2}
+                  onClose={handleClose2}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {"Confirm Student"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Do you want to Confirm Student ?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose2}>Cancel</Button>
+                    <Button
+               onClick={() => {
+                axios
+                  .post(
+                    `http://localhost:5000/inquiry/ConfimInquiry?id=${id}`
+                  )
+                  .then((data) => {
+                    doUpdate(!update);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+                  handleClose2()
+              }}
+                     
+                     
+                    
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
     </>
   );
 }

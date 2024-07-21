@@ -67,7 +67,7 @@ function Batches() {
   const [parent, setParent] = React.useState({});
 
   const [data, setData] = React.useState({ StuName: [] });
-  const [id, setId] = React.useState("");
+  const [id, setId] = React.useState();
 
   function convertToIST(utcDateStr) {
     const date = new Date(utcDateStr);
@@ -97,7 +97,7 @@ function Batches() {
     severity: "",
   });
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
-  
+  console.log(id)
   React.useEffect(() => {
     axios
       .get("http://localhost:5000/batchEvent/DisplayBevent")
@@ -211,7 +211,6 @@ function Batches() {
       return selectedNames.join(", ");
     }
   };
-  console.log(confirm);
 
   return (
     <>
@@ -311,8 +310,8 @@ function Batches() {
                 {alertMsg.message}
               </Alert>
             )}
-          <Box sx={{ maxWidth: 300 }}>
-            <FormControl sx={{ mt: 3 }} fullWidth>
+          <Box>
+            <FormControl sx={{width: 300, mt: 3 }}>
               <InputLabel id="demo-multiple-checkbox-label">
                 Select Students
               </InputLabel>
@@ -320,7 +319,7 @@ function Batches() {
               <Select
                 labelId="demo-multiple-checkbox-label"
                 id="demo-multiple-checkbox"
-                fullWidth
+                sx={{ width: 300 }}
                 multiple
                 value={
                   data.StuName &&
@@ -547,59 +546,14 @@ function Batches() {
                       </Tooltip>
                     </TableCell>
                     <TableCell align="center">
-                    <Dialog
-                  open={open1}
-                  onClose={handleClose1}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    {"Delete Batch"}
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      Do you Want to delete?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleClose1}>Cancel</Button>
-                    <Button
-                      onClick={() => {
-                        console.log(row._id);
-                        axios
-                          .delete(
-                            `http://localhost:5000/regBatch/Delete?id=${row._id}&course=${parent.Course}`
-                          )
-                          .then((data) => {
-                            console.log("delet", data);
-                            setUpdate(!update);
-                            setAlertSuccess({
-                              open: true,
-                              message: "Deleted Successfully",
-                              severity: "success",
-                            });
-                            setTimeout(()=>{
-                              setAlertSuccess("");
-                            },3000);
-   setUpdate(!update);
-   setAdd("SAomething13")
-
-
-                          })
-                          .catch((err) => {
-                            console.log(err);
-                          });
-                      }}
-                    
-                    >
-                      Confirm
-                    </Button>
-                  </DialogActions>
-                </Dialog>
+               
                     <Tooltip title="Delete" arrow>
                         
                       <Button
-                  onClick={()=>{handleClickOpen1()}}
+                  onClick={()=>{
+                    setId(row._id);
+                    handleClickOpen1()
+                  }}
                         color="error"
                       
                       >
@@ -647,7 +601,55 @@ function Batches() {
         <div></div>
       )}
 
+<Dialog
+                  open={open1}
+                  onClose={handleClose1}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {"Delete Batch"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Do you Want to delete?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose1}>Cancel</Button>
+                    <Button
+                      onClick={() => {
+                        
+                        axios
+                          .delete(
+                            `http://localhost:5000/regBatch/Delete?id=${id}&course=${parent.Course}`
+                          )
+                          .then((data) => {
+                            console.log("delet", data);
+                            setUpdate(!update);
+                            setAlertSuccess({
+                              open: true,
+                              message: "Deleted Successfully",
+                              severity: "success",
+                            });
+                            setTimeout(()=>{
+                              setAlertSuccess("");
+                            },3000);
+   setUpdate(!update);
+   setAdd("SAomething13")
+   handleClose1()
 
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                          });
+                      }}
+                    
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
     </>
   );
 }

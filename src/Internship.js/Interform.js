@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import Alert from "@mui/material/Alert";
 import dayjs from "dayjs";
-import utc from 'dayjs/plugin/utc';
+import utc from "dayjs/plugin/utc";
 import AddIcon from "@mui/icons-material/Add";
 
 import DialogContent from "@mui/material/DialogContent";
@@ -27,8 +27,8 @@ import {
   FilledInput,
   TableBody,
 } from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
-import DoneAllIcon from '@mui/icons-material/DoneAll';
+import EditIcon from "@mui/icons-material/Edit";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Tooltip from "@mui/material/Tooltip";
 
@@ -75,7 +75,7 @@ function Interform() {
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
-  
+
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
@@ -124,9 +124,9 @@ function Interform() {
             message: "Updated Successfully",
             severity: "success",
           });
-          setTimeout(()=>{
+          setTimeout(() => {
             setAlertSuccess("");
-          },3000);
+          }, 3000);
 
           console.log("data is updated", data);
         })
@@ -154,9 +154,9 @@ function Interform() {
             message: "Added Successfully",
             severity: "success",
           });
-          setTimeout(()=>{
+          setTimeout(() => {
             setAlertSuccess("");
-          },3000);
+          }, 3000);
           console.log("Alert State is changed");
           handleClose();
           // handledelete(row);
@@ -182,8 +182,7 @@ function Interform() {
         });
     }
   };
- 
- 
+
   const DaysArr = [
     "Monday",
     "Tuesday",
@@ -215,51 +214,30 @@ function Interform() {
       });
   }, [update]);
 
-
-  const handledelete = (row) => {
-    axios
-      .delete(`http://localhost:5000/event/Deleteevent?id=${row._id}`)
-      .then((data) => {
-        doUpdate(!update);
-        setAlertSuccess({
-          open: true,
-          message: "Deleted Successfully",
-          severity: "error",
-        });
-        setTimeout(()=>{
-          setAlertSuccess("");
-        },3000);
-        console.log("Alert State is changed");
-        console.log("data deleted", data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   dayjs.extend(utc);
-  const handleDateChange = (val,type) => {
+  const handleDateChange = (val, type) => {
     const selectedDate = new Date(val);
     const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
-    const adjustedDate = new Date(selectedDate.getTime() + timezoneOffset * 60 * 1000);
+    const adjustedDate = new Date(
+      selectedDate.getTime() + timezoneOffset * 60 * 1000
+    );
     const formattedDate = adjustedDate.toISOString();
-  
+
     setdata({ ...data, [type]: formattedDate });
   };
-  
+
   return (
     <React.Fragment>
       <Grid container spacing={2} justifyContent="right">
-        <Grid item xs={1} sx={{ mb: 3,mr:1 }}>
+        <Grid item xs={1} sx={{ mb: 3, mr: 1 }}>
           <Tooltip title="Add Events">
-          <Button
-         
-            onClick={() => {
-              setopen(true);
-            }}
-          >
-           <AddIcon/>
-          </Button>
+            <Button
+              onClick={() => {
+                setopen(true);
+              }}
+            >
+              <AddIcon />
+            </Button>
           </Tooltip>
         </Grid>
       </Grid>
@@ -364,7 +342,9 @@ function Interform() {
                   slotProps={{ textField: { variant: "filled" } }}
                   defaultValue={id ? dayjs(data.StartDate) : null}
                   sx={{ width: 500 }}
-                  onChange={(val)=>{handleDateChange(val,'StartDate')}}
+                  onChange={(val) => {
+                    handleDateChange(val, "StartDate");
+                  }}
                 ></DatePicker>
               </DemoContainer>
             </LocalizationProvider>
@@ -377,7 +357,9 @@ function Interform() {
                   slotProps={{ textField: { variant: "filled" } }}
                   defaultValue={id ? dayjs(data.EndtDate) : null}
                   sx={{ width: 500 }}
-                  onChange={(val)=>{handleDateChange(val,'EndtDate')}}
+                  onChange={(val) => {
+                    handleDateChange(val, "EndtDate");
+                  }}
                 ></DatePicker>
               </DemoContainer>
             </LocalizationProvider>
@@ -394,7 +376,6 @@ function Interform() {
                 fullWidth
                 input={<FilledInput />}
                 renderValue={(selected) => selected.join(", ")}
-         
               >
                 {DaysArr.map((name) => (
                   <MenuItem key={name} value={name}>
@@ -445,180 +426,199 @@ function Interform() {
           </DialogActions>
         </DialogContent>
       </Dialog>
-      {alertSuccess.open  ? (
-        <Alert>{alertSuccess.message}</Alert>
-      ) : (
-        <div></div>
-      )}
-      <Box sx={{mx:2}}>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white" , zIndex: 1,
-                                   }}>Course</TableCell>
-              <TableCell align="center">Type Of Event</TableCell>
-              <TableCell align="center">Type Of Payment</TableCell>
-
-              <TableCell align="center">Amount</TableCell>
-
-              <TableCell align="center">Start Date</TableCell>
-              <TableCell align="center">End Date</TableCell>
-
-              <TableCell align="center">Days</TableCell>
-              <TableCell align="center">Batch Time</TableCell>
-
-              <TableCell align="center" colSpan={3}>Actions</TableCell>
-
-            </TableRow>
-          </TableHead>
-<TableBody sx={{height:arr && arr.length<1?300:0}}>
-          {arr &&
-            arr.map((row) => (
-              <TableRow
-                key={row.name}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
-                                    }}>{row.Course}</TableCell>
-                <TableCell align="center">{row.TypeOfEvent}</TableCell>
-                <TableCell align="center">{row.TypeOfPayment}</TableCell>
-
-                <TableCell align="center">{row.Amount}</TableCell>
-
-                <TableCell align="center">
-                  {row.StartDate && row.StartDate.split("T")[0]}
-                </TableCell>
-                <TableCell align="center">
-                  {row.EndtDate && row.EndtDate.split("T")[0]}
-                </TableCell>
-                <TableCell align="center">
-                  {row.Days.map((val) => (
-                   <Box>{val}</Box>
-                  ))}
-                </TableCell>
-                <TableCell align="center">
-                  {row.BatchTime && convertToIST(row.BatchTime)}
-                </TableCell>
-
-                <TableCell align="center">
-                <Tooltip title="Edit" arrow>
-                      
-                  <Button
-          
-                    onClick={() => {
-                      setopen(true);
-                      setdata(row);
-                      setid(row._id);
-                    }}
-                  >
-                    <EditIcon/>
-                  </Button>
-                  </Tooltip>
-                </TableCell>
-                <Dialog
-                  open={open1}
-                  onClose={handleClose1}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    {"Delete Event"}
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                    Do You Want To delete Event?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleClose1}>Cancel</Button>
-                    <Button
-                      onClick={() => {
-                        handleClose1();
-                        handledelete(row);
-                      }}
-                      autoFocus
-                    >
-                      Confirm
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-                <Dialog
-                  open={open2}
-                  onClose={handleClose2}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    {"Complete Event"}
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      Do You Want To Complete Event?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleClose2}>Cancel</Button>
-                    <Button
-                     onClick={() => {
-                      axios
-                        .post(
-                          `http://localhost:5000/event/Completed/?id=${row._id}`,
-                          data
-                        )
-                        .then((data) => {
-                          console.log("event completed", data);
-                          doUpdate(!update);
-                        })
-                        .catch((err) => {
-                          console.log(err);
-                        });
-                        handleClose2()
-                    }}
-                  
-                    >
-                      Confirm
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-                
-                <TableCell>
-                <Tooltip title="Delete" arrow>
-                      
-                  <Button
-                 
-                    color="error"
-                    onClick={() => {
-                   
-                      handleClickOpen1();
-                    }}
-                  >
-                    <DeleteIcon/>
-                  </Button>
-                  </Tooltip>
-                </TableCell>
-
-                <TableCell>
-                <Tooltip title="Complete" arrow>
-                      
-                  <Button
-                  onClick={()=>{
-                    handleClickOpen2()
+      {alertSuccess.open ? <Alert>{alertSuccess.message}</Alert> : <div></div>}
+      <Box sx={{ mx: 2 }}>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  align="center"
+                  sx={{
+                    position: "sticky",
+                    left: 0,
+                    backgroundColor: "white",
+                    zIndex: 1,
                   }}
-                    color="success"
-                    
-                  >
-                    <DoneAllIcon/>
-                  </Button>
-                  </Tooltip>
+                >
+                  Course
+                </TableCell>
+                <TableCell align="center">Type Of Event</TableCell>
+                <TableCell align="center">Type Of Payment</TableCell>
+
+                <TableCell align="center">Amount</TableCell>
+
+                <TableCell align="center">Start Date</TableCell>
+                <TableCell align="center">End Date</TableCell>
+
+                <TableCell align="center">Days</TableCell>
+                <TableCell align="center">Batch Time</TableCell>
+
+                <TableCell align="center" colSpan={3}>
+                  Actions
                 </TableCell>
               </TableRow>
+            </TableHead>
+            <TableBody sx={{ height: arr && arr.length < 1 ? 300 : 0 }}>
+              {arr &&
+                arr.map((row) => (
+                  <TableRow
+                    key={row.name}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell
+                      align="center"
+                      sx={{
+                        position: "sticky",
+                        left: 0,
+                        backgroundColor: "white",
+                        zIndex: 1,
+                      }}
+                    >
+                      {row.Course}
+                    </TableCell>
+                    <TableCell align="center">{row.TypeOfEvent}</TableCell>
+                    <TableCell align="center">{row.TypeOfPayment}</TableCell>
 
-            ))}
-</TableBody>
-        </Table>
-      </TableContainer>
+                    <TableCell align="center">{row.Amount}</TableCell>
+
+                    <TableCell align="center">
+                      {row.StartDate && row.StartDate.split("T")[0]}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.EndtDate && row.EndtDate.split("T")[0]}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.Days.map((val) => (
+                        <Box>{val}</Box>
+                      ))}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.BatchTime && convertToIST(row.BatchTime)}
+                    </TableCell>
+
+                    <TableCell align="center">
+                      <Tooltip title="Edit" arrow>
+                        <Button
+                          onClick={() => {
+                            setopen(true);
+                            setdata(row);
+                            setid(row._id);
+                          }}
+                        >
+                          <EditIcon />
+                        </Button>
+                      </Tooltip>
+                    </TableCell>
+
+                    <TableCell>
+                      <Tooltip title="Delete" arrow>
+                        <Button
+                          color="error"
+                          onClick={() => {
+                            setid(row._id);
+                            handleClickOpen1();
+                          }}
+                        >
+                          <DeleteIcon />
+                        </Button>
+                      </Tooltip>
+                    </TableCell>
+
+                    <TableCell>
+                      <Tooltip title="Complete" arrow>
+                        <Button
+                          onClick={() => {
+                            setid(row._id);
+                            handleClickOpen2();
+                          }}
+                          color="success"
+                        >
+                          <DoneAllIcon />
+                        </Button>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
+      <Dialog
+        open={open1}
+        onClose={handleClose1}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Delete Event"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do You Want To delete Event?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose1}>Cancel</Button>
+          <Button
+            onClick={() => {
+              handleClose1();
+
+              axios
+                .delete(`http://localhost:5000/event/Deleteevent?id=${id}`)
+                .then((data) => {
+                  doUpdate(!update);
+                  setAlertSuccess({
+                    open: true,
+                    message: "Deleted Successfully",
+                    severity: "error",
+                  });
+                  setTimeout(() => {
+                    setAlertSuccess("");
+                  }, 3000);
+                  console.log("Alert State is changed");
+                  console.log("data deleted", data);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }}
+            autoFocus
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Complete Event"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do You Want To Complete Event?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose2}>Cancel</Button>
+          <Button
+            onClick={() => {
+              axios
+                .post(`http://localhost:5000/event/Completed/?id=${id}`, data)
+                .then((data) => {
+                  console.log("event completed", data);
+                  doUpdate(!update);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              handleClose2();
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </React.Fragment>
   );
 }

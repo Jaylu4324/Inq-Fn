@@ -189,7 +189,7 @@ const handleDateChange = (val) => {
 
   setdata({ ...data, StartDate: formattedDate });
 };
-
+console.log(id)
   return (
     <>
       <Grid container spacing={2} justifyContent="right">
@@ -214,7 +214,7 @@ const handleDateChange = (val) => {
                 {alertMsg.message}
               </Alert>
             )}
-          <Box sx={{ minWidth: 120, mb: 2 }}>
+          <Box sx={{ minWidth: 120, mb: 1 }}>
             <FormControl variant="filled" fullWidth>
               <InputLabel id="demo-simple-select-label">Course</InputLabel>
               <Select
@@ -398,7 +398,48 @@ const handleDateChange = (val) => {
               </Button>
               </Tooltip>
                    </TableCell>
-                   <Dialog
+         
+                
+              <TableCell align="center">
+              <Tooltip title="Delete" arrow>
+               
+              <Button
+                color="error"
+                onClick={() => {
+                  setid(row._id)
+                  handleClickOpen1()
+                }}
+              >
+              <DeleteIcon/>
+              </Button>
+              </Tooltip>
+                   </TableCell>
+              
+                   <TableCell align="center">
+                   <Tooltip title="Complete" arrow>
+               
+              <Button
+           
+              color="success"
+              onClick={() => {
+              setid(row._id)
+              handleClickOpen2()
+              }}
+              >
+              <DoneAllIcon/>
+              </Button>
+              </Tooltip>
+                  
+                  
+                   </TableCell>
+              
+              </TableRow>
+              </TableBody>
+              ))}
+              </Table>
+              </TableContainer>
+              </Box>
+               <Dialog
                   open={open1}
                   onClose={handleClose1}
                   aria-labelledby="alert-dialog-title"
@@ -417,7 +458,7 @@ const handleDateChange = (val) => {
                     <Button
                       onClick={() => {
                      
-                        axios.delete(`http://localhost:5000/batchEvent/DeleteBevent?id=${row._id}`)
+                        axios.delete(`http://localhost:5000/batchEvent/DeleteBevent?id=${id}`)
                         .then((data)=>{
                           doUpdate(!update)
                           setAlertSuccess({
@@ -441,7 +482,8 @@ const handleDateChange = (val) => {
                       Confirm
                     </Button>
                   </DialogActions>
-                </Dialog>
+                </Dialog> 
+                       
                 <Dialog
                   open={open2}
                   onClose={handleClose2}
@@ -461,7 +503,7 @@ const handleDateChange = (val) => {
                     <Button
                       onClick={() => {
                      
-                        axios.post(`http://localhost:5000/batchEvent/completedBevent?id=${row._id}`)
+                        axios.post(`http://localhost:5000/batchEvent/completedBevent?id=${id}`)
                         .then((data)=>{
                           doUpdate(!update)
                           setAlertSuccess({
@@ -469,6 +511,7 @@ const handleDateChange = (val) => {
                             message: "Completed Successfully",
                             severity: "success",
                           });
+                          handleClose2()
                           setTimeout(()=>{
                             setAlertSuccess("");
                           },3000);
@@ -485,44 +528,6 @@ const handleDateChange = (val) => {
                     </Button>
                   </DialogActions>
                 </Dialog>
-                
-              <TableCell align="center">
-              <Tooltip title="Delete" arrow>
-               
-              <Button
-                color="error"
-                onClick={() => {
-                  handleClickOpen1()
-                }}
-              >
-              <DeleteIcon/>
-              </Button>
-              </Tooltip>
-                   </TableCell>
-              
-                   <TableCell align="center">
-                   <Tooltip title="Complete" arrow>
-               
-              <Button
-           
-              color="success"
-              onClick={() => {
-              handleClickOpen2()
-              }}
-              >
-              <DoneAllIcon/>
-              </Button>
-              </Tooltip>
-                  
-                  
-                   </TableCell>
-              
-              </TableRow>
-              </TableBody>
-              ))}
-              </Table>
-              </TableContainer>
-              </Box>
               </>
               );
               }

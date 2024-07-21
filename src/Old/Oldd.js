@@ -12,8 +12,6 @@ import { Box } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 
-
-
 import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -34,7 +32,7 @@ function convertToIST(utcDateStr) {
 
 export default function Old() {
   const [open1, setOpen1] = React.useState(false);
-  
+  const [id, setid] = React.useState();
   const handleClickOpen1 = () => {
     setOpen1(true);
   };
@@ -42,7 +40,7 @@ export default function Old() {
   const handleClose1 = () => {
     setOpen1(false);
   };
-  
+
   const [arr, setarr] = React.useState([]);
 
   const [update, doupdate] = React.useState(false);
@@ -67,9 +65,12 @@ export default function Old() {
             <TableRow>
               <TableCell
                 align="center"
-                sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
+                sx={{
+                  position: "sticky",
+                  left: 0,
+                  backgroundColor: "white",
+                  zIndex: 1,
                 }}
-
               >
                 Course
               </TableCell>
@@ -87,7 +88,6 @@ export default function Old() {
               <TableCell align="center" colSpan={3}>
                 Actions
               </TableCell>
-
             </TableRow>
           </TableHead>
 
@@ -99,9 +99,12 @@ export default function Old() {
               >
                 <TableCell
                   align="center"
-                  sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
+                  sx={{
+                    position: "sticky",
+                    left: 0,
+                    backgroundColor: "white",
+                    zIndex: 1,
                   }}
-
                 >
                   {row.Course}
                 </TableCell>
@@ -118,13 +121,31 @@ export default function Old() {
                 </TableCell>
                 <TableCell align="center">
                   {row.Days.map((val) => (
-                   <Box>{val}</Box>
+                    <Box>{val}</Box>
                   ))}
                 </TableCell>
                 <TableCell align="center">
                   {row.BatchTime && convertToIST(row.BatchTime)}
                 </TableCell>
-                <Dialog
+
+                <TableCell align="center">
+                  <Tooltip title="Delete" arrow>
+                    <Button
+                      onClick={() => {
+                        setid(row._id);
+                        handleClickOpen1();
+                      }}
+                      color="error"
+                    >
+                      <DeleteIcon />
+                    </Button>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))}
+        </Table>
+      </TableContainer>
+      <Dialog
         open={open1}
         onClose={handleClose1}
         aria-labelledby="alert-dialog-title"
@@ -133,49 +154,29 @@ export default function Old() {
         <DialogTitle id="alert-dialog-title">{"Delete Event"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-           Do You Want To delete?
+            Do You Want To delete?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose1}>Cancel</Button>
           <Button
-          onClick={() => {
-            axios
-              .delete(
-                `http://localhost:5000/event/Deleteevent?id=${row._id}`
-              )
-              .then((data) => {
-                doupdate(!update);
-                console.log("data delted", data);
-              })
-              .catch((err) => {
-                console.log("error", err);
-              });
-              handleClose1()
-          }}
+            onClick={() => {
+              axios
+                .delete(`http://localhost:5000/event/Deleteevent?id=${id}`)
+                .then((data) => {
+                  doupdate(!update);
+                  console.log("data delted", data);
+                })
+                .catch((err) => {
+                  console.log("error", err);
+                });
+              handleClose1();
+            }}
           >
             Confirm
           </Button>
         </DialogActions>
       </Dialog>
-                <TableCell align="center">
-                  <Tooltip title="Delete" arrow>
-
-                    <Button
-                   onClick={()=>{handleClickOpen1()}}
-                      color="error"
-                    
-                    >
-                      <DeleteIcon />
-                    </Button>
-                  </Tooltip>
-
-                </TableCell>
-
-              </TableRow>
-            ))}
-        </Table>
-      </TableContainer>
     </>
   );
 }
