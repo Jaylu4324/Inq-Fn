@@ -38,12 +38,14 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import jwttoken from '../Token'
 
 import Paper from "@mui/material/Paper";
 import { Grid } from "@mui/material";
 import axios from "axios";
 
 function Addcourse() {
+  
   const [open, setopen] = React.useState(false);
   const [update, doUpdate] = React.useState(false);
 
@@ -53,12 +55,14 @@ function Addcourse() {
   
   const[id,setid]=React.useState()
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
+  const [alertbatchMsg, setalertbatchMsg] = React.useState({ open: false, message: "",severity:"" });
   
+
+  const[alertSuccess,setAlertSuccess]=React.useState({open:false,message:"",severity:""})
+
   const [open1, setOpen1] = React.useState(false);
 
-  const[alertSuccess,setAlertSuccess]=React.useState({
-    open:false,message:"",severity:"",
-  })
+console.log(alertSuccess.open)
   const handleClickOpen1 = () => {
     setOpen1(true);
   };
@@ -109,7 +113,7 @@ function Addcourse() {
   };
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/batchEvent/DisplayBevent")
+      .get("http://localhost:5000/batchEvent/DisplayBevent",jwttoken())
       .then((data) => {
         setarr(data.data.data);
         
@@ -146,7 +150,7 @@ console.log(arr)
 const handlesubmit=()=>{
 
   const url=id?`http://localhost:5000/batchEvent/UpdateBevent?id=${id}`:'http://localhost:5000/batchEvent/addBevent'
-  axios.post(url,data)
+  axios.post(url,data,jwttoken())
   .then((data)=>{
     doUpdate(!update)
    
@@ -161,7 +165,7 @@ const handlesubmit=()=>{
     },3000);
     setopen(false)
     setdata({})
-    setid(null)
+    setid('')
     console.log(data)
   })
 .catch((err)=>{
@@ -189,10 +193,10 @@ const handleDateChange = (val) => {
 
   setdata({ ...data, StartDate: formattedDate });
 };
-console.log(id)
+
   return (
     <>
-      <Grid container spacing={2} justifyContent="right">
+      <Grid container spacing={2} justifyContent="left">
         <Grid item xs={1} sx={{ mb: 3,mr:3 }}>
           <Tooltip title="Add Batch" arrow>
           <Button
@@ -253,7 +257,7 @@ console.log(id)
             </LocalizationProvider>
           </Box>
 
-          <Box sx={{ minWidth: 120, mb: 1 }} >
+          <Box sx={{ minWidth: 120, mb: 1 }} fullWidth>
             <FormControl variant="filled" fullWidth>
               <InputLabel id="demo-multiple-checkbox-label"> Days</InputLabel>
               <Select
@@ -262,7 +266,7 @@ console.log(id)
                 multiple
                 value={data.Days || []}
                 onChange={handleChange1}
-             
+                fullWidth
                 input={<FilledInput />}
                 renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
@@ -329,10 +333,11 @@ console.log(id)
               </DialogContent>
               </Dialog>
             
-              {alertSuccess.open  ? (
-        <Alert>{alertSuccess.message}</Alert>
-      ) : (
-        <div></div>
+              {alertSuccess.open && (
+        <Alert severity={alertSuccess.severity}>{alertSuccess.message}</Alert>
+      )}
+      {alertbatchMsg.open && (
+        <Alert severity={alertbatchMsg.severity}>{alertbatchMsg.message}</Alert>
       )}
               <Box sx={{mx:2}}>
               <TableContainer component={Paper}>
@@ -458,7 +463,7 @@ console.log(id)
                     <Button
                       onClick={() => {
                      
-                        axios.delete(`http://localhost:5000/batchEvent/DeleteBevent?id=${id}`)
+                        axios.delete(`http://localhost:5000/batchEvent/DeleteBevent?id=${id}`,jwttoken())
                         .then((data)=>{
                           doUpdate(!update)
                           setAlertSuccess({
@@ -503,7 +508,7 @@ console.log(id)
                     <Button
                       onClick={() => {
                      
-                        axios.post(`http://localhost:5000/batchEvent/completedBevent?id=${id}`)
+                        axios.post(`http://localhost:5000/batchEvent/completedBevent?id=${id}`,{},jwttoken())
                         .then((data)=>{
                           doUpdate(!update)
                           setAlertSuccess({
@@ -519,7 +524,17 @@ console.log(id)
                         })
                         .catch((err)=>{
                           console.log('error',err)
-                      
+                          if (err.response.data) {
+                            
+                            setalertbatchMsg({
+                              open: true,
+                              message: err.response.data.error.details[0],
+                              severity: "error"
+                            });
+                            setTimeout(() => {
+                              setalertbatchMsg("");
+                            }, 3000);
+                          }
                         })
                       }}
                     

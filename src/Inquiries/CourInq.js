@@ -33,6 +33,7 @@ import {
 
 import dayjs from "dayjs";
 import DialogContent from "@mui/material/DialogContent";
+import jwttoken from '../Token'
 
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 
@@ -98,7 +99,7 @@ function a11yProps(index) {
 
 function Form1() {
   const [value, setValue] = React.useState(0);
-
+console.log(jwttoken)
   const [data, setData] = React.useState({ Date: dayjs(""), Course: [] });
   const [type, settype] = React.useState("");
   const [open, setOpen] = React.useState(false);
@@ -174,8 +175,9 @@ function Form1() {
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/inquiry/OnGoing")
+      .get("http://localhost:5000/inquiry/OnGoing",jwttoken())
       .then((data) => {
+        console.log(data)
         console.log("data received");
         setArr(data.data.data);
       })
@@ -183,7 +185,7 @@ function Form1() {
         console.log(err);
       });
     axios
-      .get("http://localhost:5000/inquiry/Reject")
+      .get("http://localhost:5000/inquiry/Reject",jwttoken())
       .then((data) => {
         setReject(data.data.data);
       })
@@ -192,8 +194,9 @@ function Form1() {
       });
 
     axios
-      .get("http://localhost:5000/inquiry/Confirm")
+      .get("http://localhost:5000/inquiry/Confirm",jwttoken())
       .then((data) => {
+        console.log(data)
         setconfirm(data.data.data);
       })
       .catch((err) => {
@@ -205,7 +208,7 @@ function Form1() {
   const handlesubmit = () => {
     if (id) {
       axios
-        .post(`http://localhost:5000/inquiry/Update?id=${id}`, data)
+        .post(`http://localhost:5000/inquiry/Update?id=${id}`,data,jwttoken())
         .then((data1) => {
           doUpdate(!update);
 
@@ -238,7 +241,7 @@ function Form1() {
         });
     } else {
       axios
-        .post("http://localhost:5000/inquiry/addInquiry", data)
+        .post("http://localhost:5000/inquiry/addInquiry",data,jwttoken())
         .then((data) => {
           doUpdate(!update);
           setOpen(false);
@@ -382,8 +385,7 @@ function Form1() {
                     
                         axios
                           .get(
-                            `http://localhost:5000/inquiry/coursefillbymonth?month=${montharr[index]}&sort=${order1}&type=${type}`
-                          )
+                            `http://localhost:5000/inquiry/coursefillbymonth?month=${montharr[index]}&sort=${order1}&type=${type}`,jwttoken())
                           .then((data) => {
                           
                             console.log(data);
@@ -437,7 +439,7 @@ function Form1() {
                     onClick={() => {
                       axios
                         .get(
-                          `http://localhost:5000/inquiry/Alldata?key=${type}`
+                          `http://localhost:5000/inquiry/Alldata?key=${type}`,jwttoken()
                         )
                         .then((data) => {
                           console.log(data);
@@ -460,7 +462,7 @@ function Form1() {
                     onClick={() => {
                       axios
                         .get(
-                          `http://localhost:5000/inquiry/coursefillbydate?key=Date&sortby=${order}&type=${type}`
+                          `http://localhost:5000/inquiry/coursefillbydate?key=Date&sortby=${order}&type=${type}`,jwttoken()
                         )
                         .then((data) => {
                           console.log(data);
@@ -487,7 +489,7 @@ function Form1() {
                     onClick={() => {
                       axios
                         .get(
-                          `http://localhost:5000/inquiry/coursefillbydate?key=FullName&sortby=${order}&type=${type}`
+                          `http://localhost:5000/inquiry/coursefillbydate?key=FullName&sortby=${order}&type=${type}`,jwttoken()
                         )
                         .then((data) => {
                           console.log(data);
@@ -569,7 +571,7 @@ function Form1() {
                     onClick={() => {
                       axios
                         .get(
-                          `http://localhost:5000/inquiry/commansearchstu?FullName=${searchname}&type=${type}`
+                          `http://localhost:5000/inquiry/commansearchstu?FullName=${searchname}&type=${type}`,jwttoken()
                         )
                         .then((data) => {
                           console.log(data);
@@ -790,7 +792,11 @@ function Form1() {
                           <TableCell align="center">
                             {row.CollageName}
                           </TableCell>
-                          <TableCell align="center">{row.Course}</TableCell>
+                          <TableCell align="center">{
+                          row.Course&&row.Course.map((val)=>(
+                            <Box>{val}</Box>
+                          ))                            
+                            }</TableCell>
                           <TableCell align="center">
                             {row.Description}
                           </TableCell>
@@ -800,7 +806,7 @@ function Form1() {
                                 onClick={() => {
                                   axios
                                     .delete(
-                                      "http://localhost:5000/inquiry/Delete"
+                                      "http://localhost:5000/inquiry/Delete",jwttoken()
                                     )
                                     .then((data) => {
                                       doUpdate(!update);
@@ -1092,8 +1098,7 @@ function Form1() {
                   onClick={() => {
                     axios
                       .post(
-                        `http://localhost:5000/inquiry/RejectedInquiry?id=${id}`
-                      )
+                        `http://localhost:5000/inquiry/RejectedInquiry?id=${id}`,{},jwttoken())
                       .then((data) => {
                         console.log(data);
                         doUpdate(!update);
@@ -1131,7 +1136,7 @@ function Form1() {
                onClick={() => {
                 axios
                   .post(
-                    `http://localhost:5000/inquiry/ConfimInquiry?id=${id}`
+                    `http://localhost:5000/inquiry/ConfimInquiry?id=${id}`,{},jwttoken()
                   )
                   .then((data) => {
                     doUpdate(!update);

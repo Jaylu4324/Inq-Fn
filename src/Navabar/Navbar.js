@@ -22,10 +22,13 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { Grid } from '@mui/material';
 import MailIcon from '@mui/icons-material/Mail';
 
-export default function ButtonAppBar() {
+export default function ButtonAppBar(props) {
+  console.log(props)
+  console.log()
   const[text1,settext]=React.useState()
   console.log(text1)
   const [open, setOpen] = React.useState(false);
+  
   const Nav=useNavigate("")
 let dasharr=['/dashBoard/dashBoard']
     let arr=["/course/AddCourse","/course/CourInq",'/course/Batch-For-Course',"/course/Invoice","/course/Studentdetails","/course/Completedcourse"]
@@ -44,7 +47,10 @@ let dasharr=['/dashBoard/dashBoard']
       <List>
          {['Dashboard'].map(
            (text, index) => (
-             <ListItem key={text} disablePadding onClick={()=>{settext(text);Nav(`${dasharr[index]}`)}}>
+             <ListItem key={text} disablePadding onClick={()=>{settext(text);Nav(`${dasharr[index]}`);
+             
+             
+             }}>
                <ListItemButton onClick={()=>{
       setOpen(false)
     }}
@@ -137,7 +143,7 @@ let dasharr=['/dashBoard/dashBoard']
       component="div" 
       sx={{ flexGrow: 1, textAlign: 'center' }}
     >
-      {text1}
+      {text1?text1:"Dashboard"}
     </Typography>
   </Grid>
   

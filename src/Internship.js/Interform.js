@@ -6,6 +6,7 @@ import Alert from "@mui/material/Alert";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import AddIcon from "@mui/icons-material/Add";
+import jwttoken from '../Token'
 
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -64,8 +65,8 @@ function convertToIST(utcDateStr) {
 function Interform() {
   const [open, setopen] = React.useState(false);
   const [data, setdata] = React.useState({
-    StartDate: dayjs(),
-    EndtDate: dayjs(),
+    StartDate: dayjs(''),
+    EndtDate: dayjs(''),
     Days: [],
   });
 
@@ -75,7 +76,8 @@ function Interform() {
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
-
+  const [alertbatchMsg, setalertbatchMsg] = React.useState({ open: false, message: "",severity:"" });
+  
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
@@ -114,7 +116,7 @@ function Interform() {
   const handlesubmit = (e) => {
     if (id) {
       axios
-        .post(`http://localhost:5000/event/Updateevent?id=${id}`, data)
+        .post(`http://localhost:5000/event/Updateevent?id=${id}`, data,jwttoken())
         .then((data) => {
           handleClose();
 
@@ -146,7 +148,7 @@ function Interform() {
     } else {
       console.log(data);
       axios
-        .post(`http://localhost:5000/event/addevent`, data)
+        .post(`http://localhost:5000/event/addevent`, data,jwttoken())
         .then((data) => {
           doUpdate(!update);
           setAlertSuccess({
@@ -203,7 +205,7 @@ function Interform() {
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/event/Displayevent")
+      .get("http://localhost:5000/event/Displayevent",jwttoken())
       .then((data) => {
         setarr(data.data.data);
         console.log("arr is set ");
@@ -364,7 +366,7 @@ function Interform() {
               </DemoContainer>
             </LocalizationProvider>
           </Box>
-          <Box sx={{ minWidth: 120, mb: 2 }} fullWidth>
+          <Box sx={{ minWidth: 120, mb: 1 }} fullWidth>
             <FormControl variant="filled" fullWidth>
               <InputLabel id="demo-multiple-checkbox-label"> Days</InputLabel>
               <Select
@@ -389,7 +391,7 @@ function Interform() {
               </Select>
             </FormControl>
           </Box>
-          <box sx={{ mt: 3 }}>
+          <Box sx={{ mt: 1 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
               <DemoContainer components={["TimePicker"]} fullWidth>
                 <TimePicker
@@ -404,7 +406,7 @@ function Interform() {
                 />
               </DemoContainer>
             </LocalizationProvider>
-          </box>
+          </Box>
 
           <DialogActions>
             <Button
@@ -426,7 +428,13 @@ function Interform() {
           </DialogActions>
         </DialogContent>
       </Dialog>
-      {alertSuccess.open ? <Alert>{alertSuccess.message}</Alert> : <div></div>}
+      
+      {alertSuccess.open && (
+        <Alert severity={alertSuccess.severity}>{alertSuccess.message}</Alert>
+      )}
+      {alertbatchMsg.open && (
+        <Alert severity={alertbatchMsg.severity}>{alertbatchMsg.message}</Alert>
+      )}
       <Box sx={{ mx: 2 }}>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -563,7 +571,7 @@ function Interform() {
               handleClose1();
 
               axios
-                .delete(`http://localhost:5000/event/Deleteevent?id=${id}`)
+                .delete(`http://localhost:5000/event/Deleteevent?id=${id}`,jwttoken())
                 .then((data) => {
                   doUpdate(!update);
                   setAlertSuccess({
@@ -604,15 +612,28 @@ function Interform() {
           <Button
             onClick={() => {
               axios
-                .post(`http://localhost:5000/event/Completed/?id=${id}`, data)
+                .post(`http://localhost:5000/event/Completed/?id=${id}`,{},jwttoken())
                 .then((data) => {
                   console.log("event completed", data);
                   doUpdate(!update);
+                  handleClose2();
+              
                 })
                 .catch((err) => {
                   console.log(err);
+                  if (err.response.data) {
+                            
+                    setalertbatchMsg({
+                      open: true,
+                      message: err.response.data.error.details[0],
+                      severity: "error"
+                    });
+                    setTimeout(() => {
+                      setalertbatchMsg("");
+                    }, 3000);
+                  }
                 });
-              handleClose2();
+              
             }}
           >
             Confirm

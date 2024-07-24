@@ -12,7 +12,7 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import EditIcon from "@mui/icons-material/Edit";
 import Tooltip from "@mui/material/Tooltip";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import utc from "dayjs/plugin/utc";
+
 import { Box, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -25,6 +25,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { styled } from "@mui/material/styles";
+import jwttoken from '../Token'
+
 function convertToIST(utcDateStr) {
   const date = new Date(utcDateStr);
 
@@ -61,7 +63,7 @@ export default function Completedcourse() {
   const [student, setstudent] = React.useState([]);
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/ISC/getAllData")
+      .get("http://localhost:5000/ISC/getAllData",jwttoken())
       .then((data) => {
         console.log("data", data.data.data);
         setarr(data.data.data);
@@ -342,7 +344,7 @@ export default function Completedcourse() {
                           axios
                             .post(
                               `http://localhost:5000/ISC/UpdateISC?UpdateId=${row._id}`,
-                              data
+                              data,jwttoken()
                             )
                             .then((res) => {
                               console.log(res);

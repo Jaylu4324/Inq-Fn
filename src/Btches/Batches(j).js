@@ -4,6 +4,7 @@ import Dialog from "@mui/material/Dialog";
 
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import jwttoken from '../Token'
 
 import { Box, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, FilledInput, TableBody } from '@mui/material';
 import Table from "@mui/material/Table";
@@ -65,6 +66,7 @@ function Batches() {
   const [data, setData] = React.useState({ StuName: [] });
   const [id, setId] = React.useState("");
   const [value, setValue] = React.useState(0);
+  
   const handleChange1 = (event, newValue) => {
     setValue(newValue);
   };
@@ -97,7 +99,7 @@ function Batches() {
   React.useEffect(() => {
     
     axios
-      .get("http://localhost:5000/event/Displayevent")
+      .get("http://localhost:5000/event/Displayevent",jwttoken())
       .then((data) => {
         seteventarr(data.data.data);
     console.log('first api')
@@ -109,7 +111,7 @@ function Batches() {
       
       if (parent._id) {
         axios
-          .get(`http://localhost:5000/Batch/Display?id=${parent._id}`)
+          .get(`http://localhost:5000/Batch/Display?id=${parent._id}`,jwttoken())
           .then((data) => {
             console.log(data.data.data);
       console.log('second api')
@@ -120,7 +122,8 @@ function Batches() {
           });
     if (parent._id) {
       axios
-        .get(`http://localhost:5000/Eventinquiry/getisAdded?id=${parent._id}`)
+        .get(`http://localhost:5000/Eventinquiry/getisAdded?id=${parent._id}`,jwttoken()
+        )
 
         .then((data) => {
           console.log(data);
@@ -535,7 +538,7 @@ console.log('thid api')
               onClick={() => {
                 if (id) {
                   axios
-                    .post(`http://localhost:5000/Batch/Update?id=${id}`, {...data,EventId:parent._id})
+                    .post(`http://localhost:5000/Batch/Update?id=${id}`, {...data,EventId:parent._id},jwttoken())
                     .then((data) => {
                       console.log(arr);
                       setId("");
@@ -562,7 +565,7 @@ console.log('thid api')
                     .post("http://localhost:5000/Batch/addbatch", {
                       ...data,
                       EventId: parent._id,
-                    })
+                    },jwttoken())
                     .then((data1) => {
 
                       console.log(arr);
@@ -618,7 +621,7 @@ console.log('thid api')
            
             axios
               .delete(
-                `http://localhost:5000/Batch/Delete?id=${id}`
+                `http://localhost:5000/Batch/Delete?id=${id}`,jwttoken()
               )
               .then((data) => {
                 console.log("delet", data);
@@ -652,7 +655,7 @@ console.log('thid api')
          onClick={() => {
           axios
             .post(
-              `http://localhost:5000/Batch/isCompleted?id=${id}`
+              `http://localhost:5000/Batch/isCompleted?id=${id}`,{},jwttoken()
             )
             .then((data) => {
               doupdate(!update);

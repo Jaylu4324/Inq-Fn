@@ -36,6 +36,7 @@ import axios from "axios";
 
 import PropTypes from "prop-types";
 import Typography from "@mui/material/Typography";
+import jwttoken from '../Token'
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -100,7 +101,7 @@ function Batches() {
   console.log(id)
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/batchEvent/DisplayBevent")
+      .get("http://localhost:5000/batchEvent/DisplayBevent",jwttoken())
       .then((data) => {
         setcoursearr(data.data.data);
 
@@ -114,7 +115,7 @@ function Batches() {
       console.log("called  fd");
       console.log(parent);
       axios
-        .get(`http://localhost:5000/inquiry/getisAdded?Course=${parent.Course}`)
+        .get(`http://localhost:5000/inquiry/getisAdded?Course=${parent.Course}`,jwttoken())
         .then((data) => {
           setarr(data.data.data);
         })
@@ -125,7 +126,7 @@ function Batches() {
 
     if (parent._id) {
       axios
-        .get(`http://localhost:5000/regBatch/Display?id=${parent._id}`)
+        .get(`http://localhost:5000/regBatch/Display?id=${parent._id}`,jwttoken())
         .then((data) => {
           console.log(data);
 
@@ -375,7 +376,7 @@ function Batches() {
                       {
                         ...data,
                         EventId: parent._id,
-                      }
+                      },jwttoken()
                     )
                     .then((data) => {
                       console.log(arr);
@@ -407,7 +408,7 @@ function Batches() {
                       {
                         ...data,
                         EventId: parent._id,
-                      }
+                      },jwttoken()
                     )
                     .then((data1) => {
                       console.log(arr);
@@ -622,7 +623,7 @@ function Batches() {
                         
                         axios
                           .delete(
-                            `http://localhost:5000/regBatch/Delete?id=${id}&course=${parent.Course}`
+                            `http://localhost:5000/regBatch/Delete?id=${id}&course=${parent.Course}`,jwttoken()
                           )
                           .then((data) => {
                             console.log("delet", data);

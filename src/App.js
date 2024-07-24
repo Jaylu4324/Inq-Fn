@@ -23,6 +23,7 @@ function App() {
       
 <Route path='/login' element={<Login/>}/>      
 <Route path='/dashBoard' element={<Navbar/>}>
+
 <Route path='/dashBoard/dashBoard' element={<Dashboard/>}/>
 </Route>
 <Route path='/course' element={<Navbar/>}>
@@ -48,7 +49,11 @@ function App() {
     </Routes>
     </BrowserRouter>
 
-    // <div><Alerts/></div>
+//     // <div><Alerts/></div>
+//     <Route path='/login' element={<Login text='Dashboard'/>}/>      
+// <Route path='/dashBoard' element={<Navbar text="123"/>}>
+
+
   )
 
 }

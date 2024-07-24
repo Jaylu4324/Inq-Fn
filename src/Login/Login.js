@@ -111,6 +111,7 @@ export default function SignIn() {
                 axios
                   .post("http://localhost:5000/login/login", data)
                   .then((data) => {
+                    localStorage.setItem('token',data.data.tokan)
                     if (data.status == 200) {
                       setAlertMsg({
                         open: true,
@@ -131,7 +132,7 @@ export default function SignIn() {
                       setAlertMsg({
                         open: true,
                          severity: "error",
-                        message: err.response.data,
+                        message: err.response.data.error
                       });
                       setTimeout(() => {
                         setAlertMsg("");

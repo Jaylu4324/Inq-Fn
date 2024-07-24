@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import DownloadIcon from "@mui/icons-material/Download";
 import DialogContentText from "@mui/material/DialogContentText";
+import jwttoken from '../Token'
 
 import Dialog from "@mui/material/Dialog";
 import {
@@ -123,7 +124,7 @@ function SD() {
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/batchEvent/allcourse")
+      .get("http://localhost:5000/batchEvent/allcourse",jwttoken())
       .then((data) => {
         setcoursearr(data.data.data);
         console.log("arr is set");
@@ -135,7 +136,7 @@ function SD() {
     console.log(coursearr);
     if (!parent._id) {
       axios
-        .get("http://localhost:5000/student/Alldata")
+        .get("http://localhost:5000/student/Alldata",jwttoken())
         .then((data) => {
           setarr(data.data.data);
         })
@@ -146,7 +147,7 @@ function SD() {
 
     if (parent._id) {
       axios
-        .get(`http://localhost:5000/student/allStuden?id=${parent._id}`)
+        .get(`http://localhost:5000/student/allStuden?id=${parent._id}`,jwttoken())
         .then((data) => {
           setarr(data.data.data);
         })
@@ -160,7 +161,7 @@ function SD() {
   const handlesubmit = () => {
     if (id) {
       axios
-        .post(`http://localhost:5000/student/UpdateStu?id=${id}`, data)
+        .post(`http://localhost:5000/student/UpdateStu?id=${id}`,data,jwttoken())
         .then((data) => {
           console.log(data);
           doupdate(!update);
@@ -194,7 +195,7 @@ function SD() {
         .post("http://localhost:5000/student/stuadd", {
           ...data,
           CourseId: parent._id,
-        })
+        },jwttoken())
         .then((data) => {
           console.log("data posted", data);
           doupdate(!update);
@@ -352,7 +353,7 @@ console.log(data.baseString)
                       .get(
                         `http://localhost:5000/student/filtermonth?perentId=${
                           parent._id ? parent._id : ""
-                        }&month=${montharr[index]}&sort=${order1}`
+                        }&month=${montharr[index]}&sort=${order1}`,jwttoken()
                       )
                       .then((data) => {
                         console.log(data);
@@ -408,7 +409,7 @@ console.log(data.baseString)
                     .get(
                       `http://localhost:5000/student/fillter?key=Date&sortby=${order}&courseid=${
                         parent._id ? parent._id : ""
-                      }`
+                      }`,jwttoken()
                     )
                     .then((data) => {
                       console.log(data);
@@ -427,7 +428,7 @@ console.log(data.baseString)
                 onClick={() => {
                   axios
                     .get(
-                      `http://localhost:5000/student/fillter?key=Name&sortby=${order}&courseid=${parent._id ? parent._id : ""}`
+                      `http://localhost:5000/student/fillter?key=Name&sortby=${order}&courseid=${parent._id ? parent._id : ""}`,jwttoken()
 
                     )
                     .then((data) => {
@@ -449,7 +450,7 @@ console.log(data.baseString)
                     .get(
                       `http://localhost:5000/student/fillter?key=Rfees&sortby=${order}&courseid=${
                         parent._id ? parent._id : ""
-                      }`
+                      }`,jwttoken()
                     )
                     .then((data) => {
                       console.log(data);
@@ -579,7 +580,7 @@ console.log(data.baseString)
             <Button sx={{ color: "#0063cc" }}>
               <SearchIcon
                 onClick={() => {
-                  axios.get(`http://localhost:5000/student/stusearch?Name=${searchname}`)
+                  axios.get(`http://localhost:5000/student/stusearch?Name=${searchname}`,jwttoken())
                   .then((data)=>{
                     console.log('newdata',data.data.data)
                     setarr(data.data.data)
@@ -902,7 +903,7 @@ console.log(data.baseString)
                     onClick={() => {
                       axios
                         .delete(
-                          `http://localhost:5000/student/deleteStu?id=${id}`
+                          `http://localhost:5000/student/deleteStu?id=${id}`,jwttoken()
                         )
                         .then((data) => {
                           console.log("data deleted", data);

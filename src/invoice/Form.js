@@ -16,6 +16,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import autoTable from "jspdf-autotable";
 import SearchIcon from "@mui/icons-material/Search";
+import jwttoken from '../Token'
 
 import Tooltip from "@mui/material/Tooltip";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -70,7 +71,7 @@ export default function FormDialog() {
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/batchEvent/allcourse")
+      .get("http://localhost:5000/batchEvent/allcourse",jwttoken())
       .then((data) => {
         setcoursearr(data.data.data);
 
@@ -82,7 +83,7 @@ export default function FormDialog() {
     console.log(coursearr);
     if (!parent._id) {
       axios
-        .get("http://localhost:5000/invoice/Display")
+        .get("http://localhost:5000/invoice/Display",jwttoken())
         .then((data) => {
           setArr(data.data.data);
         })
@@ -91,7 +92,7 @@ export default function FormDialog() {
         });
     } else {
       axios
-        .get(`http://localhost:5000/invoice/courseIn?parentId=${parent._id}`)
+        .get(`http://localhost:5000/invoice/courseIn?parentId=${parent._id}`,jwttoken())
         .then((data) => {
           console.log(data);
           setArr(data.data.data);
@@ -102,7 +103,7 @@ export default function FormDialog() {
     }
     if (parent._id) {
       axios
-        .get(`http://localhost:5000/student/InvoiceGet?id=${parent._id}`)
+        .get(`http://localhost:5000/student/InvoiceGet?id=${parent._id}`,jwttoken())
         .then((data) => {
           setstuarr(data.data.data);
         })
@@ -137,7 +138,7 @@ export default function FormDialog() {
       console.log(data);
 
       axios
-        .post(`http://localhost:5000/invoice/Update?id=${id}`, data)
+        .post(`http://localhost:5000/invoice/Update?id=${id}`,data,jwttoken())
         .then((data) => {
           doUpdate(!update);
           setAlertSuccess({
@@ -171,7 +172,7 @@ export default function FormDialog() {
         .post("http://localhost:5000/invoice/addinfo", {
           ...data,
           courseId: parent._id,
-        })
+        },jwttoken())
         .then((data) => {
           doUpdate(!update);
           setAlertSuccess({
@@ -339,7 +340,7 @@ export default function FormDialog() {
                       .get(
                         `http://localhost:5000/invoice/fillterinvocemonth?courseId=${
                           parent._id ? parent._id : ""
-                        }&month=${montharr[index]}&sort=${order1}`
+                        }&month=${montharr[index]}&sort=${order1}`,jwttoken()
                       )
                       .then((data) => {
                         console.log("API Response:", data);
@@ -396,7 +397,7 @@ export default function FormDialog() {
                     .get(
                       `http://localhost:5000/invoice/filterinvocedate?key=invoiceDate&sortby=${order}&courseid=${
                         parent._id ? parent._id : ""
-                      }`
+                      }`,jwttoken()
                     )
                     .then((data) => {
                       console.log(data);
@@ -417,7 +418,7 @@ export default function FormDialog() {
                     .get(
                       `http://localhost:5000/invoice/filterinvocedate?key=Name&sortby=${order}&courseid=${
                         parent._id ? parent._id : ""
-                      }`
+                      }`,jwttoken()
                     )
                     .then((data) => {
                       console.log(data);
@@ -436,7 +437,7 @@ export default function FormDialog() {
                 onClick={() => {
                   axios
                     .get(
-                      `http://localhost:5000/invoice/filterinvocedate?key=Rfees&sortby=${order}&courseid=${parent._id ? parent._id : ""}`)
+                      `http://localhost:5000/invoice/filterinvocedate?key=Rfees&sortby=${order}&courseid=${parent._id ? parent._id : ""}`,jwttoken())
                     .then((data) => {
                       console.log(data);
                       setorder(order == 1 ? -1 : 1);
@@ -569,7 +570,7 @@ export default function FormDialog() {
                 onClick={() => {
                   axios
                     .get(
-                      `http://localhost:5000/invoice/searchinstu?name=${searchname}`
+                      `http://localhost:5000/invoice/searchinstu?name=${searchname}`,jwttoken()
                     )
                     .then((data) => {
                       console.log(data);
@@ -846,7 +847,7 @@ sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             ],
             [
               "Course Name",
-              row.stuId.course && row.stuId.course,
+              row.courseId.Course && row.courseId.Course,
             ],
             ["Payment Method", row.TypeOfPayment],
             ["Paid Amount", row.Amount],
@@ -935,7 +936,7 @@ sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         );
 
         doc.save(
-          `${row.stuId.Name}-${row.stuId.course}.pdf`
+          `${row.stuId.Name}-${row.courseId.Course}.pdf`
         );
       }}
     >
@@ -950,7 +951,7 @@ sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
   
       onClick={() => {
         axios
-          .post("http://localhost:5000/invoice/pdf", row)
+          .post("http://localhost:5000/invoice/pdf",row,jwttoken())
           .then((data) => {
             console.log(data);
             if(data.data){

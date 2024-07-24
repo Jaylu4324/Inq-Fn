@@ -11,6 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { Box } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
+import jwttoken from '../Token'
 
 import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
@@ -46,7 +47,7 @@ export default function Old() {
   const [update, doupdate] = React.useState(false);
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/event/Completedevent")
+      .get("http://localhost:5000/event/Completedevent",jwttoken())
       .then((data) => {
         console.log("data r");
         setarr(data.data.data);
@@ -162,7 +163,7 @@ export default function Old() {
           <Button
             onClick={() => {
               axios
-                .delete(`http://localhost:5000/event/Deleteevent?id=${id}`)
+                .delete(`http://localhost:5000/event/Deleteevent?id=${id}`,jwttoken())
                 .then((data) => {
                   doupdate(!update);
                   console.log("data delted", data);

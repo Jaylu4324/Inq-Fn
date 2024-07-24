@@ -8,6 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import jwttoken from '../Token'
 
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -141,7 +142,7 @@ function Eventi() {
   const handlesubmit = () => {
     if (id) {
       axios
-        .post(`http://localhost:5000/Eventinquiry/Update?id=${id}`, data)
+        .post(`http://localhost:5000/Eventinquiry/Update?id=${id}`, data,jwttoken())
         .then((data) => {
           doUpdate(!update);
           setAlertSuccess({
@@ -172,7 +173,7 @@ function Eventi() {
         .post("http://localhost:5000/Eventinquiry/addInquiry", {
           ...data,
           eventId: parent._id,
-        })
+        },jwttoken())
         .then((data) => {
           console.log(data);
           doUpdate(!update);
@@ -204,7 +205,7 @@ function Eventi() {
   };
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/event/Displayevent")
+      .get("http://localhost:5000/event/Displayevent",jwttoken())
       .then((data) => {
         setArr(data.data.data);
         console.log("arr is set ");
@@ -216,7 +217,7 @@ function Eventi() {
 
     if (parent._id) {
       axios
-        .get(`http://localhost:5000/Eventinquiry/OnGoing?id=${parent._id}`)
+        .get(`http://localhost:5000/Eventinquiry/OnGoing?id=${parent._id}`,jwttoken())
 
         .then((data) => {
           setong(data.data.data);
@@ -226,7 +227,7 @@ function Eventi() {
           console.log(err);
         });
       axios
-        .get(`http://localhost:5000/Eventinquiry/Reject?id=${parent._id}`)
+        .get(`http://localhost:5000/Eventinquiry/Reject?id=${parent._id}`,jwttoken())
 
         .then((data) => {
           setReject(data.data.data);
@@ -236,7 +237,7 @@ function Eventi() {
           console.log(err);
         });
       axios
-        .get(`http://localhost:5000/Eventinquiry/Confirm?id=${parent._id}`)
+        .get(`http://localhost:5000/Eventinquiry/Confirm?id=${parent._id}`,jwttoken())
 
         .then((data) => {
           setconfirm(data.data.data);
@@ -244,16 +245,16 @@ function Eventi() {
         })
         .catch((err) => {
           console.log(err);
-          // if (err.response.data) {
-          //   setAlertMsg({
-          //     open: true,
-          //     message: err.response.data.error.details[0].message,
-          //   });
+          if (err.response.data) {
+            setAlertMsg({
+              open: true,
+              message: err.response.data.error.details[0].message,
+            });
             
-          //   setTimeout(() => {
-          //     setAlertMsg("");
-          //   }, 3000);
-          // }
+            setTimeout(() => {
+              setAlertMsg("");
+            }, 3000);
+          }
 
         });
     }
@@ -416,7 +417,7 @@ function Eventi() {
 
                     axios
                       .get(
-                        `http://localhost:5000/Eventinquiry/filterbyMonth?month=${montharr[index]}&sortby=${order1}&type=${type}`)
+                        `http://localhost:5000/Eventinquiry/filterbyMonth?month=${montharr[index]}&sortby=${order1}&type=${type}`,jwttoken())
                       .then((data) => {
                         console.log(data)
                         if(type=='onGoing')
@@ -473,7 +474,7 @@ function Eventi() {
             >
               <MenuItem
                 onClick={() => {
-              axios.get(`http://localhost:5000/Eventinquiry/alldata?key=${type}`)
+              axios.get(`http://localhost:5000/Eventinquiry/alldata?key=${type}`,jwttoken())
               .then((data) => {
                 console.log(data)
                 if(type=='onGoing')
@@ -505,7 +506,7 @@ function Eventi() {
                 onClick={() => {
                   axios
                     .get(
-                      `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=Date&sortBy=${order}&type=${type}`)
+                      `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=Date&sortBy=${order}&type=${type}`,jwttoken())
                       .then((data) => {
                         console.log(data)
                         if(type=='onGoing')
@@ -537,7 +538,7 @@ function Eventi() {
                  onClick={() => {
                   axios
                     .get(
-                      `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=FullName&sortBy=${order}&type=${type}`)
+                      `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=FullName&sortBy=${order}&type=${type}`,jwttoken())
                       .then((data) => {
                         console.log(data)
                         if(type=='onGoing')
@@ -696,7 +697,7 @@ function Eventi() {
               onClick={() => {
                 axios
                   .get(
-                    `http://localhost:5000/Eventinquiry/search?FullName=${searchname}&type=${type}`
+                    `http://localhost:5000/Eventinquiry/search?FullName=${searchname}&type=${type}`,jwttoken()
                   )
                   .then((data) => {
                     console.log(data);
@@ -1095,7 +1096,7 @@ function Eventi() {
             onClick={() => {
               axios
                 .delete(
-                  `http://localhost:5000/Eventinquiry/Delete?id=${deleteId}`
+                  `http://localhost:5000/Eventinquiry/Delete?id=${deleteId}`,jwttoken()
                 )
                 .then((data) => {
                   console.log(data);
@@ -1130,7 +1131,7 @@ function Eventi() {
             onClick={() => {
               axios
                 .post(
-                  `http://localhost:5000/Eventinquiry/RejectedInquiry?id=${id}`
+                  `http://localhost:5000/Eventinquiry/RejectedInquiry?id=${id}`,{},jwttoken()
                 )
 
                 .then((data) => {
@@ -1166,7 +1167,7 @@ function Eventi() {
              onClick={() => {
               axios
                 .post(
-                  `http://localhost:5000/Eventinquiry/ConfimInquiry?id=${id}`
+                  `http://localhost:5000/Eventinquiry/ConfimInquiry?id=${id}`,{},jwttoken()
                 )
                 .then((data) => {
                   console.log(data);
