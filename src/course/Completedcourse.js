@@ -8,22 +8,29 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
+
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+
 import EditIcon from "@mui/icons-material/Edit";
+
 import Tooltip from "@mui/material/Tooltip";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 
 import { Box, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
+
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 import dayjs from "dayjs";
+
 import { styled } from "@mui/material/styles";
 import jwttoken from '../Token'
 
@@ -45,7 +52,8 @@ export default function Completedcourse() {
   const [open, setOpen] = React.useState(false);
   const [count, setcount] = React.useState(0);
   const [count1, setcount1] = React.useState(0);
-
+  
+  const[id,setid]=React.useState()
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -55,12 +63,15 @@ export default function Completedcourse() {
   const handleClose = () => {
     setview(false);
   };
+  const [view, setview] = React.useState(false);
+
 
   const [arr, setarr] = React.useState([]);
-  const [view, setview] = React.useState(false);
   const [update, doupdate] = React.useState(false);
   const [data, setData] = React.useState({ Date: dayjs("") });
   const [student, setstudent] = React.useState([]);
+  console.log(student)
+
   React.useEffect(() => {
     axios
       .get("http://localhost:5000/ISC/getAllData",jwttoken())
@@ -96,7 +107,7 @@ export default function Completedcourse() {
   const handlechange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
   };
-  console.log(arr);
+  
 
   return (
     <>
@@ -164,7 +175,7 @@ export default function Completedcourse() {
                       color="error"
                       onClick={() => {
                         handleClickOpen();
-                        setstudent(row.StudentArray);
+                     setid(row._id)
                       }}
                     >
                       <EditIcon />
@@ -177,9 +188,14 @@ export default function Completedcourse() {
                     <Button
                       color="primary"
                       onClick={() => {
+                        console.log(idx)
                         setview(!view);
                         setcount(idx);
-                        setview(!view);
+                        // setcount2(idx);
+
+
+                        setstudent(row.StudentArray);
+                        
                         setcount1(row.StudentArray && row.StudentArray.length);
                       }}
                     >
@@ -188,10 +204,15 @@ export default function Completedcourse() {
                   </Tooltip>
                 </TableCell>
 
-                <BootstrapDialog
+              </TableRow>
+            ))}
+        </Table>
+      </TableContainer>
+      
+      <BootstrapDialog
                   onClose={handleClose}
                   aria-labelledby="customized-dialog-title"
-                  open={count == idx && view == true}
+                  open={count!==null && view}
                 >
                   <Box sx={{ width: "500px" }}>
                     <Grid container>
@@ -238,10 +259,10 @@ export default function Completedcourse() {
                               </TableRow>
                             </TableHead>
                             <TableBody>
-                              {row.StudentArray &&
-                                row.StudentArray.map((val) => (
+                              {student &&
+                                student.map((val) => (
                                   <TableRow
-                                    key={row.name}
+                                    key={val.name}
                                     sx={{
                                       "&:last-child td, &:last-child th": {
                                         border: 0,
@@ -343,7 +364,7 @@ export default function Completedcourse() {
                           console.log(data);
                           axios
                             .post(
-                              `http://localhost:5000/ISC/UpdateISC?UpdateId=${row._id}`,
+                              `http://localhost:5000/ISC/UpdateISC?UpdateId=${id}`,
                               data,jwttoken()
                             )
                             .then((res) => {
@@ -362,10 +383,6 @@ export default function Completedcourse() {
                     </Grid>
                   </DialogContent>
                 </Dialog>
-              </TableRow>
-            ))}
-        </Table>
-      </TableContainer>
     </>
   );
 }

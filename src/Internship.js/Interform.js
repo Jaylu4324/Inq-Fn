@@ -230,7 +230,7 @@ function Interform() {
 
   return (
     <React.Fragment>
-      <Grid container spacing={2} justifyContent="right">
+      <Grid container spacing={2} justifyContent="left">
         <Grid item xs={1} sx={{ mb: 3, mr: 1 }}>
           <Tooltip title="Add Events">
             <Button

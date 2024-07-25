@@ -99,7 +99,7 @@ function a11yProps(index) {
 
 function Form1() {
   const [value, setValue] = React.useState(0);
-console.log(jwttoken)
+
   const [data, setData] = React.useState({ Date: dayjs(""), Course: [] });
   const [type, settype] = React.useState("");
   const [open, setOpen] = React.useState(false);
@@ -339,8 +339,8 @@ console.log(jwttoken)
             xs={3}
             sx={{
               display: "flex",
-              justifyContent: "center", // Adjusted to 'flex-end' for right alignment
-              alignItems: "center",
+              justifyContent: "flex-start", // Adjusted to 'flex-end' for right alignment
+              alignItems: "flex-start",
             }}
           >
             <Box
@@ -348,7 +348,8 @@ console.log(jwttoken)
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                mr: 5,
+      
+                mt:1,ml:2
               }}
             >
               <div>
