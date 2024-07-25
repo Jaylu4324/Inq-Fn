@@ -9,6 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import TableBody from "@mui/material/TableBody";
+import Alert from "@mui/material/Alert";
 
 import Tooltip from "@mui/material/Tooltip";
 import { Box } from "@mui/material";
@@ -53,8 +54,12 @@ export default function Old() {
   const [count1, setcount1] = React.useState(0);
   const [data, setData] = React.useState({ Date: dayjs("") });
   const [student, setstudent] = React.useState([]);
-  console.log(student)
   
+  const [alertSuccess, setAlertSuccess] = React.useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
   
   const handleClickOpen = () => {
     setOpen(true);
@@ -116,6 +121,8 @@ export default function Old() {
 console.log(arr)
   return (
     <>
+    
+    {alertSuccess.open ? <Alert>{alertSuccess.message}</Alert> : <div></div>}
       <TableContainer>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -386,6 +393,14 @@ console.log(arr)
                             .then((res) => {
                               console.log(res);
                               doupdate(!update);
+                              setAlertSuccess({
+                                open: true,
+                                message: "Updated Successfully",
+                                severity: "success",
+                              });
+                              setTimeout(() => {
+                                setAlertSuccess("");
+                              }, 3000);
                             })
                             .catch((err) => {
                               console.log(err);

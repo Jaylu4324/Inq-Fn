@@ -135,16 +135,7 @@ console.log('thid api')
         })
         .catch((err) => {
           console.log(err);
-          if(err.response.data){
-            // setAlertMsg(err.response.data.error.details[0].message)
-            setAlertMsg({
-              open:true,
-              message:err.response.data.error.details[0].message
-            })
-          setTimeout(()=>{
-            setAlertMsg("");
-          },3000)
-          }
+        
         });
     }
 
@@ -351,7 +342,7 @@ console.log('thid api')
                   <TableCell align="center">Date</TableCell>
                   <TableCell align="center">Batch Time</TableCell>
 
-                  <TableCell align="center" colSpan={3}>
+                  <TableCell align="center">
                 Actions
               </TableCell>
               
@@ -431,32 +422,7 @@ console.log('thid api')
                     </TableCell>
                     
     
-                    <TableCell align="center">
-                    <Tooltip title="Delete" arrow>
-                    
-                      <Button
-                  onClick={()=>{setId(row._id);handleClickOpen2()}}
-                        color="error"
-                      
-                      >
-                        
-                      <DeleteIcon />
-                    </Button>
-                  </Tooltip>
                   
-                    </TableCell>
-                   
-                    <TableCell align="center">
-                    <Tooltip title="Complete" arrow>
-                      <Button
-                    onClick={()=>{setId(row._id);handleClickOpen3()}}
-                        color="success"
-                       
-                      >
-                    <DoneAllIcon/>
-                      </Button>
-                      </Tooltip>
-                    </TableCell>
                     </Box>
                   </TableRow>
                 ))}
@@ -546,6 +512,14 @@ console.log('thid api')
                       console.log(data.StuName)
                       setopen(false);
                       doupdate(!update);
+                      setAlertSuccess({
+                        open: true,
+                        message: "Student Updated Successfully",
+                        severity: "success",
+                      });
+                      setTimeout(() => {
+                        setAlertSuccess("");
+                      }, 3000);
                     })
                     .catch((err) => {
                       console.log(err);
@@ -574,6 +548,14 @@ console.log('thid api')
                       setId("");
                       setData({ StuName: [] })
                       doupdate(!update);
+                      setAlertSuccess({
+                        open: true,
+                        message: "Student Added Successfully",
+                        severity: "success",
+                      });
+                      setTimeout(() => {
+                        setAlertSuccess("");
+                      }, 3000);
 
                     })
                     .catch((err) => {
@@ -602,7 +584,7 @@ console.log('thid api')
       ) : (
         <div></div>
       )}
-                      <Dialog
+                      {/* <Dialog
         open={open2}
         onClose={handleClose2}
         aria-labelledby="alert-dialog-title"
@@ -672,6 +654,7 @@ console.log('thid api')
           </Button>
         </DialogActions>
       </Dialog>
+       */}
     </>
   );
 }

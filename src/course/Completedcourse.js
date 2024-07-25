@@ -8,6 +8,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
+import Alert from "@mui/material/Alert";
 
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 
@@ -52,6 +53,11 @@ export default function Completedcourse() {
   const [open, setOpen] = React.useState(false);
   const [count, setcount] = React.useState(0);
   const [count1, setcount1] = React.useState(0);
+  const [alertSuccess, setAlertSuccess] = React.useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
   
   const[id,setid]=React.useState()
   const handleClickOpen = () => {
@@ -111,6 +117,8 @@ export default function Completedcourse() {
 
   return (
     <>
+     {alertSuccess.open ? <Alert>{alertSuccess.message}</Alert> : <div></div>}
+
       <TableContainer>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -370,6 +378,14 @@ export default function Completedcourse() {
                             .then((res) => {
                               console.log(res);
                               doupdate(!update);
+                              setAlertSuccess({
+                                open: true,
+                                message: "Updated Successfully",
+                                severity: "success",
+                              });
+                              setTimeout(() => {
+                                setAlertSuccess("");
+                              }, 3000);
                             })
                             .catch((err) => {
                               console.log(err);

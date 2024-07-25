@@ -248,6 +248,9 @@ function Addcourse() {
                 <MenuItem value={"C"}>C</MenuItem>
                 <MenuItem value={"C++"}>C++</MenuItem>
                 <MenuItem value={"Python"}>Python</MenuItem>
+                <MenuItem value={"Mern"}>Mern</MenuItem>
+
+
               </Select>
             </FormControl>
           </Box>
@@ -259,8 +262,6 @@ function Addcourse() {
                   label="Start Date"
                   slotProps={{ textField: { variant: "filled",error: false  } }}
                   defaultValue={id ? dayjs(data.StartDate) : null}
-
-                
                   sx={{ width: 500 }}
                   onChange={handleDateChange}
                 />
@@ -368,7 +369,7 @@ function Addcourse() {
                 <TableCell align="center">Batch Time</TableCell>
                 <TableCell align="center">Batch Name</TableCell>
 
-                <TableCell align="center" colSpan={3}>
+                <TableCell align="center" colSpan={2}>
                   Actions
                 </TableCell>
               </TableRow>
@@ -422,20 +423,6 @@ function Addcourse() {
                     </TableCell>
 
                     <TableCell align="center">
-                      <Tooltip title="Delete" arrow>
-                        <Button
-                          color="error"
-                          onClick={() => {
-                            setid(row._id);
-                            handleClickOpen1();
-                          }}
-                        >
-                          <DeleteIcon />
-                        </Button>
-                      </Tooltip>
-                    </TableCell>
-
-                    <TableCell align="center">
                       <Tooltip title="Complete" arrow>
                         <Button
                           color="success"
@@ -454,49 +441,6 @@ function Addcourse() {
           </Table>
         </TableContainer>
       </Box>
-      <Dialog
-        open={open1}
-        onClose={handleClose1}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Delete Batch"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you confirm to delete?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose1}>Cancel</Button>
-          <Button
-            onClick={() => {
-              axios
-                .delete(
-                  `http://localhost:5000/batchEvent/DeleteBevent?id=${id}`,
-                  jwttoken()
-                )
-                .then((data) => {
-                  doUpdate(!update);
-                  setAlertSuccess({
-                    open: true,
-                    message: "Deleted Successfully",
-                    severity: "success",
-                  });
-                  setTimeout(() => {
-                    setAlertSuccess("");
-                  }, 3000);
-                  console.log("data delted", data);
-                  handleClose1();
-                })
-                .catch((err) => {
-                  console.log("error", err);
-                });
-            }}
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       <Dialog
         open={open2}

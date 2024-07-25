@@ -84,13 +84,7 @@ function Interform() {
     severity: "",
   });
 
-  const handleClickOpen1 = () => {
-    setOpen1(true);
-  };
-
-  const handleClose1 = () => {
-    setOpen1(false);
-  };
+ 
 
   const handleClickOpen2 = () => {
     setOpen2(true);
@@ -336,7 +330,7 @@ function Interform() {
             />
           ) : null}
 
-          <Box sx={{ mb: 2 }}>
+          <Box sx={{ mb: 1 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
@@ -462,7 +456,7 @@ function Interform() {
                 <TableCell align="center">Days</TableCell>
                 <TableCell align="center">Batch Time</TableCell>
 
-                <TableCell align="center" colSpan={3}>
+                <TableCell align="center" colSpan={2}>
                   Actions
                 </TableCell>
               </TableRow>
@@ -519,20 +513,7 @@ function Interform() {
                       </Tooltip>
                     </TableCell>
 
-                    <TableCell>
-                      <Tooltip title="Delete" arrow>
-                        <Button
-                          color="error"
-                          onClick={() => {
-                            setid(row._id);
-                            handleClickOpen1();
-                          }}
-                        >
-                          <DeleteIcon />
-                        </Button>
-                      </Tooltip>
-                    </TableCell>
-
+          
                     <TableCell>
                       <Tooltip title="Complete" arrow>
                         <Button
@@ -552,49 +533,7 @@ function Interform() {
           </Table>
         </TableContainer>
       </Box>
-      <Dialog
-        open={open1}
-        onClose={handleClose1}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Delete Event"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Do You Want To delete Event?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose1}>Cancel</Button>
-          <Button
-            onClick={() => {
-              handleClose1();
-
-              axios
-                .delete(`http://localhost:5000/event/Deleteevent?id=${id}`,jwttoken())
-                .then((data) => {
-                  doUpdate(!update);
-                  setAlertSuccess({
-                    open: true,
-                    message: "Deleted Successfully",
-                    severity: "error",
-                  });
-                  setTimeout(() => {
-                    setAlertSuccess("");
-                  }, 3000);
-                  console.log("Alert State is changed");
-                  console.log("data deleted", data);
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            }}
-            autoFocus
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+      
       <Dialog
         open={open2}
         onClose={handleClose2}
@@ -616,6 +555,14 @@ function Interform() {
                 .then((data) => {
                   console.log("event completed", data);
                   doUpdate(!update);
+                  setAlertSuccess({
+                    open: true,
+                    message: "Confirmed Successfully",
+                    severity: "success",
+                  });
+                  setTimeout(() => {
+                    setAlertSuccess("");
+                  }, 3000);
                   handleClose2();
               
                 })

@@ -387,6 +387,14 @@ function Batches() {
                       setopen(false);
                       setUpdate(!update);
                       setAdds("Something22");
+                      setAlertSuccess({
+                        open: true,
+                        message: "Student Updated Successfully",
+                        severity: "success",
+                      });
+                      setTimeout(() => {
+                        setAlertSuccess("");
+                      }, 3000);
                     })
                     .catch((err) => {
                       console.log(err);
@@ -419,7 +427,14 @@ function Batches() {
                       setAdds("Setted");
                       setUpdate(!update);
                       setAdd("Something12");
-
+                      setAlertSuccess({
+                        open: true,
+                        message: "Student Added Successfully",
+                        severity: "success",
+                      });
+                      setTimeout(() => {
+                        setAlertSuccess("");
+                      }, 3000);
                       console.log(data1);
                     })
 
@@ -464,7 +479,7 @@ function Batches() {
                   <TableCell align="center">Days</TableCell>
                   <TableCell align="center">Date</TableCell>
                   <TableCell align="center">Batch Time</TableCell>
-                  <TableCell align="center" colSpan={3}>Actions</TableCell>
+                  <TableCell align="center">Actions</TableCell>
 
                   
                 </TableRow>
@@ -546,7 +561,7 @@ function Batches() {
                       </Button>
                       </Tooltip>
                     </TableCell>
-                    <TableCell align="center">
+                    {/* <TableCell align="center">
                
                     <Tooltip title="Delete" arrow>
                         
@@ -562,6 +577,7 @@ function Batches() {
                       </Button>
                       </Tooltip>
                     </TableCell>
+                     */}
                     {/* <TableCell align="center">
                     <Tooltip title="Complete" arrow>
                         
@@ -601,7 +617,7 @@ function Batches() {
       ) : (
         <div></div>
       )}
-
+{/* 
 <Dialog
                   open={open1}
                   onClose={handleClose1}
@@ -651,6 +667,7 @@ function Batches() {
                     </Button>
                   </DialogActions>
                 </Dialog>
+                 */}
     </>
   );
 }

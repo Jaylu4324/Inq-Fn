@@ -124,13 +124,9 @@ function Eventi() {
     message: "",
     severity: "",
   });
-  const [deleteId, setDeleteId] = React.useState("");
 
   const [id, setId] = React.useState(0);
 
-  const handleClickOpen1 = () => {
-    setOpen1(true);
-  };
 
   const handleClose1 = () => {
     setOpen1(false);
@@ -145,6 +141,7 @@ function Eventi() {
         .post(`http://localhost:5000/Eventinquiry/Update?id=${id}`, data,jwttoken())
         .then((data) => {
           doUpdate(!update);
+          handleClose();
           setAlertSuccess({
             open: true,
             message: "Updated Successfully",
@@ -153,7 +150,7 @@ function Eventi() {
           setTimeout(() => {
             setAlertSuccess("");
           }, 3000);
-          handleClose();
+       
         })
         .catch((err) => {
           console.log(err);
@@ -177,6 +174,7 @@ function Eventi() {
         .then((data) => {
           console.log(data);
           doUpdate(!update);
+          handleClose();
           setAlertSuccess({
             open: true,
             message: "Added Successfully",
@@ -186,7 +184,7 @@ function Eventi() {
             setAlertSuccess("");
           }, 3000);
 
-          handleClose();
+         
         })
         .catch((err) => {
           console.log(err);
@@ -848,22 +846,24 @@ function Eventi() {
               handleChange(e, "Description");
             }}
           />
+          <Grid container spacing={2} justifyContent="right" sx={{ mt: 0.5 }}>
           <Button
             onClick={() => {
               handleClose();
             }}
-            sx={{ ml: 45 }}
+            
           >
             Cancel
           </Button>
           <Button
-            autoFocus
+          
             onClick={() => {
               handlesubmit();
             }}
           >
             Submit
           </Button>
+          </Grid>
         </DialogContent>
         <DialogActions></DialogActions>
       </Dialog>
@@ -993,7 +993,7 @@ function Eventi() {
                   <TableCell align="center">FollowUp</TableCell>
                   <TableCell align="center">Interaction</TableCell>
                   <TableCell align="center">Description</TableCell>
-                  <TableCell align="center">Action</TableCell>
+              
                 </TableRow>
               </TableHead>
               <TableBody sx={{ height: reject && reject.length < 1 ? 220 : 0 }}>
@@ -1013,20 +1013,7 @@ function Eventi() {
                       <TableCell align="center">{row.FollowUp}</TableCell>
                       <TableCell align="center">{row.Interaction}</TableCell>
                       <TableCell align="center">{row.Description}</TableCell>
-                      <TableCell>
-                        <Tooltip title="Delete" arrow>
-                          <Button
-                            
-                            color="error"
-                            onClick={() => {
-                              handleClickOpen1();
-                              setDeleteId(row._id);
-                            }}
-                          >
-                            <DeleteIcon />
-                          </Button>
-                        </Tooltip>
-                      </TableCell>
+                   
                     </TableRow>
                   ))}
               </TableBody>
@@ -1079,41 +1066,6 @@ function Eventi() {
       {alertSuccess.open ? <Alert>{alertSuccess.message}</Alert> : <div></div>}
 
       <Dialog
-        open={open1}
-        onClose={handleClose1}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Delete Student"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-           Do You Want To delete?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose1}>Cancel</Button>
-          <Button
-            onClick={() => {
-              axios
-                .delete(
-                  `http://localhost:5000/Eventinquiry/Delete?id=${deleteId}`,jwttoken()
-                )
-                .then((data) => {
-                  console.log(data);
-                  doUpdate(!update);
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-
-              handleClose1();
-            }}
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
         open={open2}
         onClose={handleClose2}
         aria-labelledby="alert-dialog-title"
@@ -1137,11 +1089,20 @@ function Eventi() {
                 .then((data) => {
                   console.log(data);
                   doUpdate(!update);
+                  setAlertSuccess({
+                    open: true,
+                    message: "Reject Successfully",
+                    severity: "success",
+                  });
+                  setTimeout(() => {
+                    setAlertSuccess("");
+                  }, 3000);
+                  handleClose2()
                 })
                 .catch((err) => {
                   console.log(err);
                 });
-                handleClose2()
+             
             }}
           >
             Confirm
@@ -1172,6 +1133,15 @@ function Eventi() {
                 .then((data) => {
                   console.log(data);
                   doUpdate(!update);
+                  setAlertSuccess({
+                    open: true,
+                    message: "Confirmed Successfully",
+                    severity: "success",
+                  });
+                  setTimeout(() => {
+                    setAlertSuccess("");
+                  }, 3000);
+                  handleClose2();
                 })
                 .catch((err) => {
                   console.log(err);

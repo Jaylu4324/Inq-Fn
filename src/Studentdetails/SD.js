@@ -229,14 +229,31 @@ function SD() {
    
   };
 
-
+const maxsize=1000 * 600;
   const handleFileUpload = (event) => {
-    var reader = new FileReader();
-    reader.onloadend = function () {
-      const baseString = reader.result;
+   
+      const checksize=event.target.files[0]
+    if(checksize.size>maxsize)
+    {
+      setAlertMsg({
+        open: true,
+        message: 'file size exceeds limit',
+      });
+      setTimeout(() => {
+        setAlertMsg("");
+      }, 3000);
+    }
+    else{
+      var reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]);
+      reader.onloadend = function () {
+        const baseString = reader.result;
       setData((prevData) => ({ ...prevData, baseString }));
-    };
-    reader.readAsDataURL(event.target.files[0]);
+     }
+
+     };
+    
+   
   };
 
   const handleopen = () => {
@@ -299,8 +316,7 @@ function SD() {
     "November",
     "December",
   ];
-  console.log(arr);
-console.log(data.baseString)
+
   return (
     <React.Fragment>
       <Grid
@@ -793,7 +809,7 @@ console.log(data.baseString)
           <TableCell align="center">Date</TableCell>
           <TableCell align="center">Batch Days</TableCell>
           <TableCell align="center">Batch Timing</TableCell>
-          <TableCell align="center" colSpan={3}>
+          <TableCell align="center" colSpan={2}>
             Actions
           </TableCell>
         </TableRow>
@@ -863,13 +879,7 @@ console.log(data.baseString)
                 </Tooltip>  
               </TableCell>
             
-              <TableCell align="center">
-                <Tooltip title="Delete" arrow>
-                  <Button color="error" onClick={()=>{  setId(row._id);handleClickOpen1()}}>
-                    <DeleteIcon />
-                  </Button>
-                </Tooltip>
-              </TableCell>
+          
             </TableRow>
           ))
         ) : (
@@ -883,50 +893,7 @@ console.log(data.baseString)
     </Table>
   </TableContainer>
 </Box>;
-<Dialog
-                open={open1}
-                onClose={handleClose1}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle id="alert-dialog-title">
-                  {"Delete Student"}
-                </DialogTitle>
-                <DialogContent>
-                  <DialogContentText id="alert-dialog-description">
-                    Do you want to delete this student?
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose1}>Cancel</Button>
-                  <Button
-                    onClick={() => {
-                      axios
-                        .delete(
-                          `http://localhost:5000/student/deleteStu?id=${id}`,jwttoken()
-                        )
-                        .then((data) => {
-                          console.log("data deleted", data);
-                          doupdate(!update);
-                          setAlertSuccess({
-                            open: true,
-                            message: "Deleted Successfully",
-                            severity: "success",
-                          });
-                          setTimeout(() => {
-                            setAlertSuccess("");
-                          }, 3000);
-                        })
-                        .catch((err) => {
-                          console.log(err);
-                        });
-                      handleClose1();
-                    }}
-                  >
-                    Confirm
-                  </Button>
-                </DialogActions>
-              </Dialog>
+
       
       {alertSuccess.open ? (
           <Alert>{alertSuccess.message}</Alert>

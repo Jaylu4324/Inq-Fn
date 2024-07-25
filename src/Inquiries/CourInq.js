@@ -20,7 +20,6 @@ import utc from "dayjs/plugin/utc";
 
 import DoneIcon from "@mui/icons-material/Done";
 import {
- 
   Box,
   FormControl,
   InputLabel,
@@ -33,7 +32,7 @@ import {
 
 import dayjs from "dayjs";
 import DialogContent from "@mui/material/DialogContent";
-import jwttoken from '../Token'
+import jwttoken from "../Token";
 
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 
@@ -110,32 +109,38 @@ function Form1() {
   const [id, setId] = React.useState();
 
   const [alertMsg, setAlertMsg] = React.useState("");
-  
+
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
-  
+
   const handleClickOpen1 = () => {
     setOpen1(true);
   };
 
   const handleClose1 = () => {
+    setOpen(false);
+    setData({});
+    setId("");
+
     setOpen1(false);
   };
-  
+
   const handleClickOpen2 = () => {
     setOpen2(true);
   };
 
   const handleClose2 = () => {
+    setOpen(false);
+    setData({});
+    setId("");
+
     setOpen2(false);
   };
-
 
   const [searchname, setseearchname] = React.useState("");
   const handlesearchname = (e) => {
     setseearchname(e.target.value);
   };
- 
 
   const handleChange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
@@ -166,7 +171,7 @@ function Form1() {
       settype("Confirm");
     }
   }, [value]);
- 
+
   const Co = ["React", "Node", "C", "C++", "Python", "Mern Stack", "AWS"];
   const handlecourse = (e) => {
     let value = e.target.value;
@@ -175,9 +180,9 @@ function Form1() {
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/inquiry/OnGoing",jwttoken())
+      .get("http://localhost:5000/inquiry/OnGoing", jwttoken())
       .then((data) => {
-        console.log(data)
+        console.log(data);
         console.log("data received");
         setArr(data.data.data);
       })
@@ -185,7 +190,7 @@ function Form1() {
         console.log(err);
       });
     axios
-      .get("http://localhost:5000/inquiry/Reject",jwttoken())
+      .get("http://localhost:5000/inquiry/Reject", jwttoken())
       .then((data) => {
         setReject(data.data.data);
       })
@@ -194,9 +199,9 @@ function Form1() {
       });
 
     axios
-      .get("http://localhost:5000/inquiry/Confirm",jwttoken())
+      .get("http://localhost:5000/inquiry/Confirm", jwttoken())
       .then((data) => {
-        console.log(data)
+        console.log(data);
         setconfirm(data.data.data);
       })
       .catch((err) => {
@@ -204,17 +209,17 @@ function Form1() {
       });
   }, [update]);
 
-
   const handlesubmit = () => {
     if (id) {
       axios
-        .post(`http://localhost:5000/inquiry/Update?id=${id}`,data,jwttoken())
+        .post(`http://localhost:5000/inquiry/Update?id=${id}`, data, jwttoken())
         .then((data1) => {
           doUpdate(!update);
 
           setOpen(false);
           setData({});
-          setId();
+          setId("");
+
           setAlertSuccess({
             open: true,
             message: "Updated Successfully",
@@ -241,12 +246,13 @@ function Form1() {
         });
     } else {
       axios
-        .post("http://localhost:5000/inquiry/addInquiry",data,jwttoken())
+        .post("http://localhost:5000/inquiry/addInquiry", data, jwttoken())
         .then((data) => {
           doUpdate(!update);
           setOpen(false);
           setData({});
-          setId();
+          setId("");
+
           setAlertSuccess({
             open: true,
             message: "Added Successfully",
@@ -314,7 +320,7 @@ function Form1() {
   const handleClosemenu1 = () => {
     setAnchorEl1(null);
   };
-  
+
   const montharr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const monthname = [
     "January",
@@ -348,8 +354,9 @@ function Form1() {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-      
-                mt:1,ml:2
+
+                mt: 1,
+                ml: 2,
               }}
             >
               <div>
@@ -383,12 +390,12 @@ function Form1() {
                   {montharr.map((val, index) => (
                     <MenuItem
                       onClick={() => {
-                    
                         axios
                           .get(
-                            `http://localhost:5000/inquiry/coursefillbymonth?month=${montharr[index]}&sort=${order1}&type=${type}`,jwttoken())
+                            `http://localhost:5000/inquiry/coursefillbymonth?month=${montharr[index]}&sort=${order1}&type=${type}`,
+                            jwttoken()
+                          )
                           .then((data) => {
-                          
                             console.log(data);
                             if (type == "onGoing") {
                               setArr(data.data);
@@ -400,7 +407,6 @@ function Form1() {
                               setconfirm(data.data);
                               setorder1(order1 === 1 ? -1 : 1);
                             }
-                           
                           })
                           .catch((error) => {
                             console.error("API Request Error:", error);
@@ -440,7 +446,8 @@ function Form1() {
                     onClick={() => {
                       axios
                         .get(
-                          `http://localhost:5000/inquiry/Alldata?key=${type}`,jwttoken()
+                          `http://localhost:5000/inquiry/Alldata?key=${type}`,
+                          jwttoken()
                         )
                         .then((data) => {
                           console.log(data);
@@ -451,8 +458,7 @@ function Form1() {
                           } else {
                             setconfirm(data.data.allData);
                           }
-                          handleClosemenu()
-                          
+                          handleClosemenu();
                         });
                     }}
                   >
@@ -463,7 +469,8 @@ function Form1() {
                     onClick={() => {
                       axios
                         .get(
-                          `http://localhost:5000/inquiry/coursefillbydate?key=Date&sortby=${order}&type=${type}`,jwttoken()
+                          `http://localhost:5000/inquiry/coursefillbydate?key=Date&sortby=${order}&type=${type}`,
+                          jwttoken()
                         )
                         .then((data) => {
                           console.log(data);
@@ -490,7 +497,8 @@ function Form1() {
                     onClick={() => {
                       axios
                         .get(
-                          `http://localhost:5000/inquiry/coursefillbydate?key=FullName&sortby=${order}&type=${type}`,jwttoken()
+                          `http://localhost:5000/inquiry/coursefillbydate?key=FullName&sortby=${order}&type=${type}`,
+                          jwttoken()
                         )
                         .then((data) => {
                           console.log(data);
@@ -572,7 +580,8 @@ function Form1() {
                     onClick={() => {
                       axios
                         .get(
-                          `http://localhost:5000/inquiry/commansearchstu?FullName=${searchname}&type=${type}`,jwttoken()
+                          `http://localhost:5000/inquiry/commansearchstu?FullName=${searchname}&type=${type}`,
+                          jwttoken()
                         )
                         .then((data) => {
                           console.log(data);
@@ -583,7 +592,7 @@ function Form1() {
                           } else {
                             setconfirm(data.data.filterdata);
                           }
-                          
+
                           setseearchname("");
                         })
                         .catch((err) => {
@@ -701,15 +710,14 @@ function Form1() {
                               </Button>
                             </Tooltip>
                           </TableCell>
-                
-                
+
                           <TableCell align="center">
                             <Tooltip title="Reject" arrow>
                               <Button
-                               onClick={()=>{
-                                setId(row._id);
-                                handleClickOpen1()
-                              }}
+                                onClick={() => {
+                                  setId(row._id);
+                                  handleClickOpen1();
+                                }}
                                 color="error"
                               >
                                 <CloseIcon />
@@ -719,10 +727,9 @@ function Form1() {
                           <TableCell align="center">
                             <Tooltip title="Confirm" arrow>
                               <Button
-                                onClick={()=>{
+                                onClick={() => {
                                   setId(row._id);
-                                  handleClickOpen2()
-
+                                  handleClickOpen2();
                                 }}
                                 color="success"
                               >
@@ -760,7 +767,6 @@ function Form1() {
                       <TableCell align="center">College Name</TableCell>
                       <TableCell align="center">Interested Course</TableCell>
                       <TableCell align="center">Description</TableCell>
-                      <TableCell align="center">Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody
@@ -793,36 +799,12 @@ function Form1() {
                           <TableCell align="center">
                             {row.CollageName}
                           </TableCell>
-                          <TableCell align="center">{
-                          row.Course&&row.Course.map((val)=>(
-                            <Box>{val}</Box>
-                          ))                            
-                            }</TableCell>
+                          <TableCell align="center">
+                            {row.Course &&
+                              row.Course.map((val) => <Box>{val}</Box>)}
+                          </TableCell>
                           <TableCell align="center">
                             {row.Description}
-                          </TableCell>
-                          <TableCell>
-                            <Tooltip title="Delete" arrow>
-                              <Button
-                                onClick={() => {
-                                  axios
-                                    .delete(
-                                      "http://localhost:5000/inquiry/Delete",jwttoken()
-                                    )
-                                    .then((data) => {
-                                      doUpdate(!update);
-                                      console.log(data);
-
-                                    })
-                                    .catch((err) => {
-                                      console.log(err);
-                                    });
-                                }}
-                                color="error"
-                              >
-                                <DeleteIcon />
-                              </Button>
-                            </Tooltip>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -884,7 +866,7 @@ function Form1() {
                           <TableCell align="center">{row.Contact}</TableCell>
                           <TableCell align="center">{row.Email}</TableCell>
                           <TableCell align="center">
-                            {row.date && row.Date.split("T")[0]}
+                            {row.Date && row.Date.split("T")[0]}
                           </TableCell>
                           <TableCell align="center">
                             {row.CollageName}
@@ -904,11 +886,11 @@ function Form1() {
 
         <Dialog open={open} onClose={handleClose}>
           <DialogContent>
-          {alertMsg.open && (
-            <Alert severity="error" sx={{ zIndex: 9999 }}>
-              {alertMsg.message}
-            </Alert>
-          )}
+            {alertMsg.open && (
+              <Alert severity="error" sx={{ zIndex: 9999 }}>
+                {alertMsg.message}
+              </Alert>
+            )}
 
             <TextField
               id="outlined-basic"
@@ -1080,81 +1062,92 @@ function Form1() {
         )}
       </React.Fragment>
       <Dialog
-                  open={open1}
-                  onClose={handleClose1}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    {"Reject Student"}
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      Do you Want to Reject ?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleClose1}>Cancel</Button>
-                    <Button
-                  onClick={() => {
-                    axios
-                      .post(
-                        `http://localhost:5000/inquiry/RejectedInquiry?id=${id}`,{},jwttoken())
-                      .then((data) => {
-                        console.log(data);
-                        doUpdate(!update);
-                      })
-                      .catch((err) => {
-                        console.log(err);
-                      });
-                      handleClose1()
-                  }}
-                     
-                     
-                    
-                    >
-                      Confirm
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-                <Dialog
-                  open={open2}
-                  onClose={handleClose2}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    {"Confirm Student"}
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      Do you want to Confirm Student ?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleClose2}>Cancel</Button>
-                    <Button
-               onClick={() => {
-                axios
-                  .post(
-                    `http://localhost:5000/inquiry/ConfimInquiry?id=${id}`,{},jwttoken()
-                  )
-                  .then((data) => {
-                    doUpdate(!update);
-                  })
-                  .catch((err) => {
-                    console.log(err);
+        open={open1}
+        onClose={handleClose1}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Reject Student"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do you Want to Reject ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose1}>Cancel</Button>
+          <Button
+            onClick={() => {
+              axios
+                .post(
+                  `http://localhost:5000/inquiry/RejectedInquiry?id=${id}`,
+                  {},
+                  jwttoken()
+                )
+                .then((data) => {
+                  console.log(data);
+                  doUpdate(!update);
+                  setAlertSuccess({
+                    open: true,
+                    message: "Reject Successfully",
+                    severity: "success",
                   });
-                  handleClose2()
-              }}
-                     
-                     
-                    
-                    >
-                      Confirm
-                    </Button>
-                  </DialogActions>
-                </Dialog>
+                  setTimeout(() => {
+                    setAlertSuccess("");
+                  }, 3000);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              handleClose1();
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Student"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do you want to Confirm Student ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose2}>Cancel</Button>
+          <Button
+            onClick={() => {
+              axios
+                .post(
+                  `http://localhost:5000/inquiry/ConfimInquiry?id=${id}`,
+                  {},
+                  jwttoken()
+                )
+                .then((data) => {
+                  doUpdate(!update);
+                  setAlertSuccess({
+                    open: true,
+                    message: "Confirmed Successfully",
+                    severity: "success",
+                  });
+                  setTimeout(() => {
+                    setAlertSuccess("");
+                  }, 3000);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              handleClose2();
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
