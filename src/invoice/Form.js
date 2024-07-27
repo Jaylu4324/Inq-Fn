@@ -14,7 +14,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import EmailIcon from "@mui/icons-material/Email";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-
+import autoTable from "jspdf-autotable";
 import SearchIcon from "@mui/icons-material/Search";
 import jwttoken from '../Token'
 
@@ -53,9 +53,8 @@ export default function FormDialog() {
 
   const [arr, setArr] = React.useState([]);
   const [update, doUpdate] = React.useState(false);
-  const [severity, setSeverity] = React.useState("success");
   const [message, setMessage] = React.useState("");
-  const [alertopen, setalertopen] = React.useState(false);
+  
   const [stuarr, setstuarr] = React.useState([]);
   const [parent, setParent] = React.useState({});
   const handleparent = (e) => {

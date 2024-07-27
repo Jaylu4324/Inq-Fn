@@ -65,9 +65,11 @@ function convertToIST(utcDateStr) {
 }
 
 function SD() {
-  const [id, setId] = React.useState();
+  const [id, setId] = React.useState('');
+  const[render,setrender]=React.useState('no')
+  console.log(render)
   const [data, setData] = React.useState({
-    Date: dayjs(),
+    Date: dayjs(''),
     btime: "",
     days: [],
   });
@@ -132,6 +134,7 @@ setData({...data,[type]:e.target.value})
 }
 console.log(data)
   React.useEffect(() => {
+  
     axios
       .get("http://localhost:5000/batchEvent/allcourse",jwttoken())
       .then((data) => {
@@ -163,25 +166,31 @@ console.log(data)
         .catch((err) => {
           console.log(err);
         });
+
     }
     
-  }, [parent, update]);
+  }, [parent, update,render]);
+  React.useEffect(()=>{
+    
+    if(parent._id){
+      console.log("useEffect triggered with:", {  render });
+    
+    axios.get(`http://localhost:5000/inquiry/falsestu?Course=${parent.Course}`)
+    .then((data)=>{
+      console.log(data)
+      setstudent(data.data.data)
+    })
+    .catch((err)=>{
+      console.log(err)
+        
+    })
+    }
+  },[parent,render])
   const [searchname, setseearchname] = React.useState("");
 console.log(parent.Course)
-React.useEffect(()=>{
 
-  if(parent._id){
 
-      axios.get(`http://localhost:5000/inquiry/falsestu?Course=${parent.Course}`)
-      .then((data)=>{
-        console.log(data)
-        setstudent(data.data.data)
-      })
-      .catch((err)=>{
-        console.log(err)
-      })
-  }
-},[parent])
+
   const handlesubmit = () => {
     if (id) {
       axios
@@ -189,6 +198,8 @@ React.useEffect(()=>{
         .then((data) => {
           console.log(data);
           doupdate(!update);
+          setrender('yes')
+
           handleClick12({ vertical: "top", horizontal: "center" });
           setAlertSuccess({
             open: true,
@@ -214,16 +225,18 @@ React.useEffect(()=>{
         });
     } else {
       axios
-        .post("http://localhost:5000/student/stuadd", {...data,CourseId: parent._id},jwttoken())
+        .post(`http://localhost:5000/student/stuadd?course=${parent.Course}`, {...data,CourseId: parent._id},jwttoken())
         .then((data) => {
           console.log("data posted", data);
           doupdate(!update);
-          // handleClick12({ vertical: "top", horizontal: "center" });
-          // setAlertSuccess({
-          //   open: true,
-          //   message: " Student Detail Added Successfully",
+          setrender('yes')
+          
+          handleClick12({ vertical: "top", horizontal: "center" });
+          setAlertSuccess({
+            open: true,
+            message: " Student Detail Added Successfully",
             
-          // });
+          });
    
           setOpen(!open);
           setData({});
@@ -231,14 +244,14 @@ React.useEffect(()=>{
         })
         .catch((err) => {
           console.log(err);
-          // if (err.response.data) {
-          //   handleClick12({ vertical: "top", horizontal: "center" });
-          //   setAlertMsg({
-          //     open: true,
-          //     message: err.response.data.error.details[0].message,
-          //   });
+          if (err.response.data) {
+            handleClick12({ vertical: "top", horizontal: "center" });
+            setAlertMsg({
+              open: true,
+              message: err.response.data.error.details[0].message,
+            });
          
-          // }
+          }
 
         });
     }
@@ -252,13 +265,13 @@ const maxsize=1000 * 130;
       const checksize=event.target.files[0]
     if(checksize.size>=maxsize)
     {
+      handleClick12({ vertical: "top", horizontal: "center" });
+    
       setAlertMsg({
         open: true,
         message: 'Aadhar Card Size Must be less then 100 KB',
       });
-      setTimeout(() => {
-        setAlertMsg("");
-      }, 3000);
+  
     }
     else{
       var reader = new FileReader();
@@ -266,6 +279,12 @@ const maxsize=1000 * 130;
       reader.onloadend = function () {
         const baseString = reader.result;
       setData((prevData) => ({ ...prevData, baseString }));
+      handleClick12({ vertical: "top", horizontal: "center" });
+      setAlertSuccess({
+        open: true,
+        message: " Aadhar Uploaded  Successfully",
+        
+      });
      }
 
      };
@@ -670,13 +689,9 @@ const[student,setstudent]=React.useState([])
       >
         <DialogTitle></DialogTitle>
         <DialogContent>
-        {alertMsg.open && (
-            <Alert severity="error" sx={{ zIndex: 9999 }}>
-              {alertMsg.message}
-            </Alert>
-          )}
+      
 
-                        <Box sx={{ minWidth: 120, mb: 2 }}>
+            {id=='' &&            <Box sx={{ minWidth: 120, mb: 2 }}>
                       <FormControl variant="filled" fullWidth>
                         <InputLabel id="demo-simple-select-label">
                           Select and Add Student Detail
@@ -698,10 +713,10 @@ const[student,setstudent]=React.useState([])
                             ))}
                         </Select>
                       </FormControl>
-                    </Box>
+                    </Box>}
 
 
-          {/* <TextField
+          {id&&<TextField
             fullWidth
             label="Full Name"
             value={data.Name}
@@ -711,9 +726,9 @@ const[student,setstudent]=React.useState([])
             onChange={(e) => {
               handlechange(e, "Name");
             }}
-          />
-           */}
-          {/* <TextField
+          />}
+           
+          {id&& <TextField
             type="number"
             id="outlined-basic"
             label="Contact Info"
@@ -725,7 +740,7 @@ const[student,setstudent]=React.useState([])
               handlechange(e, "Contact");
             }}
           />
-           */}
+           }
           <TextField
             type="number"
             id="outlined-basic"
@@ -740,7 +755,7 @@ const[student,setstudent]=React.useState([])
           />
          
           
-          {/* <TextField
+          {id&& <TextField
             id="outlined-basic"
             label="Email"
             variant="filled"
@@ -750,9 +765,9 @@ const[student,setstudent]=React.useState([])
             onChange={(e) => {
               handlechange(e, "Email");
             }}
-          /> */}
+          /> }
 
-          {/* <TextField
+          {id&&<TextField
             id="outlined-basic"
             label="College Name"
             variant="filled"
@@ -763,7 +778,7 @@ const[student,setstudent]=React.useState([])
               handlechange(e, "CollegeName");
             }}
           />
-           */}
+          }
            <TextField
             type="number"
             id="outlined-basic"
@@ -832,7 +847,7 @@ const[student,setstudent]=React.useState([])
           <Button
             onClick={() => {
               setOpen(false);
-              setId();
+              setId('');
               setData({});
             }}
           >
@@ -962,10 +977,7 @@ const[student,setstudent]=React.useState([])
 </Box>;
 
       
-      {alertSuccess.open ? (
-          <Alert>{alertSuccess.message}</Alert>
-        ) : (
-          <div></div>)}
+    
     </React.Fragment>
     
   );
