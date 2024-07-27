@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import DownloadIcon from "@mui/icons-material/Download";
-import DialogContentText from "@mui/material/DialogContentText";
-import jwttoken from '../Token'
 
+import jwttoken from '../Token'
+import Snackbar from '@mui/material/Snackbar';
 import Dialog from "@mui/material/Dialog";
 import {
   Box,
@@ -12,15 +12,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Checkbox,
-  ListItemText,
-  FilledInput,
+  
 } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import EditIcon from "@mui/icons-material/Edit";
 import utc from "dayjs/plugin/utc";
 import TableCell from "@mui/material/TableCell";
-import DeleteIcon from "@mui/icons-material/Delete";
+
 import Menu from "@mui/material/Menu";
 
 import DialogActions from "@mui/material/DialogActions";
@@ -33,7 +31,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Grid } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+
 import Tooltip from "@mui/material/Tooltip";
 
 import dayjs from "dayjs";
@@ -50,9 +48,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { styled, alpha } from "@mui/material/styles";
 
-import Toolbar from "@mui/material/Toolbar";
-
-import InputBase from "@mui/material/InputBase";
 
 import SearchIcon from "@mui/icons-material/Search";
 function convertToIST(utcDateStr) {
@@ -82,27 +77,38 @@ function SD() {
   const [parent, setParent] = React.useState({});
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   
-  const [open1, setOpen1] = React.useState(false);
-  const handleClickOpen1 = () => {
-    setOpen1(true);
-  };
-
-  const handleClose1 = () => {
-    setOpen1(false);
-  };
   
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
-    severity: "",
+    
   });
 
   
+const [state, setState] = React.useState({
+  op: false,
+  vertical: "top",
+  horizontal: "center",
+});
+const { vertical, horizontal, op } = state;
+
+const handleClick12 = (newState) => {
+  setState({ ...state, op: true });
+};
+
+const handleClose12 = () => {
+  setState({ ...state, op: false });
+  setAlertSuccess({ ...alertSuccess, open: false });
+  setAlertMsg({ ...alertMsg, open: false });
+  
+};
+
 
 
   const handleparent = (e) => {
     setParent({ ...e.target.value });
   };
+  console.log(parent)
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -121,7 +127,10 @@ function SD() {
   const handlechange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
   };
-
+const handlestudent=(e,type)=>{
+setData({...data,[type]:e.target.value})
+}
+console.log(data)
   React.useEffect(() => {
     axios
       .get("http://localhost:5000/batchEvent/allcourse",jwttoken())
@@ -155,9 +164,24 @@ function SD() {
           console.log(err);
         });
     }
+    
   }, [parent, update]);
   const [searchname, setseearchname] = React.useState("");
+console.log(parent.Course)
+React.useEffect(()=>{
 
+  if(parent._id){
+
+      axios.get(`http://localhost:5000/inquiry/falsestu?Course=${parent.Course}`)
+      .then((data)=>{
+        console.log(data)
+        setstudent(data.data.data)
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
+  }
+},[parent])
   const handlesubmit = () => {
     if (id) {
       axios
@@ -165,14 +189,13 @@ function SD() {
         .then((data) => {
           console.log(data);
           doupdate(!update);
+          handleClick12({ vertical: "top", horizontal: "center" });
           setAlertSuccess({
             open: true,
-            message: "Updated Successfully",
-            severity: "success",
+            message: "Student Detail Updated Successfully",
+          
           });
-          setTimeout(() => {
-            setAlertSuccess("");
-          }, 3000);
+
           setOpen(!open);
           setData({});
           setId("");
@@ -180,64 +203,58 @@ function SD() {
         .catch((err) => {
           console.log(err);
           if (err.response.data) {
-            // setAlertMsg(err.response.data.error.details[0].message)
+            
+            handleClick12({ vertical: "top", horizontal: "center" });
             setAlertMsg({
               open: true,
               message: err.response.data.error.details[0].message,
             });
-            setTimeout(() => {
-              setAlertMsg("");
-            }, 3000);
+       
           }
         });
     } else {
       axios
-        .post("http://localhost:5000/student/stuadd", {
-          ...data,
-          CourseId: parent._id,
-        },jwttoken())
+        .post("http://localhost:5000/student/stuadd", {...data,CourseId: parent._id},jwttoken())
         .then((data) => {
           console.log("data posted", data);
           doupdate(!update);
-          setAlertSuccess({
-            open: true,
-            message: "Added Successfully",
-            severity: "success",
-          });
-          setTimeout(() => {
-            setAlertSuccess("");
-          }, 3000);
+          // handleClick12({ vertical: "top", horizontal: "center" });
+          // setAlertSuccess({
+          //   open: true,
+          //   message: " Student Detail Added Successfully",
+            
+          // });
+   
           setOpen(!open);
           setData({});
           setId("");
         })
         .catch((err) => {
           console.log(err);
-          if (err.response.data) {
-            // setAlertMsg(err.response.data.error.details[0].message)
-            setAlertMsg({
-              open: true,
-              message: err.response.data.error.details[0].message,
-            });
-            setTimeout(() => {
-              setAlertMsg("");
-            }, 3000);
-          }
+          // if (err.response.data) {
+          //   handleClick12({ vertical: "top", horizontal: "center" });
+          //   setAlertMsg({
+          //     open: true,
+          //     message: err.response.data.error.details[0].message,
+          //   });
+         
+          // }
+
         });
     }
 
    
   };
 
-const maxsize=1000 * 600;
+const maxsize=1000 * 130;
   const handleFileUpload = (event) => {
    
       const checksize=event.target.files[0]
-    if(checksize.size>maxsize)
+    if(checksize.size>=maxsize)
     {
       setAlertMsg({
         open: true,
-        message: 'file size exceeds limit',
+        message: 'Aadhar Card Size Must be less then 100 KB',
       });
       setTimeout(() => {
         setAlertMsg("");
@@ -255,7 +272,7 @@ const maxsize=1000 * 600;
     
    
   };
-
+console.log(data.baseString)
   const handleopen = () => {
     setOpen(!open);
   };
@@ -316,9 +333,31 @@ const maxsize=1000 * 600;
     "November",
     "December",
   ];
-
+  
+const[student,setstudent]=React.useState([])
   return (
     <React.Fragment>
+        <Snackbar
+        open={op}
+        autoHideDuration={3000}
+        onClose={handleClose12}
+        anchorOrigin={{ vertical, horizontal }}
+        
+      >
+          {(alertSuccess.open || alertMsg.open) && (
+    <Alert
+      onClose={handleClose12}
+      severity={alertSuccess.open ? "success" : "error"}
+                // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
+
+      variant="filled"
+      sx={{ width: "100%" }}
+    >
+      {alertSuccess.open ? alertSuccess.message : alertMsg.message}
+    </Alert>
+  )}
+      </Snackbar>
+   
       <Grid
         container
         spacing={2}
@@ -520,14 +559,14 @@ const maxsize=1000 * 600;
                     },
                   }}
                   renderValue={(data) => {
-                    return (parent._id && data.Course) || "";
+                    return (parent._id && data.batchName) || "";
                   }}
                 >
                   {coursearr &&
                     coursearr.map((row) => (
                       <MenuItem key={row._id} value={row}>
                         <TableRow>
-                          <TableCell align="center">{row.Course}</TableCell>
+                          <TableCell align="center">{row.batchName}</TableCell>
                           <TableCell align="center">{row.Amount}</TableCell>
                           <TableCell align="center">{row.Days}</TableCell>
                           <TableCell align="center">
@@ -598,7 +637,7 @@ const maxsize=1000 * 600;
                 onClick={() => {
                   axios.get(`http://localhost:5000/student/stusearch?Name=${searchname}`,jwttoken())
                   .then((data)=>{
-                    console.log('newdata',data.data.data)
+              
                     setarr(data.data.data)
                     setseearchname("");
                       
@@ -637,7 +676,32 @@ const maxsize=1000 * 600;
             </Alert>
           )}
 
-          <TextField
+                        <Box sx={{ minWidth: 120, mb: 2 }}>
+                      <FormControl variant="filled" fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Select and Add Student Detail
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          
+                          onChange={(e) => {
+                            handlestudent(e, "inquiryId");
+                          }}
+
+                        >
+                          {student &&
+                            student.map((val) => (
+                              <MenuItem value={val._id} key={val._id}>
+                                <Box>{val.FullName}</Box>
+                              </MenuItem>
+                            ))}
+                        </Select>
+                      </FormControl>
+                    </Box>
+
+
+          {/* <TextField
             fullWidth
             label="Full Name"
             value={data.Name}
@@ -648,7 +712,8 @@ const maxsize=1000 * 600;
               handlechange(e, "Name");
             }}
           />
-          <TextField
+           */}
+          {/* <TextField
             type="number"
             id="outlined-basic"
             label="Contact Info"
@@ -660,6 +725,7 @@ const maxsize=1000 * 600;
               handlechange(e, "Contact");
             }}
           />
+           */}
           <TextField
             type="number"
             id="outlined-basic"
@@ -674,7 +740,7 @@ const maxsize=1000 * 600;
           />
          
           
-          <TextField
+          {/* <TextField
             id="outlined-basic"
             label="Email"
             variant="filled"
@@ -684,9 +750,9 @@ const maxsize=1000 * 600;
             onChange={(e) => {
               handlechange(e, "Email");
             }}
-          />
+          /> */}
 
-          <TextField
+          {/* <TextField
             id="outlined-basic"
             label="College Name"
             variant="filled"
@@ -697,6 +763,7 @@ const maxsize=1000 * 600;
               handlechange(e, "CollegeName");
             }}
           />
+           */}
            <TextField
             type="number"
             id="outlined-basic"
@@ -710,7 +777,7 @@ const maxsize=1000 * 600;
               handlechange(e, "Tfees");
             }}
           />
-          <TextField
+         <TextField
             id="outlined-basic"
             label="Academic Course"
             variant="filled"
@@ -720,10 +787,10 @@ const maxsize=1000 * 600;
             onChange={(e) => {
               handlechange(e, "AcademicCourse");
             }}
-          />
+          /> 
 
 
-          <Box sx={{mb:1}}>
+           <Box sx={{mb:1}}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
@@ -737,7 +804,7 @@ const maxsize=1000 * 600;
               </DemoContainer>
             </LocalizationProvider>
           </Box>
-    
+     
           <Grid container spacing={2} justifyContent="center">
             <Grid item xs={4} sx={{ mb: 2, mt: 2 }}>
               <Button

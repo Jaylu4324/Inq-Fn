@@ -22,7 +22,7 @@ function App() {
 console.log(props)
    
       const gettoken=localStorage.getItem('token')
-      console.log(gettoken)
+      
   if(gettoken){
     return props.children
   }

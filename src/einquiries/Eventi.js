@@ -933,7 +933,13 @@ function Eventi() {
                         {row.Date && row.Date.split("T")[0]}
                       </TableCell>
                       <TableCell align="center">{row.CollageName}</TableCell>
-                      <TableCell align="center">{row.FollowUp}</TableCell>
+                      <TableCell align="center"
+                       style={{
+                        color: row.FollowUp == "Yes" ? "green" : "red",
+                        fontWeight: "bold",
+                      }}>
+                      
+                      {row.FollowUp}</TableCell>
                       <TableCell align="center">{row.Interaction}</TableCell>
                       <TableCell align="center">{row.Description}</TableCell>
                       <TableCell align="center">
@@ -1010,7 +1016,12 @@ function Eventi() {
                         {row.Date && row.Date.split("T")[0]}
                       </TableCell>
                       <TableCell align="center">{row.CollageName}</TableCell>
-                      <TableCell align="center">{row.FollowUp}</TableCell>
+                      <TableCell align="center"
+                        style={{
+                          color: row.FollowUp == "Yes" ? "green" : "red",
+                          fontWeight: "bold",
+                        }}>{row.FollowUp}</TableCell>
+
                       <TableCell align="center">{row.Interaction}</TableCell>
                       <TableCell align="center">{row.Description}</TableCell>
                    

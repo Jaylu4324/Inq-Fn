@@ -5,8 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import EditIcon from "@mui/icons-material/Edit";
 
-import DeleteIcon from "@mui/icons-material/Delete";
-import DoneAllIcon from "@mui/icons-material/DoneAll";
+
 import AddIcon from "@mui/icons-material/Add";
 
 import Tooltip from "@mui/material/Tooltip";
@@ -27,10 +26,10 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Alert from "@mui/material/Alert";
+
 import { Grid } from "@mui/material";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+
+import { Snackbar, Alert } from '@mui/material';
 
 import axios from "axios";
 
@@ -91,14 +90,14 @@ function Batches() {
   const [add, setAdd] = React.useState("Nothing");
   const [adds, setAdds] = React.useState("No");
   const [course, setcoursearr] = React.useState([]);
-  const [confirm, setconfirm] = React.useState([]);
+  
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
-    severity: "",
+    
   });
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
-  console.log(id)
+  
   React.useEffect(() => {
     axios
       .get("http://localhost:5000/batchEvent/DisplayBevent",jwttoken())
@@ -129,11 +128,8 @@ function Batches() {
         .get(`http://localhost:5000/regBatch/Display?id=${parent._id}`,jwttoken())
         .then((data) => {
           console.log(data);
-
           console.log(parent._id);
-
           console.log("last display data:", data.data.data);
-
           maparr(data.data.data);
         })
         .catch((err) => {
@@ -173,15 +169,7 @@ function Batches() {
       },
     },
   };
-  const [open1, setOpen1] = React.useState(false);
   
-  const handleClickOpen1 = () => {
-    setOpen1(true);
-  };
-
-  const handleClose1 = () => {
-    setOpen1(false);
-  };
   const handleChange = (event) => {
     const {
       target: { value },
@@ -212,9 +200,48 @@ function Batches() {
       return selectedNames.join(", ");
     }
   };
+console.log(course)
+
+const [state, setState] = React.useState({
+  open1: false,
+  vertical: "top",
+  horizontal: "center",
+});
+const { vertical, horizontal, open1 } = state;
+
+const handleClick1 = (newState) => {
+  setState({ ...state, open1: true });
+};
+console.log(state);
+const handleClose1 = () => {
+  setState({ ...state, open1: false });
+  setAlertSuccess({ ...alertSuccess, open: false });
+  setAlertMsg({ ...alertMsg, open: false });
+  
+};
 
   return (
     <>
+  <Snackbar
+        open={open1}
+        autoHideDuration={3000}
+        onClose={handleClose1}
+        anchorOrigin={{ vertical, horizontal }}
+        
+      >
+          {(alertSuccess.open || alertMsg.open) && (
+    <Alert
+      onClose={handleClose1}
+      severity={alertSuccess.open ? "success" : "error"}
+                // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
+
+      variant="filled"
+      sx={{ width: "100%" }}
+    >
+      {alertSuccess.open ? alertSuccess.message : alertMsg.message}
+    </Alert>
+  )}
+      </Snackbar>
     <Grid container spacing={2}>
     <Grid item xs={2} sx={{display:'flex',justifyContent:'flex-start',alignItems:'flex-start'}}>
       <Box sx={{mt:1}}>
@@ -251,7 +278,7 @@ function Batches() {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               label="Status"
-              renderValue={(data)=>{return (parent._id && data.Course || '')}}
+              renderValue={(data)=>{return (parent._id && data.batchName || '')}}
               sx={{
                 height:50,
                 borderRadius: "16px",
@@ -277,18 +304,15 @@ function Batches() {
                         "&:last-child td, &:last-child th": { border: 0 },
                       }}
                     >
-                      <TableCell align="center">{row.Course}</TableCell>
+                      <TableCell align="center">{row.batchName}</TableCell>
 
-                      <TableCell align="center">{row.TypeOfEvent}</TableCell>
-                      <TableCell align="center">{row.TypeOfPayment}</TableCell>
 
-                      <TableCell align="center">{row.Amount}</TableCell>
 
                       <TableCell align="center">
                         {row.StartDate && row.StartDate.split("T")[0]}
                       </TableCell>
                       <TableCell align="center">
-                        {row.EndtDate && row.EndtDate.split("T")[0]}
+                      {row.Days&&row.Days}
                       </TableCell>
                     
                       <TableCell align="center">
@@ -306,11 +330,7 @@ function Batches() {
 </Grid>
       <Dialog open={open}>
         <DialogContent>
-        {alertMsg.open && (
-              <Alert severity="error" sx={{ zIndex: 9999 }}>
-                {alertMsg.message}
-              </Alert>
-            )}
+        
           <Box>
             <FormControl sx={{width: 300, mt: 3 }}>
               <InputLabel id="demo-multiple-checkbox-label">
@@ -387,19 +407,20 @@ function Batches() {
                       setopen(false);
                       setUpdate(!update);
                       setAdds("Something22");
+                      handleClick1({ vertical: "top", horizontal: "center" });
+          
                       setAlertSuccess({
                         open: true,
                         message: "Student Updated Successfully",
-                        severity: "success",
+                        
                       });
-                      setTimeout(() => {
-                        setAlertSuccess("");
-                      }, 3000);
+                      
                     })
                     .catch((err) => {
                       console.log(err);
                       if (err.response.data) {
-                        // setAlertMsg(err.response.data.error.details[0].message)
+                        handleClick1({ vertical: "top", horizontal: "center" });
+          
                         setAlertMsg({
                           open: true,
                           message: err.response.data.error.details[0].message,
@@ -427,28 +448,27 @@ function Batches() {
                       setAdds("Setted");
                       setUpdate(!update);
                       setAdd("Something12");
+                      handleClick1({ vertical: "top", horizontal: "center" });
+          
                       setAlertSuccess({
                         open: true,
                         message: "Student Added Successfully",
-                        severity: "success",
+                        
                       });
-                      setTimeout(() => {
-                        setAlertSuccess("");
-                      }, 3000);
-                      console.log(data1);
+                      
                     })
 
                     .catch((err) => {
                       console.log(err);
                       if (err.response.data) {
-                        // setAlertMsg(err.response.data.error.details[0].message)
+                        handleClick1({ vertical: "top", horizontal: "center" });
+          
+                        
                         setAlertMsg({
                           open: true,
                           message: err.response.data.error.details[0].message,
                         });
-                        setTimeout(() => {
-                          setAlertMsg("");
-                        }, 3000);
+                        
                       }
                     });
                 }
@@ -612,11 +632,7 @@ function Batches() {
           </TableContainer>
         </Box>
       </Box>
-      {alertSuccess.open  ? (
-        <Alert>{alertSuccess.message}</Alert>
-      ) : (
-        <div></div>
-      )}
+      
 {/* 
 <Dialog
                   open={open1}

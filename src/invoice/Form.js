@@ -14,9 +14,11 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import EmailIcon from "@mui/icons-material/Email";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-import autoTable from "jspdf-autotable";
+
 import SearchIcon from "@mui/icons-material/Search";
 import jwttoken from '../Token'
+
+import { Snackbar, Alert } from '@mui/material';
 
 import Tooltip from "@mui/material/Tooltip";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -40,7 +42,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import axios from "axios";
-import Alert from "@mui/material/Alert";
+
 import FilledInput from "@mui/material/FilledInput";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
@@ -60,13 +62,7 @@ export default function FormDialog() {
     setParent({ ...e.target.value });
     setS("hahahh");
   };
-  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   
-  const [alertSuccess, setAlertSuccess] = React.useState({
-    open: false,
-    message: "",
-    severity: "",
-  });
   const [s, setS] = React.useState("kalpshha");
 
   React.useEffect(() => {
@@ -133,6 +129,32 @@ export default function FormDialog() {
   const handleopenclose = () => {
     setOpen(!open);
   };
+  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
+  
+  const [alertSuccess, setAlertSuccess] = React.useState({
+    open: false,
+    message: "",
+    
+  });
+  
+const [state, setState] = React.useState({
+  open1: false,
+  vertical: "top",
+  horizontal: "center",
+});
+const { vertical, horizontal, open1 } = state;
+
+const handleClick1 = (newState) => {
+  setState({ ...state, open1: true });
+};
+console.log(state);
+const handleClose1 = () => {
+  setState({ ...state, open1: false });
+  setAlertSuccess({ ...alertSuccess, open: false });
+  setAlertMsg({ ...alertMsg, open: false });
+  
+};
+
   const AddorUpdate = (message) => {
     if (id) {
       console.log(data);
@@ -141,15 +163,11 @@ export default function FormDialog() {
         .post(`http://localhost:5000/invoice/Update?id=${id}`,data,jwttoken())
         .then((data) => {
           doUpdate(!update);
+          handleClick1({ vertical: "top", horizontal: "center" });
           setAlertSuccess({
             open: true,
-            message: "Updated Successfully",
-            severity: "success",
+            message: "Invoice Updated Successfully",
           });
-          setTimeout(() => {
-            setAlertSuccess("");
-          }, 3000);
-          console.log(data);
           setData({});
           setId();
           setOpen(false);
@@ -157,14 +175,12 @@ export default function FormDialog() {
         .catch((err) => {
           console.log(err);
           if (err.response.data) {
-            // setAlertMsg(err.response.data.error.details[0].message)
+            handleClick1({ vertical: "top", horizontal: "center" });
             setAlertMsg({
               open: true,
               message: err.response.data.error.details[0].message,
             });
-            setTimeout(() => {
-              setAlertMsg("");
-            }, 3000);
+            
           }
         });
     } else {
@@ -175,15 +191,13 @@ export default function FormDialog() {
         },jwttoken())
         .then((data) => {
           doUpdate(!update);
+          handleClick1({ vertical: "top", horizontal: "center" });
           setAlertSuccess({
             open: true,
-            message: "Added Successfully",
-            severity: "success",
+            message: " Invoice Added Successfully",
+            
           });
-          setTimeout(() => {
-            setAlertSuccess("");
-          }, 3000);
-          console.log("data post api ", data);
+          
           setData({});
           setId();
           setOpen(false);
@@ -191,20 +205,16 @@ export default function FormDialog() {
         .catch((err) => {
           console.log(err);
           if (err.response.data) {
-            // setAlertMsg(err.response.data.error.details[0].message)
+            handleClick1({ vertical: "top", horizontal: "center" });
+            
             setAlertMsg({
               open: true,
-              message: err.response.data.error.details[0].message,
+              message: err.response.data.error.details[0].message
             });
-            setTimeout(() => {
-              setAlertMsg("");
-            }, 3000);
+            
           }
         });
     }
-    setSeverity(severity);
-    setMessage(message);
-    setalertopen(true);
 
     
   };
@@ -286,7 +296,26 @@ export default function FormDialog() {
   
   return (
     <React.Fragment>
-       
+         <Snackbar
+        open={open1}
+        autoHideDuration={3000}
+        onClose={handleClose1}
+        anchorOrigin={{ vertical, horizontal }}
+        
+      >
+          {(alertSuccess.open || alertMsg.open) && (
+    <Alert
+      onClose={handleClose1}
+      severity={alertSuccess.open ? "success" : "error"}
+                // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
+
+      variant="filled"
+      sx={{ width: "100%" }}
+    >
+      {alertSuccess.open ? alertSuccess.message : alertMsg.message}
+    </Alert>
+  )}
+      </Snackbar>
      <Grid container spacing={2}>
       {/* Left Section */}
       <Grid item xs={12} sm={3} sx={{
@@ -472,7 +501,7 @@ export default function FormDialog() {
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         label="Status"
-        renderValue={(data)=>{return (parent._id && data.Course) || ''}}
+        renderValue={(data)=>{return (parent._id && data.batchName) || ''}}
         sx={{
           height:50,
           minWidth:'100%',
@@ -498,7 +527,7 @@ export default function FormDialog() {
                   "&:last-child td, &:last-child th": { border: 0 },
                 }}
               >
-                <TableCell align="center">{row.Course}</TableCell>
+                <TableCell align="center">{row.batchName}</TableCell>
                 <TableCell align="center">{row.Amount}</TableCell>
                 <TableCell align="center">{row.Days}</TableCell>
                 <TableCell align="center">
@@ -590,11 +619,8 @@ export default function FormDialog() {
 
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
-        {alertMsg.open && (
-              <Alert severity="error" sx={{ zIndex: 9999 }}>
-                {alertMsg.message}
-              </Alert>
-            )}
+        
+            
           <Box>
             <FormControl sx={{ my: 2 }} fullWidth>
               <InputLabel id="demo-multiple-checkbox-label">
@@ -694,7 +720,7 @@ export default function FormDialog() {
           </Button>
         </DialogActions>
       </Dialog>
-      {alertSuccess.open ? <Alert>{alertSuccess.message}</Alert> : <div></div>}
+      
 
       <Box sx={{ mt: 3, mx: 2 }}>
         <TableContainer component={Paper}>
@@ -713,6 +739,8 @@ export default function FormDialog() {
                   Student Name
                 </TableCell>
                 <TableCell align="center">Date</TableCell>
+                <TableCell align="center">Batch Name</TableCell>
+                
                 <TableCell align="center">Course</TableCell>
                 <TableCell align="center">TypeOfPayment</TableCell>
 
@@ -756,8 +784,13 @@ sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
   {row.invoiceDate && row.invoiceDate.split("T")[0]}
 </TableCell>
 <TableCell align="center">
+  {row.courseId && row.courseId.batchName}
+</TableCell>
+
+<TableCell align="center">
   {row.courseId && row.courseId.Course}
 </TableCell>
+
 <TableCell align="center">{row.TypeOfPayment}</TableCell>
 <TableCell align="center">{row.Amount}</TableCell>
 
@@ -955,15 +988,13 @@ sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
           .then((data) => {
             console.log(data);
             if(data.data){
+              handleClick1({ vertical: "top", horizontal: "center" });
               setAlertSuccess({
                 open: true,
                 message: "Email Sent Successfully",
-                severity: "success",
+                
               });
-              setTimeout(() => {
-                setAlertSuccess("");
-              }, 3000);
-              console.log(data.data)
+              
             }
           })
           .catch((err) => {

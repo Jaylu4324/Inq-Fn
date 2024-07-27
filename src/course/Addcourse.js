@@ -3,7 +3,8 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import dayjs from "dayjs";
-import Alert from "@mui/material/Alert";
+
+
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 
@@ -14,7 +15,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import EditIcon from "@mui/icons-material/Edit";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
-import DeleteIcon from "@mui/icons-material/Delete";
+
 import Tooltip from "@mui/material/Tooltip";
 import utc from "dayjs/plugin/utc";
 import AddIcon from "@mui/icons-material/Add";
@@ -39,12 +40,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import jwttoken from "../Token";
+import { Snackbar, Alert } from '@mui/material';
+
 
 import Paper from "@mui/material/Paper";
 import { Grid } from "@mui/material";
 import axios from "axios";
 
 function Addcourse() {
+  
   const [open, setopen] = React.useState(false);
   const [update, doUpdate] = React.useState(false);
 
@@ -53,30 +57,18 @@ function Addcourse() {
   const [open2, setOpen2] = React.useState(false);
 
   const [id, setid] = React.useState();
+
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   const [alertbatchMsg, setalertbatchMsg] = React.useState({
     open: false,
     message: "",
-    severity: "",
+    
   });
 
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
-    severity: "",
   });
-
-  const [open1, setOpen1] = React.useState(false);
-
-  console.log(alertSuccess.open);
-  const handleClickOpen1 = () => {
-    setOpen1(true);
-  };
-
-  const handleClose1 = () => {
-    setOpen1(false);
-    
-  };
 
   const handleClickOpen2 = () => {
     setOpen2(true);
@@ -113,13 +105,15 @@ function Addcourse() {
   };
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
-
-  const MenuProps = {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
+  const menuprops = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
     },
   };
+
   React.useEffect(() => {
     axios
       .get("http://localhost:5000/batchEvent/DisplayBevent", jwttoken())
@@ -136,7 +130,7 @@ function Addcourse() {
   console.log(arr);
   const handleClose = () => {
     setopen(false);
-    setid('');
+    setid("");
     setdata({});
   };
 
@@ -163,18 +157,18 @@ function Addcourse() {
       .then((data) => {
         doUpdate(!update);
 
+        handleClick1({ vertical: "top", horizontal: "center" });
+
         setAlertSuccess({
           open: true,
-          severity: "success",
+
           message:
             id == undefined
               ? "Batch Added Successfully"
               : "Batch Updated Successfully",
         });
 
-        setTimeout(() => {
-          setAlertSuccess("");
-        }, 3000);
+
         setopen(false);
         setdata({});
         setid("");
@@ -182,19 +176,19 @@ function Addcourse() {
       })
       .catch((err) => {
         console.log(err);
+
         if (err.response.data) {
-          // setAlertMsg(err.response.data.error.details[0].message)
+          handleClick1({ vertical: "top", horizontal: "center" });
+          
           setAlertMsg({
             open: true,
             message: err.response.data.error.details[0].message,
           });
-          setTimeout(() => {
-            setAlertMsg("");
-          }, 3000);
         }
       });
   };
-
+  console.log(alertSuccess);
+  console.log(alertMsg);
   dayjs.extend(utc);
   const handleDateChange = (val) => {
     const selectedDate = new Date(val);
@@ -206,9 +200,49 @@ function Addcourse() {
 
     setdata({ ...data, StartDate: formattedDate });
   };
+console.log(alertbatchMsg)
+
+  const [state, setState] = React.useState({
+    open1: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+  const { vertical, horizontal, open1 } = state;
+
+  const handleClick1 = (newState) => {
+    setState({ ...state, open1: true });
+  };
+  console.log(state);
+  const handleClose1 = () => {
+    setState({ ...state, open1: false });
+    setAlertSuccess({ ...alertSuccess, open: false });
+    setAlertMsg({ ...alertMsg, open: false });
+    setalertbatchMsg({...alertbatchMsg,open:false})
+  };
 
   return (
     <>
+      <Snackbar
+        open={open1}
+        autoHideDuration={3000}
+        onClose={handleClose1}
+        anchorOrigin={{ vertical, horizontal }}
+        
+      >
+          {(alertSuccess.open || alertMsg.open || alertbatchMsg.open) && (
+    <Alert
+      onClose={handleClose1}
+      severity={alertSuccess.open ? "success" : alertMsg.open?"error": alertbatchMsg.open?'error':null}
+                // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
+
+      variant="filled"
+      sx={{ width: "100%" }}
+    >
+      {alertSuccess.open ? alertSuccess.message : alertMsg.open?alertMsg.message:alertbatchMsg.open?alertbatchMsg.message:null}
+    </Alert>
+  )}
+      </Snackbar>
+
       <Grid container spacing={2} justifyContent="left">
         <Grid item xs={1} sx={{ mb: 3, mr: 3 }}>
           <Tooltip title="Add Batch" arrow>
@@ -225,11 +259,6 @@ function Addcourse() {
 
       <Dialog open={open}>
         <DialogContent>
-          {alertMsg.open && (
-            <Alert severity="error" sx={{ zIndex: 9999 }}>
-              {alertMsg.message}
-            </Alert>
-          )}
           <Box sx={{ minWidth: 120, mb: 1 }}>
             <FormControl variant="filled" fullWidth>
               <InputLabel id="demo-simple-select-label">Course</InputLabel>
@@ -249,8 +278,6 @@ function Addcourse() {
                 <MenuItem value={"C++"}>C++</MenuItem>
                 <MenuItem value={"Python"}>Python</MenuItem>
                 <MenuItem value={"Mern"}>Mern</MenuItem>
-
-
               </Select>
             </FormControl>
           </Box>
@@ -260,7 +287,7 @@ function Addcourse() {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="Start Date"
-                  slotProps={{ textField: { variant: "filled",error: false  } }}
+                  slotProps={{ textField: { variant: "filled", error: false } }}
                   defaultValue={id ? dayjs(data.StartDate) : null}
                   sx={{ width: 500 }}
                   onChange={handleDateChange}
@@ -281,7 +308,8 @@ function Addcourse() {
                 fullWidth
                 input={<FilledInput />}
                 renderValue={(selected) => selected.join(", ")}
-                MenuProps={MenuProps}
+                MenuProps={menuprops}
+
               >
                 {DaysArr.map((name) => (
                   <MenuItem key={name} value={name}>
@@ -300,11 +328,11 @@ function Addcourse() {
               <DemoContainer components={["TimePicker"]} fullWidth>
                 <TimePicker
                   label="Batch Timings"
-                  slotProps={{ textField: { variant: "filled",error: false  } }}
+                  slotProps={{ textField: { variant: "filled", error: false } }}
                   sx={{ width: 500 }}
                   defaultValue={id ? dayjs(data.BatchTime) : null}
                   // value={id ? dayjs(data.StartDate) : null}
-                  
+
                   fullWidth
                   onChange={(val) => {
                     setdata({ ...data, BatchTime: val });
@@ -345,12 +373,7 @@ function Addcourse() {
         </DialogContent>
       </Dialog>
 
-      {alertSuccess.open && (
-        <Alert severity={alertSuccess.severity}>{alertSuccess.message}</Alert>
-      )}
-      {alertbatchMsg.open && (
-        <Alert severity={alertbatchMsg.severity}>{alertbatchMsg.message}</Alert>
-      )}
+      
       <Box sx={{ mx: 2 }}>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -466,28 +489,29 @@ function Addcourse() {
                 )
                 .then((data) => {
                   doUpdate(!update);
+                  handleClick1({ vertical: "top", horizontal: "center" });
+        
                   setAlertSuccess({
                     open: true,
                     message: "Completed Successfully",
                     severity: "success",
                   });
                   handleClose2();
-                  setTimeout(() => {
-                    setAlertSuccess("");
-                  }, 3000);
+                  
                   console.log("data completed", data);
                 })
                 .catch((err) => {
                   console.log("error", err);
                   if (err.response.data) {
+                    handleClick1({ vertical: "top", horizontal: "center" });
+        
                     setalertbatchMsg({
                       open: true,
                       message: err.response.data.error.details[0],
-                      severity: "error",
+                      
                     });
-                    setTimeout(() => {
-                      setalertbatchMsg("");
-                    }, 3000);
+                    
+
                   }
                 });
             }}

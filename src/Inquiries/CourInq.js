@@ -8,10 +8,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import Menu from "@mui/material/Menu";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { Snackbar, Alert } from '@mui/material';
 
 import DialogActions from "@mui/material/DialogActions";
 
-import DeleteIcon from "@mui/icons-material/Delete";
+
 import Tooltip from "@mui/material/Tooltip";
 
 import CloseIcon from "@mui/icons-material/Close";
@@ -42,7 +43,6 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import Alert from "@mui/material/Alert";
 
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -108,7 +108,32 @@ function Form1() {
   const [update, doUpdate] = React.useState(false);
   const [id, setId] = React.useState();
 
-  const [alertMsg, setAlertMsg] = React.useState("");
+  const [alertMsg, setAlertMsg] = React.useState({open: false, message: "" });
+  const [alertSuccess, setAlertSuccess] = React.useState({
+    open: false,
+    message: "",
+  });
+  
+  const [state, setState] = React.useState({
+    op: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+  const { vertical, horizontal, op } = state;
+
+  const handleClick1 = (newState) => {
+    setState({ ...state, op: true });
+  };
+  console.log(state);
+  const handleClose12 = () => {
+    setState({ ...state, op: false });
+    setAlertSuccess({ ...alertSuccess, open: false });
+    setAlertMsg({ ...alertMsg, open: false });
+    
+  };
+
+
+
 
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -146,11 +171,7 @@ function Form1() {
     setData({ ...data, [type]: e.target.value });
   };
 
-  const [alertSuccess, setAlertSuccess] = React.useState({
-    open: false,
-    message: "",
-    severity: "",
-  });
+  
 
   const handleopen = () => {
     setOpen(!open);
@@ -219,29 +240,25 @@ function Form1() {
           setOpen(false);
           setData({});
           setId("");
+          handleClick1({ vertical: "top", horizontal: "center" });
 
           setAlertSuccess({
             open: true,
-            message: "Updated Successfully",
-            severity: "success",
+            message: " Inquiry Updated Successfully",
+            
           });
-          setTimeout(() => {
-            setAlertSuccess("");
-          }, 3000);
-          console.log("data is upfated", data1);
-          // doUpdate(!update)
-        })
+           })
         .catch((err) => {
           console.log(err);
           if (err.response.data) {
-            // setAlertMsg(err.response.data.error.details[0].message)
+            handleClick1({ vertical: "top", horizontal: "center" });
+
+            
             setAlertMsg({
               open: true,
               message: err.response.data.error.details[0].message,
             });
-            setTimeout(() => {
-              setAlertMsg("");
-            }, 3000);
+            
           }
         });
     } else {
@@ -249,31 +266,29 @@ function Form1() {
         .post("http://localhost:5000/inquiry/addInquiry", data, jwttoken())
         .then((data) => {
           doUpdate(!update);
+          handleClick1({ vertical: "top", horizontal: "center" });
+
           setOpen(false);
           setData({});
           setId("");
 
           setAlertSuccess({
             open: true,
-            message: "Added Successfully",
-            severity: "success",
+            message: " Inquiry Added Successfully",
+            
           });
-          setTimeout(() => {
-            setAlertSuccess("");
-          }, 3000);
-          console.log("data posted", data);
+          
         })
         .catch((err) => {
           console.log(err);
           if (err.response.data) {
-            // setAlertMsg(err.response.data.error.details[0].message)
+            handleClick1({ vertical: "top", horizontal: "center" });
+
             setAlertMsg({
               open: true,
               message: err.response.data.error.details[0].message,
             });
-            setTimeout(() => {
-              setAlertMsg("");
-            }, 3000);
+            
           }
         });
     }
@@ -339,6 +354,26 @@ function Form1() {
 
   return (
     <>
+     <Snackbar
+        open={op}
+        autoHideDuration={3000}
+        onClose={handleClose12}
+        anchorOrigin={{ vertical, horizontal }}
+        
+      >
+          {(alertSuccess.open || alertMsg.open) && (
+    <Alert
+      onClose={handleClose12}
+      severity={alertSuccess.open ? "success" : "error"}
+                // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
+
+      variant="filled"
+      sx={{ width: "100%" }}
+    >
+      {alertSuccess.open ? alertSuccess.message : alertMsg.message}
+    </Alert>
+  )}
+      </Snackbar>
       <React.Fragment>
         <Grid container spacing={2}>
           <Grid
@@ -886,11 +921,8 @@ function Form1() {
 
         <Dialog open={open} onClose={handleClose}>
           <DialogContent>
-            {alertMsg.open && (
-              <Alert severity="error" sx={{ zIndex: 9999 }}>
-                {alertMsg.message}
-              </Alert>
-            )}
+            
+          
 
             <TextField
               id="outlined-basic"
@@ -1055,11 +1087,7 @@ function Form1() {
           </DialogContent>
         </Dialog>
 
-        {alertSuccess.open ? (
-          <Alert>{alertSuccess.message}</Alert>
-        ) : (
-          <div></div>
-        )}
+        
       </React.Fragment>
       <Dialog
         open={open1}
@@ -1086,14 +1114,14 @@ function Form1() {
                 .then((data) => {
                   console.log(data);
                   doUpdate(!update);
+                  handleClick1({ vertical: "top", horizontal: "center" });
+
                   setAlertSuccess({
                     open: true,
-                    message: "Reject Successfully",
-                    severity: "success",
+                    message: " Inquiry Reject Successfully",
+                    
                   });
-                  setTimeout(() => {
-                    setAlertSuccess("");
-                  }, 3000);
+                  
                 })
                 .catch((err) => {
                   console.log(err);
@@ -1129,14 +1157,14 @@ function Form1() {
                 )
                 .then((data) => {
                   doUpdate(!update);
+                            handleClick1({ vertical: "top", horizontal: "center" });
+
                   setAlertSuccess({
                     open: true,
-                    message: "Confirmed Successfully",
-                    severity: "success",
+                    message: "Inquiry Confirmed Successfully",
+                    
                   });
-                  setTimeout(() => {
-                    setAlertSuccess("");
-                  }, 3000);
+                  
                 })
                 .catch((err) => {
                   console.log(err);
