@@ -5,17 +5,18 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+
 import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
+
 import Box from "@mui/material/Box";
+import { Snackbar, Alert } from '@mui/material';
+
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import Alert from "@mui/material/Alert";
+
 function Copyright(props) {
   return (
     <Typography
@@ -39,8 +40,32 @@ const defaultTheme = createTheme();
 export default function SignIn() {
   const [data, setData] = useState({});
   const nav = useNavigate();
+  const [alertMsg, setAlertMsg] = React.useState({open: false, message: "" });
+  const [alertSuccess, setAlertSuccess] = React.useState({
+    open: false,
+    message: "",
+  });
+  
+  const [state, setState] = React.useState({
+    op: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+  const { vertical, horizontal, op } = state;
 
-  const [alertMsg, setAlertMsg] = React.useState("");
+  const handleClick1 = (newState) => {
+    setState({ ...state, op: true });
+  };
+  console.log(state);
+  const handleClose12 = () => {
+    setState({ ...state, op: false });
+    setAlertSuccess({ ...alertSuccess, open: false });
+    setAlertMsg({ ...alertMsg, open: false });
+    
+  };
+
+
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -87,17 +112,7 @@ export default function SignIn() {
                 setData({ ...data, password: e.target.value });
               }}
             />
-          
-            {
-            
-            alertMsg.open && (
-              <Alert severity={alertMsg.severity}sx={{ zIndex: 9999 }}>
-                {alertMsg.message}
-              </Alert>
-            
-            
-            )}
-
+         
             <Button
               type="submit"
               fullWidth
@@ -110,30 +125,33 @@ export default function SignIn() {
                   .then((data) => {
                     localStorage.setItem('token',data.data.tokan)
                     if (data.status == 200) {
-                      setAlertMsg({
-                        open: true,
-                        message: data.data,
-                        severity: "success"
-                      });
-                      setTimeout(() => {
-                        setAlertMsg("");
-                      }, 3000);
-                    }
-                    nav("/dashBoard/dashBoard");
+                      handleClick1({ vertical: "top", horizontal: "center" });
 
+                      setAlertSuccess({
+                        open: true,
+                        message: data.data.msg,
+                       
+                      });
+                 
+                    }
+                    setTimeout(()=>{
+                      nav("/dashBoard/dashBoard");
+                    },2000)
+                   
+                    
                     console.log(data);
                   })
                   .catch((err) => {
                     console.log(err);
                     if (!data.status) {
+                      handleClick1({ vertical: "top", horizontal: "center" });
+
                       setAlertMsg({
                         open: true,
-                         severity: "error",
+                       
                         message: err.response.data.error
                       });
-                      setTimeout(() => {
-                        setAlertMsg("");
-                      }, 3000);
+                     
                     }
                   });
               }}
@@ -145,6 +163,27 @@ export default function SignIn() {
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
+
+      <Snackbar
+        open={op}
+        autoHideDuration={2000}
+        onClose={handleClose12}
+        anchorOrigin={{ vertical, horizontal }}
+        
+      >
+          {(alertSuccess.open || alertMsg.open) && (
+    <Alert
+      onClose={handleClose12}
+      severity={alertSuccess.open ? "success" : "error"}
+                // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
+
+      variant="filled"
+      sx={{ width: "100%" }}
+    >
+      {alertSuccess.open ? alertSuccess.message : alertMsg.message}
+    </Alert>
+  )}
+      </Snackbar>
     </ThemeProvider>
   );
 }

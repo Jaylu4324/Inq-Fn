@@ -180,6 +180,7 @@ function Addcourse() {
         if (err.response.data) {
           handleClick1({ vertical: "top", horizontal: "center" });
           
+          
           setAlertMsg({
             open: true,
             message: err.response.data.error.details[0].message,

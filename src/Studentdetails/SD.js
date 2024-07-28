@@ -173,7 +173,6 @@ console.log(data)
   React.useEffect(()=>{
     
     if(parent._id){
-      console.log("useEffect triggered with:", {  render });
     
     axios.get(`http://localhost:5000/inquiry/falsestu?Course=${parent.Course}`)
     .then((data)=>{

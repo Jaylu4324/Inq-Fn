@@ -13,27 +13,19 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import AddIcon from "@mui/icons-material/Add";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 
 import EditIcon from '@mui/icons-material/Edit';
-import DoneAllIcon from '@mui/icons-material/DoneAll';
-import DeleteIcon from "@mui/icons-material/Delete";
 import Tooltip from "@mui/material/Tooltip";
 
 import { Grid } from "@mui/material";
-import { styled } from "@mui/material/styles";
-// let str="2024-07-01T12:00:99"
 
-// let newdate=str.split('T')[0].split("-").reverse().join("/")
 
 
 import axios from "axios";
-import Paper from "@mui/material/Paper";
 
 import PropTypes from "prop-types";
 import Typography from "@mui/material/Typography";
-import Alert from '@mui/material/Alert';
+import { Snackbar, Alert } from '@mui/material';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -65,12 +57,7 @@ function Batches() {
   const [parent, setParent] = React.useState({});
   const [data, setData] = React.useState({ StuName: [] });
   const [id, setId] = React.useState("");
-  const [value, setValue] = React.useState(0);
   
-  const handleChange1 = (event, newValue) => {
-    setValue(newValue);
-  };
-
   function convertToIST(utcDateStr) {
     const date = new Date(utcDateStr);
 
@@ -90,11 +77,32 @@ function Batches() {
   const [arr, setarr] = React.useState([]);
   const [map, maparr] = React.useState([]);
   const [arr1, seteventarr] = React.useState([]);
-  const [confirm, setconfirm] = React.useState([]);
-  const[alertMsg,setAlertMsg]=React.useState("");
-  const[alertSuccess,setAlertSuccess]=React.useState({
-    open:false,message:"",severity:"",
-  })
+  
+  
+  const [alertSuccess, setAlertSuccess] = React.useState({
+    open: false,
+    message: "",
+    
+  });
+  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
+  
+const [state, setState] = React.useState({
+  open1: false,
+  vertical: "top",
+  horizontal: "center",
+});
+const { vertical, horizontal, open1 } = state;
+
+const handleClick1 = (newState) => {
+  setState({ ...state, open1: true });
+};
+console.log(state);
+const handleClose1 = () => {
+  setState({ ...state, open1: false });
+  setAlertSuccess({ ...alertSuccess, open: false });
+  setAlertMsg({ ...alertMsg, open: false });
+  
+};
 
   React.useEffect(() => {
     
@@ -207,30 +215,29 @@ console.log('thid api')
       return selectedNames.join(", ")
     }
   };
-  console.log(confirm);
-
-  const [open2, setOpen2] = React.useState(false);
-  
-  const [open3, setOpen3] = React.useState(false);
-  
-  const handleClickOpen2 = () => {
-    setOpen2(true);
-  };
-
-  const handleClose2 = () => {
-    setOpen2(false);
-  };
-  
-  const handleClickOpen3 = () => {
-    setOpen3(true);
-  };
-
-  const handleClose3 = () => {
-    setOpen3(false);
-  };
 
   return (
     <>
+    <Snackbar
+        open={open1}
+        autoHideDuration={3000}
+        onClose={handleClose1}
+        anchorOrigin={{ vertical, horizontal }}
+        
+      >
+          {(alertSuccess.open || alertMsg.open) && (
+    <Alert
+      onClose={handleClose1}
+      severity={alertSuccess.open ? "success" : "error"}
+                // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
+
+      variant="filled"
+      sx={{ width: "100%" }}
+    >
+      {alertSuccess.open ? alertSuccess.message : alertMsg.message}
+    </Alert>
+  )}
+      </Snackbar>
    <Grid container spacing={2}>
    <Grid item  xs={2} sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
    <Box sx={{mt:1}}>
@@ -436,11 +443,7 @@ console.log('thid api')
 
       <Dialog open={open}>
         <DialogContent>
-        {alertMsg.open && (
-            <Alert severity="error" sx={{ zIndex: 9999 }}>
-              {alertMsg.message}
-            </Alert>
-          )}
+      
           <Grid container spacing={2} justifyContent="left">
             <Grid item xs={4}>
               <Box>
@@ -512,26 +515,25 @@ console.log('thid api')
                       console.log(data.StuName)
                       setopen(false);
                       doupdate(!update);
+                      handleClick1({ vertical: "top", horizontal: "center" });
+          
                       setAlertSuccess({
                         open: true,
                         message: "Student Updated Successfully",
-                        severity: "success",
+                
                       });
-                      setTimeout(() => {
-                        setAlertSuccess("");
-                      }, 3000);
+                
                     })
                     .catch((err) => {
                       console.log(err);
                       if (err.response.data) {
+                        handleClick1({ vertical: "top", horizontal: "center" });
+          
                         setAlertMsg({
                           open: true,
                           message: err.response.data.error.details[0].message,
                         });
             
-                        setTimeout(() => {
-                          setAlertMsg("");
-                        }, 3000);
                       }
                     });
                 } else {
@@ -548,27 +550,27 @@ console.log('thid api')
                       setId("");
                       setData({ StuName: [] })
                       doupdate(!update);
+                      handleClick1({ vertical: "top", horizontal: "center" });
+          
                       setAlertSuccess({
                         open: true,
                         message: "Student Added Successfully",
-                        severity: "success",
+                 
                       });
-                      setTimeout(() => {
-                        setAlertSuccess("");
-                      }, 3000);
+                  
 
                     })
                     .catch((err) => {
                       console.log(err);
                       if (err.response.data) {
+                        handleClick1({ vertical: "top", horizontal: "center" });
+          
                         setAlertMsg({
                           open: true,
                           message: err.response.data.error.details[0].message,
                         });
             
-                        setTimeout(() => {
-                          setAlertMsg("");
-                        }, 3000);
+                   
                       }
                     });
                 }
@@ -579,82 +581,8 @@ console.log('thid api')
           </DialogActions>
         </DialogContent>
       </Dialog>
-      {alertSuccess.open  ? (
-        <Alert>{alertSuccess.message}</Alert>
-      ) : (
-        <div></div>
-      )}
-                      {/* <Dialog
-        open={open2}
-        onClose={handleClose2}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Delete Batch"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-           Do You Want To delete?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose2}>Cancel</Button>
-          <Button
-           onClick={() => {
-           
-            axios
-              .delete(
-                `http://localhost:5000/Batch/Delete?id=${id}`,jwttoken()
-              )
-              .then((data) => {
-                console.log("delet", data);
-                doupdate(!update);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-              handleClose2()
-          }}
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={open3}
-        onClose={handleClose3}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Complete Batch"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-           Do You Want To Complete?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose3}>Cancel</Button>
-          <Button
-         onClick={() => {
-          axios
-            .post(
-              `http://localhost:5000/Batch/isCompleted?id=${id}`,{},jwttoken()
-            )
-            .then((data) => {
-              doupdate(!update);
-
-              console.log(data);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-            handleClose3()
-        }}
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-       */}
+   
+      
     </>
   );
 }

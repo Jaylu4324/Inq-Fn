@@ -19,7 +19,7 @@ import Dashboard from './dashboard/Dashboard'
 import { Navigate } from 'react-router-dom'
 function App() {
   const Privateroute=(props)=>{
-console.log(props)
+
    
       const gettoken=localStorage.getItem('token')
       

@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { Snackbar, Alert } from '@mui/material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import Drawer from '@mui/material/Drawer';
@@ -28,8 +29,8 @@ import { Dialog, dialogClasses, Grid } from '@mui/material';
 import MailIcon from '@mui/icons-material/Mail';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Button from "@mui/material/Button";
-export default function ButtonAppBar(props) {
-  console.log(props)
+export default function ButtonAppBar() {
+  
   const [open1, setOpen1] = React.useState(false);
  
   
@@ -42,18 +43,38 @@ export default function ButtonAppBar(props) {
   };
   
   const[text1,settext]=React.useState()
-  console.log(text1)
   const [open, setOpen] = React.useState(false);
  const[name,setname]=React.useState()
+
   React.useEffect(()=>{
     const getname=localStorage.getItem('displayname')
-    console.log(getname)
     if(getname){
       setname(getname)
     }
  
   },[])
-  console.log(name)
+  const [alertSuccess, setAlertSuccess] = React.useState({
+    open: false,
+    message: "",
+  });
+  
+  const [state, setState] = React.useState({
+    op: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+  const { vertical, horizontal, op } = state;
+
+  const handleClick1 = (newState) => {
+    setState({ ...state, op: true });
+  };
+  const handleClose12 = () => {
+    setState({ ...state, op: false });
+    setAlertSuccess({ ...alertSuccess, open: false });
+    
+    
+  };
+ 
   const Nav=useNavigate("")
 let dasharr=['/dashBoard/dashBoard']
     let arr=["/course/AddCourse","/course/CourInq",'/course/Batch-For-Course',"/course/Invoice","/course/Studentdetails","/course/Completedcourse"]
@@ -220,14 +241,42 @@ let dasharr=['/dashBoard/dashBoard']
                     <Button onClick={()=>{
                       localStorage.removeItem('token')
                       localStorage.removeItem('displayname')
-                      console.log('navigated to login')
-                      Nav('/')
+                      handleClick1({ vertical: "top", horizontal: "center" });
+
+                      setAlertSuccess({
+                        open: true,
+                        message: 'Logout Success',
+                       
+                      });
+                      setTimeout(()=>{
+                        Nav('/')
+                      },2000)
+                      handleClose1()
 
                     }}>
                       Confirm
                     </Button>
                   </DialogActions>
                 </Dialog>
+                <Snackbar
+        open={op}
+        autoHideDuration={2000}
+        onClose={handleClose12}
+        anchorOrigin={{ vertical, horizontal }}
+        
+      >
+          {alertSuccess.open  && (
+    <Alert
+      onClose={handleClose12}
+      severity="success"
+                
+      variant="filled"
+      sx={{ width: "100%" }}
+    >
+    {alertSuccess.message} 
+    </Alert>
+  )}
+      </Snackbar>
       </>
   );
 }

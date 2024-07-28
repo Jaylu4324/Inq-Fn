@@ -2,12 +2,12 @@ import React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
-import Alert from "@mui/material/Alert";
+
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import AddIcon from "@mui/icons-material/Add";
 import jwttoken from '../Token'
-
+import { Snackbar, Alert } from '@mui/material';
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
@@ -73,18 +73,19 @@ function Interform() {
   const [arr, setarr] = React.useState([]);
   const [id, setid] = React.useState();
   const [update, doUpdate] = React.useState(false);
-  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
-  const [open1, setOpen1] = React.useState(false);
-  const [open2, setOpen2] = React.useState(false);
-  const [alertbatchMsg, setalertbatchMsg] = React.useState({ open: false, message: "",severity:"" });
   
-  const [alertSuccess, setAlertSuccess] = React.useState({
-    open: false,
-    message: "",
-    severity: "",
-  });
+  const [open2, setOpen2] = React.useState(false);
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const menuprops = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
 
- 
 
   const handleClickOpen2 = () => {
     setOpen2(true);
@@ -107,6 +108,34 @@ function Interform() {
     setid("");
   };
 
+  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
+  const [alertbatchMsg, setalertbatchMsg] = React.useState({
+    open: false,
+    message: "",
+    
+  });
+
+  const [alertSuccess, setAlertSuccess] = React.useState({
+    open: false,
+    message: "",
+  });
+  const [state, setState] = React.useState({
+    op: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+  const { vertical, horizontal, op } = state;
+
+  const handleClick1 = (newState) => {
+    setState({ ...state, op: true });
+  };
+  console.log(state);
+  const handleClose1 = () => {
+    setState({ ...state, op: false });
+    setAlertSuccess({ ...alertSuccess, open: false });
+    setAlertMsg({ ...alertMsg, open: false });
+    setalertbatchMsg({...alertbatchMsg,open:false})
+  };
   const handlesubmit = (e) => {
     if (id) {
       axios
@@ -115,65 +144,58 @@ function Interform() {
           handleClose();
 
           doUpdate(!update);
+          handleClick1({ vertical: "top", horizontal: "center" });
+          
           setAlertSuccess({
             open: true,
-            message: "Updated Successfully",
-            severity: "success",
+            message: " Event Updated Successfully",
+            
           });
-          setTimeout(() => {
-            setAlertSuccess("");
-          }, 3000);
+    
 
           console.log("data is updated", data);
         })
         .catch((err) => {
           console.log(err);
           if (err.response.data) {
-            // setAlertMsg(err.response.data.error.details[0].message)
+            handleClick1({ vertical: "top", horizontal: "center" });
+          
             setAlertMsg({
               open: true,
               message: err.response.data.error.details[0].message,
             });
-            setTimeout(() => {
-              setAlertMsg("");
-            }, 3000);
+          
           }
         });
     } else {
-      console.log(data);
+      
       axios
         .post(`http://localhost:5000/event/addevent`, data,jwttoken())
         .then((data) => {
           doUpdate(!update);
+          handleClick1({ vertical: "top", horizontal: "center" });
+          
           setAlertSuccess({
             open: true,
-            message: "Added Successfully",
-            severity: "success",
+            message: "Event Added Successfully",
+            
           });
-          setTimeout(() => {
-            setAlertSuccess("");
-          }, 3000);
-          console.log("Alert State is changed");
+          
           handleClose();
-          // handledelete(row);
-          // setAlertMsg({
-          //   open:true,
-          //   message:"Data Added Successfully"
-          // })
-
+          
           console.log("data posted", data);
         })
         .catch((err) => {
           console.log(err);
           if (err.response.data) {
+            handleClick1({ vertical: "top", horizontal: "center" });
+          
             setAlertMsg({
               open: true,
               message: err.response.data.error.details[0].message,
             });
-            // setAlertMsg(err.response.data.error.details[0].message)
-            setTimeout(() => {
-              setAlertMsg("");
-            }, 3000);
+            
+            
           }
         });
     }
@@ -224,6 +246,26 @@ function Interform() {
 
   return (
     <React.Fragment>
+        <Snackbar
+        open={op}
+        autoHideDuration={3000}
+        onClose={handleClose1}
+        anchorOrigin={{ vertical, horizontal }}
+        
+      >
+          {(alertSuccess.open || alertMsg.open || alertbatchMsg.open) && (
+    <Alert
+      onClose={handleClose1}
+      severity={alertSuccess.open ? "success" : alertMsg.open?"error": alertbatchMsg.open?'error':null}
+                
+
+      variant="filled"
+      sx={{ width: "100%" }}
+    >
+      {alertSuccess.open ? alertSuccess.message : alertMsg.open?alertMsg.message:alertbatchMsg.open?alertbatchMsg.message:null}
+    </Alert>
+  )}
+      </Snackbar>
       <Grid container spacing={2} justifyContent="left">
         <Grid item xs={1} sx={{ mb: 3, mr: 1 }}>
           <Tooltip title="Add Events">
@@ -241,11 +283,6 @@ function Interform() {
       <Dialog open={open}>
         <DialogContent>
           <Box sx={{ minWidth: 120, mb: 2 }}>
-            {alertMsg.open && (
-              <Alert severity="error" sx={{ zIndex: 9999 }}>
-                {alertMsg.message}
-              </Alert>
-            )}
 
             <FormControl variant="filled" fullWidth>
               <InputLabel id="demo-simple-select-label">Course</InputLabel>
@@ -372,6 +409,7 @@ function Interform() {
                 fullWidth
                 input={<FilledInput />}
                 renderValue={(selected) => selected.join(", ")}
+                MenuProps={menuprops}
               >
                 {DaysArr.map((name) => (
                   <MenuItem key={name} value={name}>
@@ -423,12 +461,7 @@ function Interform() {
         </DialogContent>
       </Dialog>
       
-      {alertSuccess.open && (
-        <Alert severity={alertSuccess.severity}>{alertSuccess.message}</Alert>
-      )}
-      {alertbatchMsg.open && (
-        <Alert severity={alertbatchMsg.severity}>{alertbatchMsg.message}</Alert>
-      )}
+      
       <Box sx={{ mx: 2 }}>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -555,29 +588,27 @@ function Interform() {
                 .then((data) => {
                   console.log("event completed", data);
                   doUpdate(!update);
+                  handleClick1({ vertical: "top", horizontal: "center" });
                   setAlertSuccess({
                     open: true,
-                    message: "Confirmed Successfully",
-                    severity: "success",
+                    message: " Event Completed Successfully",
+                    
                   });
-                  setTimeout(() => {
-                    setAlertSuccess("");
-                  }, 3000);
+         
                   handleClose2();
               
                 })
                 .catch((err) => {
                   console.log(err);
                   if (err.response.data) {
-                            
+                    handleClick1({ vertical: "top", horizontal: "center" });
+          
                     setalertbatchMsg({
                       open: true,
                       message: err.response.data.error.details[0],
-                      severity: "error"
+                   
                     });
-                    setTimeout(() => {
-                      setalertbatchMsg("");
-                    }, 3000);
+                 
                   }
                 });
               
