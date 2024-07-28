@@ -293,6 +293,7 @@ const handleClose1 = () => {
     "December",
   ];
   
+
   return (
     <React.Fragment>
          <Snackbar
@@ -619,7 +620,19 @@ const handleClose1 = () => {
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
         
-            
+            {id?
+                        <TextField
+                        id="outlined-basic"
+                        label="Student Name"
+
+                        variant="filled"
+                        value={id&&data.stuId.Name}
+
+disabled={true}
+                        fullWidth
+                        sx={{ mb: 2 }}
+                      />
+            :
           <Box>
             <FormControl sx={{ my: 2 }} fullWidth>
               <InputLabel id="demo-multiple-checkbox-label">
@@ -650,7 +663,7 @@ const handleClose1 = () => {
               </Select>
             </FormControl>
           </Box>
-       
+}
             
           <TextField
             id="outlined-basic"

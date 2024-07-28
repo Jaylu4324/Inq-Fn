@@ -8,7 +8,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
-import Alert from "@mui/material/Alert";
+import { Snackbar, Alert } from '@mui/material';
+
+
 
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 
@@ -53,13 +55,31 @@ export default function Completedcourse() {
   const [open, setOpen] = React.useState(false);
   const [count, setcount] = React.useState(0);
   const [count1, setcount1] = React.useState(0);
+
+  const [alertMsg, setAlertMsg] = React.useState({open: false, message: "" });
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
-    severity: "",
   });
-  
-  const[id,setid]=React.useState()
+  const [state, setState] = React.useState({
+    op: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+  const { vertical, horizontal, op } = state;
+
+  const handleClick1 = (newState) => {
+    setState({ ...state, op: true });
+  };
+  console.log(state);
+  const handleClose12 = () => {
+    setState({ ...state, op: false });
+    setAlertSuccess({ ...alertSuccess, open: false });
+    setAlertMsg({ ...alertMsg, open: false });
+    
+  };
+
+  const[id,setid]=React.useState('')
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -117,8 +137,26 @@ export default function Completedcourse() {
 
   return (
     <>
-     {alertSuccess.open ? <Alert>{alertSuccess.message}</Alert> : <div></div>}
+ <Snackbar
+        open={op}
+        autoHideDuration={3000}
+        onClose={handleClose12}
+        anchorOrigin={{ vertical, horizontal }}
+        
+      >
+          {(alertSuccess.open || alertMsg.open) && (
+    <Alert
+      onClose={handleClose12}
+      severity={alertSuccess.open ? "success" : "error"}
+                // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
 
+      variant="filled"
+      sx={{ width: "100%" }}
+    >
+      {alertSuccess.open ? alertSuccess.message : alertMsg.message}
+    </Alert>
+  )}
+      </Snackbar>
       <TableContainer>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -378,20 +416,30 @@ export default function Completedcourse() {
                             .then((res) => {
                               console.log(res);
                               doupdate(!update);
+                              setData({})
+                              setid('')
+                              handleClose2();
+                              handleClick1({ vertical: "top", horizontal: "center" });
                               setAlertSuccess({
                                 open: true,
                                 message: "Updated Successfully",
-                                severity: "success",
+                            
                               });
-                              setTimeout(() => {
-                                setAlertSuccess("");
-                              }, 3000);
+                           
                             })
                             .catch((err) => {
                               console.log(err);
+                              if(err.response.data){
+                              handleClick1({ vertical: "top", horizontal: "center" });
+
+                              setAlertMsg({
+                                open: true,
+                                message: err.response.data.error.details[0].message,
+                              });
+                            }
                             });
-                          handleClose2();
-                          setData({});
+                          
+                          
                         }}
                       >
                         Submit
