@@ -221,6 +221,8 @@ export default function Completedcourse() {
                       color="error"
                       onClick={() => {
                         handleClickOpen();
+                        setstudent(row.StudentArray);
+                        
                      setid(row._id)
                       }}
                     >

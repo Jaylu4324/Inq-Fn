@@ -238,6 +238,8 @@ console.log(arr)
                       color="error"
                       onClick={() => {
                         handleClickOpen();
+                        
+                        setstudent(row.StudentArray);
                      setid(row._id)
                       }}
                     >
