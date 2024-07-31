@@ -49,6 +49,12 @@ import axios from "axios";
 
 function Addcourse() {
   
+  const [data, setdata] = React.useState({
+    StartDate: dayjs(''),
+    BatchTime: dayjs(""),
+    Days: [],
+  });
+
   const [open, setopen] = React.useState(false);
   const [update, doUpdate] = React.useState(false);
 
@@ -79,12 +85,7 @@ function Addcourse() {
     setdata({});
     setid("");
   };
-
-  const [data, setdata] = React.useState({
-    StartDate: dayjs(""),
-    BatchTime: dayjs(""),
-    Days: [],
-  });
+console.log(data)
 
   const DaysArr = [
     "Monday",
@@ -127,7 +128,7 @@ function Addcourse() {
   const handleChange = (e, type) => {
     setdata({ ...data, [type]: e.target.value });
   };
-  console.log(arr);
+  
   const handleClose = () => {
     setopen(false);
     setid("");
@@ -188,11 +189,11 @@ function Addcourse() {
         }
       });
   };
-  console.log(alertSuccess);
-  console.log(alertMsg);
+  
   dayjs.extend(utc);
   const handleDateChange = (val) => {
     const selectedDate = new Date(val);
+    console.log(val)
     const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
     const adjustedDate = new Date(
       selectedDate.getTime() + timezoneOffset * 60 * 1000
@@ -201,7 +202,6 @@ function Addcourse() {
 
     setdata({ ...data, StartDate: formattedDate });
   };
-console.log(alertbatchMsg)
 
   const [state, setState] = React.useState({
     open1: false,
@@ -213,7 +213,7 @@ console.log(alertbatchMsg)
   const handleClick1 = (newState) => {
     setState({ ...state, open1: true });
   };
-  console.log(state);
+  
   const handleClose1 = () => {
     setState({ ...state, open1: false });
     setAlertSuccess({ ...alertSuccess, open: false });
@@ -290,6 +290,7 @@ console.log(alertbatchMsg)
                   label="Start Date"
                   slotProps={{ textField: { variant: "filled", error: false } }}
                   defaultValue={id ? dayjs(data.StartDate) : null}
+                  
                   sx={{ width: 500 }}
                   onChange={handleDateChange}
                 />
