@@ -89,6 +89,17 @@ function a11yProps(index) {
 }
 
 function Eventi() {
+  const newdate = () => {
+    const selectedDate = new Date();
+
+    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
+    const adjustedDate = new Date(
+      selectedDate.getTime() + timezoneOffset * 60 * 1000
+    );
+    const formattedDate = adjustedDate.toISOString();
+
+    return formattedDate;
+  };
 
   function convertToIST(utcDateStr) {
     const date = new Date(utcDateStr);
@@ -108,7 +119,7 @@ function Eventi() {
 
   const [value, setValue] = React.useState(0);
 
-  const [data, setData] = React.useState({ Date: dayjs("") });
+  const [data, setData] = React.useState({ Date: dayjs(newdate()) });
   const [open, setOpen] = React.useState(false);
   const [arr, setArr] = React.useState([]);
   const [ong, setong] = React.useState([]);
@@ -259,7 +270,7 @@ function Eventi() {
   };
   const handleClose = () => {
     setOpen(false);
-    setData({});
+    setData({Date:data.Date});
     setId();
   };
   const handlechange1 = (event, newValue) => {
@@ -643,7 +654,7 @@ function Eventi() {
                         </TableCell>
                         <TableCell align="center">
                           {row.Days.map((val) => (
-                            <TableCell align="center">{val}</TableCell>
+                            <Box>{val}</Box>
                           ))}
                         </TableCell>
                         <TableCell align="center">
@@ -709,6 +720,7 @@ function Eventi() {
             <Button sx={{ color: "#0063cc" }}>
               <SearchIcon
               onClick={() => {
+                if(searchname.length>0){
                 axios
                   .get(
                     `http://localhost:5000/Eventinquiry/search?FullName=${searchname}&type=${type}`,jwttoken()
@@ -734,6 +746,15 @@ function Eventi() {
               .catch((err)=>{
                 console.log(err)
               })
+            }
+            else{
+              handleClick1({ vertical: "top", horizontal: "center" });
+              setAlertMsg({
+                open: true,
+                message: 'Please Enter Name First'
+              });
+
+            }
             }}
 
               />
@@ -788,7 +809,7 @@ function Eventi() {
               <DemoContainer components={["DatePicker"]} fullWidth>
                 <DatePicker
                   label="Choose Your Date"
-                  defaultValue={id ? dayjs(data.Date) : null}
+                  defaultValue={id ? dayjs(data.Date) : dayjs(newdate())}
                   sx={{ width: 533 }}
                   slotProps={{ textField: { variant: "filled" } }}
                   onChange={handleDateChange}

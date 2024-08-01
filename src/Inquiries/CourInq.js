@@ -8,7 +8,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Menu from "@mui/material/Menu";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Snackbar, Alert } from '@mui/material';
+import { Snackbar, Alert } from "@mui/material";
 import DialogActions from "@mui/material/DialogActions";
 import Tooltip from "@mui/material/Tooltip";
 import CloseIcon from "@mui/icons-material/Close";
@@ -83,9 +83,26 @@ function a11yProps(index) {
 }
 
 function Form1() {
-  const [value, setValue] = React.useState(0);
+  const newdate = () => {
+    const selectedDate = new Date();
 
-  const [data, setData] = React.useState({ Date: dayjs(""), Course: [] });
+    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
+    const adjustedDate = new Date(
+      selectedDate.getTime() + timezoneOffset * 60 * 1000
+    );
+    const formattedDate = adjustedDate.toISOString();
+
+    return formattedDate;
+  };
+
+  
+  const [data, setData] = React.useState({
+    Date: dayjs(newdate()),
+    Course: [],
+  });
+  
+  const [value, setValue] = React.useState(0);
+  
   const [type, settype] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [arr, setArr] = React.useState([]);
@@ -94,12 +111,12 @@ function Form1() {
   const [update, doUpdate] = React.useState(false);
   const [id, setId] = React.useState();
 
-  const [alertMsg, setAlertMsg] = React.useState({open: false, message: "" });
+  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
   });
-  
+
   const [state, setState] = React.useState({
     op: false,
     vertical: "top",
@@ -110,16 +127,12 @@ function Form1() {
   const handleClick1 = (newState) => {
     setState({ ...state, op: true });
   };
-  console.log(state);
+
   const handleClose12 = () => {
     setState({ ...state, op: false });
     setAlertSuccess({ ...alertSuccess, open: false });
     setAlertMsg({ ...alertMsg, open: false });
-    
   };
-
-
-
 
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -157,8 +170,6 @@ function Form1() {
     setData({ ...data, [type]: e.target.value });
   };
 
-  
-
   const handleopen = () => {
     setOpen(!open);
   };
@@ -189,8 +200,7 @@ function Form1() {
     axios
       .get("http://localhost:5000/inquiry/OnGoing", jwttoken())
       .then((data) => {
-        console.log(data);
-        console.log("data received");
+        
         setArr(data.data.data);
       })
       .catch((err) => {
@@ -208,7 +218,7 @@ function Form1() {
     axios
       .get("http://localhost:5000/inquiry/Confirm", jwttoken())
       .then((data) => {
-        console.log(data);
+        
         setconfirm(data.data.data);
       })
       .catch((err) => {
@@ -222,48 +232,15 @@ function Form1() {
         .post(`http://localhost:5000/inquiry/Update?id=${id}`, data, jwttoken())
         .then((data1) => {
           doUpdate(!update);
-
-          setOpen(false);
-          setData({});
+          setData({Date:data.Date});
+          setOpen(false)
           setId("");
           handleClick1({ vertical: "top", horizontal: "center" });
 
           setAlertSuccess({
             open: true,
             message: " Inquiry Updated Successfully",
-            
           });
-           })
-        .catch((err) => {
-          console.log(err);
-          if (err.response.data) {
-            handleClick1({ vertical: "top", horizontal: "center" });
-
-            
-            setAlertMsg({
-              open: true,
-              message: err.response.data.error.details[0].message,
-            });
-            
-          }
-        });
-    } else {
-      axios
-        .post("http://localhost:5000/inquiry/addInquiry", data, jwttoken())
-        .then((data) => {
-          doUpdate(!update);
-          handleClick1({ vertical: "top", horizontal: "center" });
-
-          setOpen(false);
-          setData({});
-          setId("");
-
-          setAlertSuccess({
-            open: true,
-            message: " Inquiry Added Successfully",
-            
-          });
-          
         })
         .catch((err) => {
           console.log(err);
@@ -274,7 +251,35 @@ function Form1() {
               open: true,
               message: err.response.data.error.details[0].message,
             });
-            
+          }
+        });
+    } else {
+      axios
+        .post("http://localhost:5000/inquiry/addInquiry", data, jwttoken())
+        .then((data) => {
+          doUpdate(!update);
+          handleClick1({ vertical: "top", horizontal: "center" });
+          setData({Date:data.Date});
+          
+          
+          setOpen(false);
+                  
+          setId("");
+
+          setAlertSuccess({
+            open: true,
+            message: " Inquiry Added Successfully",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          if (err.response.data) {
+            handleClick1({ vertical: "top", horizontal: "center" });
+
+            setAlertMsg({
+              open: true,
+              message: err.response.data.error.details[0].message,
+            });
           }
         });
     }
@@ -290,8 +295,6 @@ function Form1() {
 
   dayjs.extend(utc);
 
-  
-  
   const handleDateChange = (val) => {
     const selectedDate = new Date(val);
     const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
@@ -340,28 +343,27 @@ function Form1() {
     "November",
     "December",
   ];
-
+console.log(alertMsg)
   return (
     <>
-     <Snackbar
+      <Snackbar
         open={op}
         autoHideDuration={3000}
         onClose={handleClose12}
         anchorOrigin={{ vertical, horizontal }}
-        
       >
-          {(alertSuccess.open || alertMsg.open) && (
-    <Alert
-      onClose={handleClose12}
-      severity={alertSuccess.open ? "success" : "error"}
-                // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
+        {(alertSuccess.open || alertMsg.open) && (
+          <Alert
+            onClose={handleClose12}
+            severity={alertSuccess.open ? "success" : "error"}
+            // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
 
-      variant="filled"
-      sx={{ width: "100%" }}
-    >
-      {alertSuccess.open ? alertSuccess.message : alertMsg.message}
-    </Alert>
-  )}
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {alertSuccess.open ? alertSuccess.message : alertMsg.message}
+          </Alert>
+        )}
       </Snackbar>
       <React.Fragment>
         <Grid container spacing={2}>
@@ -602,6 +604,8 @@ function Form1() {
                 <Button sx={{ color: "#0063cc" }}>
                   <SearchIcon
                     onClick={() => {
+                      if(searchname.length>0)
+                      {
                       axios
                         .get(
                           `http://localhost:5000/inquiry/commansearchstu?FullName=${searchname}&type=${type}`,
@@ -622,6 +626,15 @@ function Form1() {
                         .catch((err) => {
                           console.log(err);
                         });
+                      }
+                      else{
+                        handleClick1({ vertical: "top", horizontal: "center" });
+                        setAlertMsg({
+                          open: true,
+                          message: 'Please Enter Name First'
+                        });
+                     
+                      }
                     }}
                   />
                 </Button>
@@ -910,9 +923,6 @@ function Form1() {
 
         <Dialog open={open} onClose={handleClose}>
           <DialogContent>
-            
-          
-
             <TextField
               id="outlined-basic"
               label="Full Name"
@@ -954,7 +964,7 @@ function Form1() {
                   <DatePicker
                     slotProps={{ textField: { variant: "filled" } }}
                     label="Choose Your Date"
-                    defaultValue={id ? dayjs(data.Date) : null}
+                    defaultValue={id ? dayjs(data.Date) : dayjs(newdate())}
                     onChange={handleDateChange}
                     sx={{ width: 530 }}
                   />
@@ -1060,7 +1070,9 @@ function Form1() {
               <Button
                 onClick={() => {
                   setOpen(!open);
-                  setData({});
+                  setData({Date:data.Date});
+                  setId('')
+                  
                 }}
               >
                 Cancel
@@ -1068,6 +1080,9 @@ function Form1() {
               <Button
                 onClick={() => {
                   handlesubmit();
+                
+
+
                 }}
               >
                 Submit
@@ -1075,8 +1090,6 @@ function Form1() {
             </Grid>
           </DialogContent>
         </Dialog>
-
-        
       </React.Fragment>
       <Dialog
         open={open1}
@@ -1108,9 +1121,7 @@ function Form1() {
                   setAlertSuccess({
                     open: true,
                     message: " Inquiry Reject Successfully",
-                    
                   });
-                  
                 })
                 .catch((err) => {
                   console.log(err);
@@ -1146,14 +1157,12 @@ function Form1() {
                 )
                 .then((data) => {
                   doUpdate(!update);
-                            handleClick1({ vertical: "top", horizontal: "center" });
+                  handleClick1({ vertical: "top", horizontal: "center" });
 
                   setAlertSuccess({
                     open: true,
                     message: "Inquiry Confirmed Successfully",
-                    
                   });
-                  
                 })
                 .catch((err) => {
                   console.log(err);

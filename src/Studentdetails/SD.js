@@ -65,11 +65,23 @@ function convertToIST(utcDateStr) {
 }
 
 function SD() {
+  const newdate = () => {
+    const selectedDate = new Date();
+
+    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
+    const adjustedDate = new Date(
+      selectedDate.getTime() + timezoneOffset * 60 * 1000
+    );
+    const formattedDate = adjustedDate.toISOString();
+
+    return formattedDate;
+  };
+
   const [id, setId] = React.useState('');
   const[render,setrender]=React.useState('no')
   console.log(render)
   const [data, setData] = React.useState({
-    Date: dayjs(''),
+    Date: dayjs(newdate()),
     btime: "",
     days: [],
   });
@@ -186,7 +198,7 @@ console.log(data)
     }
   },[parent,render])
   const [searchname, setseearchname] = React.useState("");
-console.log(parent.Course)
+
 
 
 
@@ -207,7 +219,7 @@ console.log(parent.Course)
           });
 
           setOpen(!open);
-          setData({});
+          setData({Date:data.Date});
           setId("");
         })
         .catch((err) => {
@@ -238,7 +250,7 @@ console.log(parent.Course)
           });
    
           setOpen(!open);
-          setData({});
+          setData({Date:data.Date});
           setId("");
         })
         .catch((err) => {
@@ -290,7 +302,7 @@ const maxsize=1000 * 130;
     
    
   };
-console.log(data.baseString)
+
   const handleopen = () => {
     setOpen(!open);
   };
@@ -653,6 +665,7 @@ const[student,setstudent]=React.useState([])
             <Button sx={{ color: "#0063cc" }}>
               <SearchIcon
                 onClick={() => {
+                  if(searchname.length>0){
                   axios.get(`http://localhost:5000/student/stusearch?Name=${searchname}`,jwttoken())
                   .then((data)=>{
               
@@ -662,8 +675,17 @@ const[student,setstudent]=React.useState([])
                   })
                   .catch((err)=>{
                     console.log(err)
+
+
                   })
-                
+                }
+                else{
+                  handleClick12({ vertical: "top", horizontal: "center" });
+                  setAlertMsg({
+                    open: true,
+                    message: 'Please Enter Name First'
+                  });
+                }
                 }}
               />
             </Button>
@@ -811,7 +833,7 @@ const[student,setstudent]=React.useState([])
                   label="Choose Your Date"
                   slotProps={{ textField: { variant: "filled" } }}
                   onChange={handleDateChange}
-                  defaultValue={id ? dayjs(data.Date) : null}
+                  defaultValue={id ? dayjs(data.Date) : dayjs(newdate())}
                   sx={{ width: 530}}
                   fullWidth
                 ></DatePicker>
@@ -847,7 +869,7 @@ const[student,setstudent]=React.useState([])
             onClick={() => {
               setOpen(false);
               setId('');
-              setData({});
+              setData({Date:data.Date});
             }}
           >
             Cancel

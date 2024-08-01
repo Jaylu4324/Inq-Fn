@@ -16,9 +16,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import autoTable from "jspdf-autotable";
 import SearchIcon from "@mui/icons-material/Search";
-import jwttoken from '../Token'
+import jwttoken from "../Token";
 
-import { Snackbar, Alert } from '@mui/material';
+import { Snackbar, Alert } from "@mui/material";
 
 import Tooltip from "@mui/material/Tooltip";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -31,7 +31,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import utc from "dayjs/plugin/utc";
 import Menu from "@mui/material/Menu";
-
 
 import Paper from "@mui/material/Paper";
 import { jsPDF } from "jspdf";
@@ -53,20 +52,19 @@ export default function FormDialog() {
 
   const [arr, setArr] = React.useState([]);
   const [update, doUpdate] = React.useState(false);
-  const [message, setMessage] = React.useState("");
-  
+
   const [stuarr, setstuarr] = React.useState([]);
   const [parent, setParent] = React.useState({});
   const handleparent = (e) => {
     setParent({ ...e.target.value });
     setS("hahahh");
   };
-  
+
   const [s, setS] = React.useState("kalpshha");
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/batchEvent/allcourse",jwttoken())
+      .get("http://localhost:5000/batchEvent/allcourse", jwttoken())
       .then((data) => {
         setcoursearr(data.data.data);
 
@@ -78,7 +76,7 @@ export default function FormDialog() {
     console.log(coursearr);
     if (!parent._id) {
       axios
-        .get("http://localhost:5000/invoice/Display",jwttoken())
+        .get("http://localhost:5000/invoice/Display", jwttoken())
         .then((data) => {
           setArr(data.data.data);
         })
@@ -87,7 +85,10 @@ export default function FormDialog() {
         });
     } else {
       axios
-        .get(`http://localhost:5000/invoice/courseIn?parentId=${parent._id}`,jwttoken())
+        .get(
+          `http://localhost:5000/invoice/courseIn?parentId=${parent._id}`,
+          jwttoken()
+        )
         .then((data) => {
           console.log(data);
           setArr(data.data.data);
@@ -98,7 +99,10 @@ export default function FormDialog() {
     }
     if (parent._id) {
       axios
-        .get(`http://localhost:5000/student/InvoiceGet?id=${parent._id}`,jwttoken())
+        .get(
+          `http://localhost:5000/student/InvoiceGet?id=${parent._id}`,
+          jwttoken()
+        )
         .then((data) => {
           setstuarr(data.data.data);
         })
@@ -111,8 +115,19 @@ export default function FormDialog() {
   React.useEffect(() => {}, []);
 
   const [open, setOpen] = React.useState(false);
+  const newdate = () => {
+    const selectedDate = new Date();
 
-  const [data, setData] = React.useState({ invoiceDate: dayjs() });
+    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
+    const adjustedDate = new Date(
+      selectedDate.getTime() + timezoneOffset * 60 * 1000
+    );
+    const formattedDate = adjustedDate.toISOString();
+
+    return formattedDate;
+  }
+  
+  const [data, setData] = React.useState({ invoiceDate: dayjs(newdate()) });
   const [id, setId] = React.useState();
 
   const handleChange = (e, type) => {
@@ -120,7 +135,8 @@ export default function FormDialog() {
   };
   console.log(data);
   const handleClose = () => {
-    setData({});
+    setData({invoiceDate:data.invoiceDate});
+          
     setId();
     setOpen(false);
   };
@@ -129,37 +145,35 @@ export default function FormDialog() {
     setOpen(!open);
   };
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
-  
+
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
-    
   });
-  
-const [state, setState] = React.useState({
-  open1: false,
-  vertical: "top",
-  horizontal: "center",
-});
-const { vertical, horizontal, open1 } = state;
 
-const handleClick1 = (newState) => {
-  setState({ ...state, open1: true });
-};
-console.log(state);
-const handleClose1 = () => {
-  setState({ ...state, open1: false });
-  setAlertSuccess({ ...alertSuccess, open: false });
-  setAlertMsg({ ...alertMsg, open: false });
-  
-};
+  const [state, setState] = React.useState({
+    open1: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+  const { vertical, horizontal, open1 } = state;
+
+  const handleClick1 = (newState) => {
+    setState({ ...state, open1: true });
+  };
+  console.log(state);
+  const handleClose1 = () => {
+    setState({ ...state, open1: false });
+    setAlertSuccess({ ...alertSuccess, open: false });
+    setAlertMsg({ ...alertMsg, open: false });
+  };
 
   const AddorUpdate = (message) => {
     if (id) {
       console.log(data);
 
       axios
-        .post(`http://localhost:5000/invoice/Update?id=${id}`,data,jwttoken())
+        .post(`http://localhost:5000/invoice/Update?id=${id}`, data, jwttoken())
         .then((data) => {
           doUpdate(!update);
           handleClick1({ vertical: "top", horizontal: "center" });
@@ -167,7 +181,8 @@ const handleClose1 = () => {
             open: true,
             message: "Invoice Updated Successfully",
           });
-          setData({});
+          setData({invoiceDate:data.invoiceDate});
+
           setId();
           setOpen(false);
         })
@@ -179,25 +194,28 @@ const handleClose1 = () => {
               open: true,
               message: err.response.data.error.details[0].message,
             });
-            
           }
         });
     } else {
       axios
-        .post("http://localhost:5000/invoice/addinfo", {
-          ...data,
-          courseId: parent._id,
-        },jwttoken())
+        .post(
+          "http://localhost:5000/invoice/addinfo",
+          {
+            ...data,
+            courseId: parent._id,
+          },
+          jwttoken()
+        )
         .then((data) => {
           doUpdate(!update);
           handleClick1({ vertical: "top", horizontal: "center" });
           setAlertSuccess({
             open: true,
             message: " Invoice Added Successfully",
-            
           });
+
+          setData({invoiceDate:data.invoiceDate});
           
-          setData({});
           setId();
           setOpen(false);
         })
@@ -205,17 +223,14 @@ const handleClose1 = () => {
           console.log(err);
           if (err.response.data) {
             handleClick1({ vertical: "top", horizontal: "center" });
-            
+
             setAlertMsg({
               open: true,
-              message: err.response.data.error.details[0].message
+              message: err.response.data.error.details[0].message,
             });
-            
           }
         });
     }
-
-    
   };
 
   function convertToIST(utcDateStr) {
@@ -274,9 +289,9 @@ const handleClose1 = () => {
     setseearchname(e.target.value);
   };
   console.log(searchname);
-  
+
   console.log(arr);
-  
+
   const montharr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const monthname = [
     "January",
@@ -293,266 +308,270 @@ const handleClose1 = () => {
     "December",
   ];
   
-
   return (
     <React.Fragment>
-         <Snackbar
+      <Snackbar
         open={open1}
         autoHideDuration={3000}
         onClose={handleClose1}
         anchorOrigin={{ vertical, horizontal }}
-        
       >
-          {(alertSuccess.open || alertMsg.open) && (
-    <Alert
-      onClose={handleClose1}
-      severity={alertSuccess.open ? "success" : "error"}
-                // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
+        {(alertSuccess.open || alertMsg.open) && (
+          <Alert
+            onClose={handleClose1}
+            severity={alertSuccess.open ? "success" : "error"}
+            // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
 
-      variant="filled"
-      sx={{ width: "100%" }}
-    >
-      {alertSuccess.open ? alertSuccess.message : alertMsg.message}
-    </Alert>
-  )}
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {alertSuccess.open ? alertSuccess.message : alertMsg.message}
+          </Alert>
+        )}
       </Snackbar>
-     <Grid container spacing={2}>
-      {/* Left Section */}
-      <Grid item xs={12} sm={3} sx={{
-        display: "flex",
-        justifyContent: "flex-start", // Adjusted for right alignment
-        alignItems: "flex-start",
-      
-
-      
-      }}>
-        <Box sx={{display:'flex',mt:1}}>
-          <div>
-            <Tooltip title="Add Invoice" arrow>
-          <Button
-       
-       disabled={parent._id ? false : true}
-
-       onClick={handleopenclose}
-     >
-     <AddIcon/>
-     </Button>
-     </Tooltip>
-          </div>
-          <div>
-            <Tooltip title="Filter" arrow>
-              <Button
-                id="basic-button"
-                aria-controls={openmenu1 ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={openmenu1 ? "true" : undefined}
-                onClick={handleClickmenu1}
+      <Grid container spacing={2}>
+        {/* Left Section */}
+        <Grid
+          item
+          xs={12}
+          sm={3}
+          sx={{
+            display: "flex",
+            justifyContent: "flex-start", // Adjusted for right alignment
+            alignItems: "flex-start",
+          }}
+        >
+          <Box sx={{ display: "flex", mt: 1 }}>
+            <div>
+              <Tooltip title="Add Invoice" arrow>
+                <Button
+                  disabled={parent._id ? false : true}
+                  onClick={handleopenclose}
+                >
+                  <AddIcon />
+                </Button>
+              </Tooltip>
+            </div>
+            <div>
+              <Tooltip title="Filter" arrow>
+                <Button
+                  id="basic-button"
+                  aria-controls={openmenu1 ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openmenu1 ? "true" : undefined}
+                  onClick={handleClickmenu1}
+                >
+                  <FilterAltIcon sx={{ color: "#0063cc" }} />
+                </Button>
+              </Tooltip>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl1}
+                open={openmenu1}
+                onClose={handleClosemenu1}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
               >
-                <FilterAltIcon sx={{ color: "#0063cc" }} />
-              </Button>
-            </Tooltip>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl1}
-              open={openmenu1}
-              onClose={handleClosemenu1}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              {montharr.map((val, index) => (
+                {montharr.map((val, index) => (
+                  <MenuItem
+                    onClick={() => {
+                      console.log("clicked1");
+
+                      axios
+                        .get(
+                          `http://localhost:5000/invoice/fillterinvocemonth?courseId=${
+                            parent._id ? parent._id : ""
+                          }&month=${montharr[index]}&sort=${order1}`,
+                          jwttoken()
+                        )
+                        .then((data) => {
+                          console.log("API Response:", data);
+                          setArr(data.data);
+
+                          setorder1(order1 === 1 ? -1 : 1);
+                        })
+                        .catch((error) => {
+                          console.error("API Request Error:", error);
+                        });
+
+                      handleClosemenu1();
+                    }}
+                  >
+                    {monthname[index]}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </div>
+
+            <div>
+              <Tooltip title="Sort" arrow>
+                <Button
+                  id="basic-button"
+                  aria-controls={openmenu ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openmenu ? "true" : undefined}
+                  onClick={handleClickmenu}
+                >
+                  <SortIcon sx={{ color: "#0063cc" }} />
+                </Button>
+              </Tooltip>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={openmenu}
+                onClose={handleClosemenu}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
                 <MenuItem
                   onClick={() => {
-                    console.log("clicked1");
-
-                    axios
-                      .get(
-                        `http://localhost:5000/invoice/fillterinvocemonth?courseId=${
-                          parent._id ? parent._id : ""
-                        }&month=${montharr[index]}&sort=${order1}`,jwttoken()
-                      )
-                      .then((data) => {
-                        console.log("API Response:", data);
-                        setArr(data.data);
-
-                        setorder1(order1 === 1 ? -1 : 1);
-                      })
-                      .catch((error) => {
-                        console.error("API Request Error:", error);
-                      });
-
-                    handleClosemenu1();
+                    setParent({});
+                    handleClosemenu();
                   }}
                 >
-                  {monthname[index]}
+                  All
                 </MenuItem>
-              ))}
-            </Menu>
-          </div>
 
-          <div>
-            <Tooltip title="Sort" arrow>
-              <Button
-                id="basic-button"
-                aria-controls={openmenu ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={openmenu ? "true" : undefined}
-                onClick={handleClickmenu}
-              >
-                <SortIcon sx={{ color: "#0063cc" }} />
-              </Button>
-            </Tooltip>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={openmenu}
-              onClose={handleClosemenu}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem
-                onClick={() => {
-                  setParent({});
-                  handleClosemenu();
-                }}
-              >
-                All
-              </MenuItem>
-
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/invoice/filterinvocedate?key=invoiceDate&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`,jwttoken()
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  handleClosemenu();
-                }}
-              >
-                Sort By Date
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/invoice/filterinvocedate?key=Name&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`,jwttoken()
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  handleClosemenu();
-                }}
-              >
-                Sort By Name
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/invoice/filterinvocedate?key=Rfees&sortby=${order}&courseid=${parent._id ? parent._id : ""}`,jwttoken())
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setArr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  handleClosemenu();
-                }}
-              >
-                Sort By RF
-              </MenuItem>
-            </Menu>
-          </div>
+                <MenuItem
+                  onClick={() => {
+                    axios
+                      .get(
+                        `http://localhost:5000/invoice/filterinvocedate?key=invoiceDate&sortby=${order}&courseid=${
+                          parent._id ? parent._id : ""
+                        }`,
+                        jwttoken()
+                      )
+                      .then((data) => {
+                        console.log(data);
+                        setorder(order == 1 ? -1 : 1);
+                        setArr(data.data.data);
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                    handleClosemenu();
+                  }}
+                >
+                  Sort By Date
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    axios
+                      .get(
+                        `http://localhost:5000/invoice/filterinvocedate?key=Name&sortby=${order}&courseid=${
+                          parent._id ? parent._id : ""
+                        }`,
+                        jwttoken()
+                      )
+                      .then((data) => {
+                        console.log(data);
+                        setorder(order == 1 ? -1 : 1);
+                        setArr(data.data.data);
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                    handleClosemenu();
+                  }}
+                >
+                  Sort By Name
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    axios
+                      .get(
+                        `http://localhost:5000/invoice/filterinvocedate?key=Rfees&sortby=${order}&courseid=${
+                          parent._id ? parent._id : ""
+                        }`,
+                        jwttoken()
+                      )
+                      .then((data) => {
+                        console.log(data);
+                        setorder(order == 1 ? -1 : 1);
+                        setArr(data.data.data);
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                    handleClosemenu();
+                  }}
+                >
+                  Sort By RF
+                </MenuItem>
+              </Menu>
+            </div>
           </Box>
         </Grid>
-        <Grid item xs={12} sm={5} sx={{
-    
-        
-      }}>
-  <Box>
-    <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">
-        Select Course
-      </InputLabel>
-      <Select
-        onChange={(e) => {
-          handleparent(e);
-        }}
-         
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        label="Status"
-        renderValue={(data)=>{return (parent._id && data.batchName) || ''}}
-        sx={{
-          height:50,
-          minWidth:'100%',
-          borderRadius: "16px",
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              border: '2px solid #0063cc', // Default border color
-            },
-            '&:hover fieldset': {
-              border: '2px solid #0063cc', // Border color on hover
-            },
-            '&.Mui-focused fieldset': {
-              border: '2px solid #0063cc', // Border color when focused
-            },
-          },
-        }}
-      >
-        {coursearr &&
-          coursearr.map((row) => (
-            <MenuItem key={row.name} value={row}>
-              <TableRow
+        <Grid item xs={12} sm={5} sx={{}}>
+          <Box>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                Select Course
+              </InputLabel>
+              <Select
+                onChange={(e) => {
+                  handleparent(e);
+                }}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Status"
+                renderValue={(data) => {
+                  return (parent._id && data.batchName) || "";
+                }}
                 sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
+                  height: 50,
+                  minWidth: "100%",
+                  borderRadius: "16px",
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      border: "2px solid #0063cc", // Default border color
+                    },
+                    "&:hover fieldset": {
+                      border: "2px solid #0063cc", // Border color on hover
+                    },
+                    "&.Mui-focused fieldset": {
+                      border: "2px solid #0063cc", // Border color when focused
+                    },
+                  },
                 }}
               >
-                <TableCell align="center">{row.batchName}</TableCell>
-                <TableCell align="center">{row.Amount}</TableCell>
-                <TableCell align="center">{row.Days}</TableCell>
-                <TableCell align="center">
-                  {row.StartDate && row.StartDate.split("T")[0]}
-                </TableCell>
-                <TableCell align="center">
-                  {row.BatchTime && convertToIST(row.BatchTime)}
-                </TableCell>
-              </TableRow>
-            </MenuItem>
-          ))}
-      </Select>
-    </FormControl>
-  </Box>
-</Grid>
+                {coursearr &&
+                  coursearr.map((row) => (
+                    <MenuItem key={row.name} value={row}>
+                      <TableRow
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell align="center">{row.batchName}</TableCell>
+                        <TableCell align="center">{row.Amount}</TableCell>
+                        <TableCell align="center">{row.Days}</TableCell>
+                        <TableCell align="center">
+                          {row.StartDate && row.StartDate.split("T")[0]}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.BatchTime && convertToIST(row.BatchTime)}
+                        </TableCell>
+                      </TableRow>
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </Grid>
 
-      
-        <Grid item xs={12} sm={4} sx={{
-        display: "flex",
-        justifyContent: "left",
-        alignItems: "center",
-      
-        
-   
-      }}>
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          sx={{
+            display: "flex",
+            justifyContent: "left",
+            alignItems: "center",
+          }}
+        >
           <Box sx={{ width: 400, ml: 3 }}>
             <TextField
               value={searchname}
@@ -597,19 +616,28 @@ const handleClose1 = () => {
             <Button sx={{ color: "#0063cc" }}>
               <SearchIcon
                 onClick={() => {
+                  if(searchname.length>0){
                   axios
                     .get(
-                      `http://localhost:5000/invoice/searchinstu?name=${searchname}`,jwttoken()
+                      `http://localhost:5000/invoice/searchinstu?name=${searchname}`,
+                      jwttoken()
                     )
                     .then((data) => {
                       console.log(data);
                       setArr(data.data.filterdata);
                       setseearchname("");
-
                     })
                     .catch((err) => {
                       console.log(err);
                     });
+                  }
+                  else{
+                    handleClick1({ vertical: "top", horizontal: "center" });
+                    setAlertMsg({
+                      open: true,
+                      message: 'Please Enter Name First'
+                    });
+                  }
                 }}
               />
             </Button>
@@ -619,55 +647,51 @@ const handleClose1 = () => {
 
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
-        
-            {id?
-                        <TextField
-                        id="outlined-basic"
-                        label="Student Name"
+          {id ? (
+            <TextField
+              id="outlined-basic"
+              label="Student Name"
+              variant="filled"
+              value={id && data.stuId.Name}
+              disabled={true}
+              fullWidth
+              sx={{ mb: 2 }}
+            />
+          ) : (
+            <Box>
+              <FormControl sx={{ my: 2 }} fullWidth>
+                <InputLabel id="demo-multiple-checkbox-label">
+                  Select Students
+                </InputLabel>
 
-                        variant="filled"
-                        value={id&&data.stuId.Name}
+                <Select
+                  labelId="demo-multiple-checkbox-label"
+                  disabled={id ? true : false}
+                  // renderValue={() => (id ? selectedStudentName : '')}
+                  id="demo-multiple-checkbox"
+                  onChange={(e) => {
+                    handleChange(e, "stuId");
+                  }}
+                  sx={{ width: 530 }}
+                  fullWidth
+                  input={<FilledInput />}
+                >
+                  {stuarr &&
+                    stuarr.map((row) => (
+                      <MenuItem key={row._id} value={row._id}>
+                        <TableCell align="center">{row.Name}</TableCell>
+                        <TableCell align="center">{row.Contact}</TableCell>
+                        <TableCell align="center">{row.Rfees}</TableCell>
+                        <TableCell align="center">{row.Pfees}</TableCell>
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+            </Box>
+          )}
 
-disabled={true}
-                        fullWidth
-                        sx={{ mb: 2 }}
-                      />
-            :
-          <Box>
-            <FormControl sx={{ my: 2 }} fullWidth>
-              <InputLabel id="demo-multiple-checkbox-label">
-                Select Students
-              </InputLabel>
-
-              <Select
-                labelId="demo-multiple-checkbox-label"
-                disabled={id ? true : false}
-                // renderValue={() => (id ? selectedStudentName : '')}
-                id="demo-multiple-checkbox"
-                onChange={(e) => {
-                  handleChange(e, "stuId");
-                }}
-                sx={{ width: 530 }}
-                fullWidth
-                input={<FilledInput />}
-              >
-                {stuarr &&
-                  stuarr.map((row) => (
-                    <MenuItem key={row._id} value={row._id}>
-                      <TableCell align="center">{row.Name}</TableCell>
-                      <TableCell align="center">{row.Contact}</TableCell>
-                      <TableCell align="center">{row.Rfees}</TableCell>
-                      <TableCell align="center">{row.Pfees}</TableCell>
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          </Box>
-}
-            
           <TextField
             id="outlined-basic"
-         
             type="Number"
             label="Amount"
             variant="filled"
@@ -683,7 +707,7 @@ disabled={true}
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
-                  defaultValue={id ? dayjs(data.invoiceDate) : null}
+                  defaultValue={id ? dayjs(data.invoiceDate) : dayjs(newdate())}
                   slotProps={{ textField: { variant: "filled" } }}
                   label="Choose Your Date"
                   sx={{ width: 525 }}
@@ -725,14 +749,13 @@ disabled={true}
           </Button>
           <Button
             onClick={() => {
-              AddorUpdate("data captured", console.log(message));
+              AddorUpdate("data captured");
             }}
           >
             Submit
           </Button>
         </DialogActions>
       </Dialog>
-      
 
       <Box sx={{ mt: 3, mx: 2 }}>
         <TableContainer component={Paper}>
@@ -752,7 +775,7 @@ disabled={true}
                 </TableCell>
                 <TableCell align="center">Date</TableCell>
                 <TableCell align="center">Batch Name</TableCell>
-                
+
                 <TableCell align="center">Course</TableCell>
                 <TableCell align="center">TypeOfPayment</TableCell>
 
@@ -775,260 +798,260 @@ disabled={true}
               </TableRow>
             </TableHead>
             <TableBody sx={{ height: arr && arr.length < 1 ? 300 : 0 }}>
-              {arr&&arr.length>0?
-            arr.map((row)=>(
-              <TableRow
-key={row.name}
-sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
->
-<TableCell
-  align="center"
-  sx={{
-    position: "sticky",
-    left: 0,
-    backgroundColor: "white",
-    zIndex: 1,
-  }}
->
-  {row.stuId && row.stuId.Name}
-</TableCell>
-<TableCell align="center">
-  {row.invoiceDate && row.invoiceDate.split("T")[0]}
-</TableCell>
-<TableCell align="center">
-  {row.courseId && row.courseId.batchName}
-</TableCell>
+              {arr && arr.length > 0 ? (
+                arr.map((row) => (
+                  <TableRow
+                    key={row.name}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell
+                      align="center"
+                      sx={{
+                        position: "sticky",
+                        left: 0,
+                        backgroundColor: "white",
+                        zIndex: 1,
+                      }}
+                    >
+                      {row.stuId && row.stuId.Name}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.invoiceDate && row.invoiceDate.split("T")[0]}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.courseId && row.courseId.batchName}
+                    </TableCell>
 
-<TableCell align="center">
-  {row.courseId && row.courseId.Course}
-</TableCell>
+                    <TableCell align="center">
+                      {row.courseId && row.courseId.Course}
+                    </TableCell>
 
-<TableCell align="center">{row.TypeOfPayment}</TableCell>
-<TableCell align="center">{row.Amount}</TableCell>
+                    <TableCell align="center">{row.TypeOfPayment}</TableCell>
+                    <TableCell align="center">{row.Amount}</TableCell>
 
-<TableCell align="center">
-  {row.stuId && row.stuId.Pfees}
-</TableCell>
+                    <TableCell align="center">
+                      {row.stuId && row.stuId.Pfees}
+                    </TableCell>
 
-<TableCell align="center">
-  {row.stuId && row.stuId.Tfees}
-</TableCell>
-<TableCell align="center">
-  {row.stuId && row.stuId.Rfees}
-</TableCell>
-<TableCell align="center">
-  <Tooltip title="Edit" arrow>
-    <Button
-  
-      onClick={() => {
-        setData(row);
-        setId(row._id);
+                    <TableCell align="center">
+                      {row.stuId && row.stuId.Tfees}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.stuId && row.stuId.Rfees}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Tooltip title="Edit" arrow>
+                        <Button
+                          onClick={() => {
+                            setData(row);
+                            setId(row._id);
 
-        setOpen(true);
-      }}
-    >
-      <EditIcon />
-    </Button>
-  </Tooltip>
-</TableCell>
+                            setOpen(true);
+                          }}
+                        >
+                          <EditIcon />
+                        </Button>
+                      </Tooltip>
+                    </TableCell>
 
-<TableCell align="center">
-  {" "}
-  <Tooltip title="Download Receipt" arrow>
-    <Button
- 
-      color="warning"
-      onClick={() => {
-        const doc = new jsPDF();
+                    <TableCell align="center">
+                      {" "}
+                      <Tooltip title="Download Receipt" arrow>
+                        <Button
+                          color="warning"
+                          onClick={() => {
+                            const doc = new jsPDF();
 
-        // Set background color
-        doc.setFillColor(255, 255, 255);
-        doc.rect(
-          0,
-          0,
-          doc.internal.pageSize.width,
-          doc.internal.pageSize.height,
-          "F"
-        );
+                            // Set background color
+                            doc.setFillColor(255, 255, 255);
+                            doc.rect(
+                              0,
+                              0,
+                              doc.internal.pageSize.width,
+                              doc.internal.pageSize.height,
+                              "F"
+                            );
 
-        // Add a logo at the top center
-        const logoWidth = 50;
-        const logoHeight = 20;
-        const centerX =
-          doc.internal.pageSize.width / 2 - logoWidth / 2;
-        doc.addImage(
-          Img,
-          "PNG",
-          centerX,
-          10,
-          logoWidth,
-          logoHeight
-        );
+                            // Add a logo at the top center
+                            const logoWidth = 50;
+                            const logoHeight = 20;
+                            const centerX =
+                              doc.internal.pageSize.width / 2 - logoWidth / 2;
+                            doc.addImage(
+                              Img,
+                              "PNG",
+                              centerX,
+                              10,
+                              logoWidth,
+                              logoHeight
+                            );
 
-        // Title
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(24);
-        doc.setTextColor(0, 0, 110);
-        doc.text(
-          "Fees Receipt".toUpperCase(),
-          doc.internal.pageSize.width / 2,
-          40,
-          { align: "center" }
-        );
+                            // Title
+                            doc.setFont("helvetica", "bold");
+                            doc.setFontSize(24);
+                            doc.setTextColor(0, 0, 110);
+                            doc.text(
+                              "Fees Receipt".toUpperCase(),
+                              doc.internal.pageSize.width / 2,
+                              40,
+                              { align: "center" }
+                            );
 
-        // Create a table with 2 columns and 8 rows
-        const table = {
-          headers: ["Field", "Value"],
-          body: [
-            ["Invoice ID", row.invoiceId],
-            [
-              "Date",
-              row.invoiceDate &&
-                row.invoiceDate.split("T")[0],
-            ],
-            [
-              "Student Name",
-              row.stuId.Name && row.stuId.Name,
-            ],
-            [
-              "Course Name",
-              row.courseId.Course && row.courseId.Course,
-            ],
-            ["Payment Method", row.TypeOfPayment],
-            ["Paid Amount", row.Amount],
-          ],
-        };
+                            // Create a table with 2 columns and 8 rows
+                            const table = {
+                              headers: ["Field", "Value"],
+                              body: [
+                                ["Invoice ID", row.invoiceId],
+                                [
+                                  "Date",
+                                  row.invoiceDate &&
+                                    row.invoiceDate.split("T")[0],
+                                ],
+                                [
+                                  "Student Name",
+                                  row.stuId.Name && row.stuId.Name,
+                                ],
+                                [
+                                  "Course Name",
+                                  row.courseId.Course && row.courseId.Course,
+                                ],
+                                ["Payment Method", row.TypeOfPayment],
+                                ["Paid Amount", row.Amount],
+                              ],
+                            };
 
-        // Add the table to the PDF with borders and colors
-        doc.autoTable({
-          startY: 60,
-          head: [table.headers],
-          body: table.body,
-          theme: "striped",
-          styles: {
-            cellPadding: 3,
-            fontSize: 10,
-            valign: "middle",
-            halign: "center",
-            fontStyle: "normal",
-            lineWidth: 0.1,
-          },
-          headStyles: {
-            fillColor: [255, 255, 255],
-            textColor: [0, 0, 110],
-            fontStyle: "bold",
-          },
-          columnStyles: {
-            0: {
-              cellWidth: 40,
-            },
-            1: {
-              cellWidth: "auto",
-            },
-          },
-        });
+                            // Add the table to the PDF with borders and colors
+                            doc.autoTable({
+                              startY: 60,
+                              head: [table.headers],
+                              body: table.body,
+                              theme: "striped",
+                              styles: {
+                                cellPadding: 3,
+                                fontSize: 10,
+                                valign: "middle",
+                                halign: "center",
+                                fontStyle: "normal",
+                                lineWidth: 0.1,
+                              },
+                              headStyles: {
+                                fillColor: [255, 255, 255],
+                                textColor: [0, 0, 110],
+                                fontStyle: "bold",
+                              },
+                              columnStyles: {
+                                0: {
+                                  cellWidth: 40,
+                                },
+                                1: {
+                                  cellWidth: "auto",
+                                },
+                              },
+                            });
 
-        // Add footer
-        const footerText = [
-          "Email: info@technishal.com",
-          "Contact: +91 9313386475",
-          "Address: H-1210, Titanium City Center Business Park,",
-          "Nr. Prahlad Nagar Rd, Jodhpur Village,",
-          "Ahmedabad, Gujarat 380015.",
-        ];
+                            // Add footer
+                            const footerText = [
+                              "Email: info@technishal.com",
+                              "Contact: +91 9313386475",
+                              "Address: H-1210, Titanium City Center Business Park,",
+                              "Nr. Prahlad Nagar Rd, Jodhpur Village,",
+                              "Ahmedabad, Gujarat 380015.",
+                            ];
 
-        doc.setFontSize(10);
-        doc.setTextColor(0, 0, 0);
+                            doc.setFontSize(10);
+                            doc.setTextColor(0, 0, 0);
 
-        // Add horizontal line
-        doc.setDrawColor(0, 0, 0);
-        doc.setLineWidth(0.5);
-        doc.line(
-          10,
-          doc.internal.pageSize.height - 30,
-          doc.internal.pageSize.width - 10,
-          doc.internal.pageSize.height - 30
-        );
+                            // Add horizontal line
+                            doc.setDrawColor(0, 0, 0);
+                            doc.setLineWidth(0.5);
+                            doc.line(
+                              10,
+                              doc.internal.pageSize.height - 30,
+                              doc.internal.pageSize.width - 10,
+                              doc.internal.pageSize.height - 30
+                            );
 
-        // Add footer text with spacing
-        let footerY = doc.internal.pageSize.height - 25;
-        footerText.forEach((text, index) => {
-          doc.text(
-            text,
-            doc.internal.pageSize.width / 2,
-            footerY,
-            { align: "center" }
-          );
-          footerY += 5;
-        });
-        doc.setFontSize(10);
-        doc.setTextColor(100);
-        doc.text(
-          "This is a computer-generated invoice. Signature not required.",
-          doc.internal.pageSize.width / 2,
-          doc.internal.pageSize.height - 50,
-          { align: "center" }
-        );
+                            // Add footer text with spacing
+                            let footerY = doc.internal.pageSize.height - 25;
+                            footerText.forEach((text, index) => {
+                              doc.text(
+                                text,
+                                doc.internal.pageSize.width / 2,
+                                footerY,
+                                { align: "center" }
+                              );
+                              footerY += 5;
+                            });
+                            doc.setFontSize(10);
+                            doc.setTextColor(100);
+                            doc.text(
+                              "This is a computer-generated invoice. Signature not required.",
+                              doc.internal.pageSize.width / 2,
+                              doc.internal.pageSize.height - 50,
+                              { align: "center" }
+                            );
 
-        // Copyright notice
-        doc.setTextColor(100);
-        doc.setFontSize(8);
-        doc.text(
-          "© 2023 TechNishal. All Rights Reserved.",
-          doc.internal.pageSize.width / 2,
-          doc.internal.pageSize.height - 2,
-          { align: "center" }
-        );
+                            // Copyright notice
+                            doc.setTextColor(100);
+                            doc.setFontSize(8);
+                            doc.text(
+                              "© 2023 TechNishal. All Rights Reserved.",
+                              doc.internal.pageSize.width / 2,
+                              doc.internal.pageSize.height - 2,
+                              { align: "center" }
+                            );
 
-        doc.save(
-          `${row.stuId.Name}-${row.courseId.Course}.pdf`
-        );
-      }}
-    >
-      <DownloadIcon />
-    </Button>
-  </Tooltip>
-</TableCell>
-<TableCell align="center">
-  <Tooltip title="Send Email" arrow>
-    <Button
-      sx={{ color: "black" }}
-  
-      onClick={() => {
-        axios
-          .post("http://localhost:5000/invoice/pdf",row,jwttoken())
-          .then((data) => {
-            console.log(data);
-            if(data.data){
-              handleClick1({ vertical: "top", horizontal: "center" });
-              setAlertSuccess({
-                open: true,
-                message: "Email Sent Successfully",
-                
-              });
-              
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }}
-    >
-      <EmailIcon />
-    </Button>
-  </Tooltip>
-</TableCell>
-</TableRow> 
-            )):
-            <TableRow>
-            <TableCell colSpan={14} align="center">
-              No data available
-            </TableCell>
-          </TableRow>
-            }
-              
-
-                
+                            doc.save(
+                              `${row.stuId.Name}-${row.courseId.Course}.pdf`
+                            );
+                          }}
+                        >
+                          <DownloadIcon />
+                        </Button>
+                      </Tooltip>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Tooltip title="Send Email" arrow>
+                        <Button
+                          sx={{ color: "black" }}
+                          onClick={() => {
+                            axios
+                              .post(
+                                "http://localhost:5000/invoice/pdf",
+                                row,
+                                jwttoken()
+                              )
+                              .then((data) => {
+                                console.log(data);
+                                if (data.data) {
+                                  handleClick1({
+                                    vertical: "top",
+                                    horizontal: "center",
+                                  });
+                                  setAlertSuccess({
+                                    open: true,
+                                    message: "Email Sent Successfully",
+                                  });
+                                }
+                              })
+                              .catch((err) => {
+                                console.log(err);
+                              });
+                          }}
+                        >
+                          <EmailIcon />
+                        </Button>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={14} align="center">
+                    No data available
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
@@ -1046,4 +1069,3 @@ sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
 // </Routes>
 // // </BrowserRouter>
 // setData({...data,[type]:e.target.value})
-
