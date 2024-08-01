@@ -63,7 +63,9 @@ function Dashboard() {
           data &&
             data.data.data.map((val) => {
               setstu(val.StuName);
-            
+          
+
+              
             });
         })
         .catch((err) => {
@@ -108,7 +110,7 @@ function Dashboard() {
 
                 {stu &&
                   stu.map((row) => (
-                    <TableBody sx={{ height: arr && arr.length < 1 ? 200 : 0 }}>
+                    <TableBody>
                       <TableRow
                         key={row.name}
                         sx={{
@@ -141,13 +143,23 @@ function Dashboard() {
 
                 <TableCell align="center">Days</TableCell>
                 <TableCell align="center">Batch Time</TableCell>
-                <TableCell align="center">Batch Name</TableCell>
+                <TableCell align="center">Course</TableCell>
 
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
 
-            {arr &&
+            {
+               arr.length<1?
+               <TableRow>
+               <TableCell colSpan={6} align="center">
+                 No Batches For Today!
+               </TableCell>
+             </TableRow>
+               
+               :
+
+            arr &&
               arr.map((row) => (
                 <TableBody sx={{ height: arr && arr.length < 1 ? 200 : 0 }}>
                   <TableRow
@@ -178,7 +190,7 @@ function Dashboard() {
                     <TableCell align="center">
                       {row.BatchTime && convertToIST(row.BatchTime)}
                     </TableCell>
-                    <TableCell align="center">{row.batchName}</TableCell>
+                    <TableCell align="center">{row.Course}</TableCell>
                     <TableCell align="center">
                       <Button
                         sx={{ color: "black" }}
@@ -191,7 +203,13 @@ function Dashboard() {
                     </TableCell>
                   </TableRow>
                 </TableBody>
-              ))}
+              ))
+              
+              
+              }
+
+
+
           </Table>
         </TableContainer>
       </Box>
