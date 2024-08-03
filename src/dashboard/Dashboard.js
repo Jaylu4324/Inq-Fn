@@ -3,6 +3,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import axios from "axios";
+import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import { Grid, Box } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -13,73 +14,68 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import Button from "@mui/material/Button";
+import Big from '../Big'
 function Dashboard() {
-  function convertToIST(utcDateStr) {
-    const date = new Date(utcDateStr);
-
-    const options = {
-      timeZone: "Asia/Kolkata",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false, // 24-hour format
-    };
-
-    return new Intl.DateTimeFormat("en-US", options).format(date);
-  }
-  const [date, setdate] = React.useState("");
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  const day = days[new Date(date).getDay()];
-  const [arr, setarr] = React.useState([]);
-  const [stu, setstu] = React.useState([]);
-  const [id, setid] = React.useState("");
-
-  React.useEffect(() => {
-    localStorage.setItem("displayname", "Dashboard");
-    if (day) {
-      axios
-        .get(`http://localhost:5000/Dashboard/CourseData?day=${day}`)
-        .then((data) => {
-          console.log(data);
-          setarr(data.data.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-    if (id) {
-      axios
-        .get(`http://localhost:5000/Dashboard/StudentDetails?courseId=${id}`)
-        .then((data) => {
-          console.log(data);
-          data &&
-            data.data.data.map((val) => {
-              setstu(val.StuName);
-          
-
-              
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [date, id]);
-  console.log(stu);
-  const handleDateChange = (e) => {
-    setdate(e.$d);
-  };
-
+ 
   return (
-    <>
+    <div>
+    <Big/>
+  </div>
+  );
+}
+
+export default Dashboard;
+ 
+// function convertToIST(utcDateStr) {
+//   const date = new Date(utcDateStr);
+
+//   const options = {
+//     timeZone: "Asia/Kolkata",
+//     hour: "2-digit",
+//     minute: "2-digit",
+//     second: "2-digit",
+//     hour12: false, // 24-hour format
+//   };
+
+//   return new Intl.DateTimeFormat("en-US", options).format(date);
+// }
+// const [date, setdate] = React.useState("");
+
+// const days = [
+//   "Sunday",
+//   "Monday",
+//   "Tuesday",
+//   "Wednesday",
+//   "Thursday",
+//   "Friday",
+//   "Saturday",
+// ];
+// const day = days[new Date(date).getDay()];
+
+// const [stu, setstu] = React.useState([]);
+// const [arr, setarr] = React.useState([]);
+
+// React.useEffect(() => {
+//   localStorage.setItem("displayname", "Dashboard");
+//   if (day) {
+//     axios
+//       .get(`http://localhost:5000/Dashboard/CourseData?day=${day}`)
+//       .then((data) => {
+//         console.log(data);
+//         setarr(data.data.data);
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//       });
+//   }
+  
+// }, [date]);
+// console.log(stu);
+// const handleDateChange = (e) => {
+//   setdate(e.$d);
+// };
+
+{/* <>
       <Grid container spacing={2}>
         <Grid xs={12} sm={4}>
           <Box sx={{  ml: 1 }}>
@@ -145,7 +141,7 @@ function Dashboard() {
                 <TableCell align="center">Batch Time</TableCell>
                 <TableCell align="center">Course</TableCell>
 
-                <TableCell align="center">Actions</TableCell>
+                <TableCell align="center"  colSpan={2}>Actions</TableCell>
               </TableRow>
             </TableHead>
 
@@ -195,11 +191,37 @@ function Dashboard() {
                       <Button
                         sx={{ color: "black" }}
                         onClick={() => {
-                          setid(row._id);
+
+                          
+                          axios
+                          .get(`http://localhost:5000/Dashboard/StudentDetails?courseId=${row._id}`)
+                          .then((data) => {
+                            console.log(data);
+                            data &&
+                              data.data.data.map((val) => {
+                                setstu(val.StuName);
+                            
+                  
+                                
+                              });
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                          });
                         }}
                       >
                         <RemoveRedEyeIcon />
                       </Button>
+                    </TableCell>
+                    <TableCell align="center">
+                    <Button
+                        sx={{ color: "black" }}
+                        onClick={() => {
+                          setstu([])
+                        }}
+                      >
+                        <NotInterestedIcon/>
+                             </Button>
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -214,7 +236,4 @@ function Dashboard() {
         </TableContainer>
       </Box>
     </>
-  );
-}
-
-export default Dashboard;
+     */}

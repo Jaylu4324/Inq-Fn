@@ -53,6 +53,7 @@ function convertToIST(utcDateStr) {
 
 export default function Completedcourse() {
   const [open, setOpen] = React.useState(false);
+  
   const [count, setcount] = React.useState(0);
   const [count1, setcount1] = React.useState(0);
 
