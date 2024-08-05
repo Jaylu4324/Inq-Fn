@@ -62,6 +62,9 @@ const MyCalendar = () => {
   };
 const handleClose1=()=>{
   setOpen1(() => false);
+    setDate(() => "");
+    setDay(() => "");
+
 }
   function getDayName(dateString) {
     if (!dateString) {
