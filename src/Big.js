@@ -152,7 +152,7 @@ const handleClose1=()=>{
                 padding: 0,
               }}
             >
-              <Box sx={{ mt: 2 }}>
+              <Box>
                 <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -171,7 +171,7 @@ const handleClose1=()=>{
                         <TableCell align="center">Days</TableCell>
                         <TableCell align="center">Batch Time</TableCell>
                         <TableCell align="center">Course</TableCell>
-                        <TableCell align="center" colSpan={2}>
+                        <TableCell align="center" colSpan={1}>
                           Actions
                         </TableCell>
                       </TableRow>
@@ -248,16 +248,7 @@ const handleClose1=()=>{
                                 <RemoveRedEyeIcon />
                               </Button>
                             </TableCell>
-                            <TableCell align="center">
-                              <Button
-                                sx={{ color: "black" }}
-                                onClick={() => {
-                                  setstu([]);
-                                }}
-                              >
-                                <NotInterestedIcon />
-                              </Button>
-                            </TableCell>
+                          
                           </TableRow>
                         ))
                       )}
