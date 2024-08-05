@@ -93,7 +93,7 @@ const handleClose1=()=>{
           });
       }
     }
-  }, [open, date]);
+  }, [ date]);
 
   const handleSelectSlot = (slotInfo) => {
     setOpen(() => true);
@@ -171,7 +171,7 @@ const handleClose1=()=>{
                         <TableCell align="center">Days</TableCell>
                         <TableCell align="center">Batch Time</TableCell>
                         <TableCell align="center">Course</TableCell>
-                        <TableCell align="center" colSpan={1}>
+                        <TableCell align="center">
                           Actions
                         </TableCell>
                       </TableRow>
@@ -232,12 +232,12 @@ const handleClose1=()=>{
                                       `http://localhost:5000/Dashboard/StudentDetails?courseId=${row._id}`,jwttoken()
                                     )
                                     .then((data) => {
-                                  setOpen1(()=>(true))   
-
+                                      
                                       console.log(data);
                                       data &&
-                                        data.data.data.map((val) => {
-                                          setstu(val.StuName);
+                                      data.data.data.map((val) => {
+                                        setstu(val.StuName);
+                                        setOpen1(()=>(true))   
                                         });
                                     })
                                     .catch((err) => {
