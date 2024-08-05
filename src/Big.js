@@ -55,9 +55,10 @@ const MyCalendar = () => {
 
   const handleClose = () => {
     setOpen(() => false);
-    setDate(() => "");
-    setDay(() => "");
-    setArr(() => []);
+    // setDate(() => "");
+    // setDay(() => "");
+    // setArr(() => []);
+
   };
 const handleClose1=()=>{
   setOpen1(() => false);
