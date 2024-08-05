@@ -75,8 +75,9 @@ const handleClose1=()=>{
   }
 
   useEffect(() => {
-    if (open) {
-      setLoading(() => true);
+    // if (open) {
+    //   setLoading(() => true);
+
       const dayName = getDayName(date);
       setDay(() => dayName);
       if (day) {
@@ -92,7 +93,7 @@ const handleClose1=()=>{
             console.log(err);
           });
       }
-    }
+    
   }, [ date]);
 
   const handleSelectSlot = (slotInfo) => {
