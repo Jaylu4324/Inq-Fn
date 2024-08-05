@@ -19,6 +19,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import jwttoken from './Token'
 
 const localizer = momentLocalizer(moment);
 const MyCalendar = () => {
@@ -80,7 +81,7 @@ const handleClose1=()=>{
       setDay(() => dayName);
       if (day) {
         axios
-          .get(`http://localhost:5000/Dashboard/CourseData?day=${day}`)
+          .get(`http://localhost:5000/Dashboard/CourseData?day=${day}`,jwttoken())
           .then((data) => {
             setLoading(() => false);
             setArr(() => data.data.data);
@@ -228,15 +229,16 @@ const handleClose1=()=>{
                                 onClick={() => {
                                   axios
                                     .get(
-                                      `http://localhost:5000/Dashboard/StudentDetails?courseId=${row._id}`
+                                      `http://localhost:5000/Dashboard/StudentDetails?courseId=${row._id}`,jwttoken()
                                     )
                                     .then((data) => {
+                                  setOpen1(()=>(true))   
+
                                       console.log(data);
                                       data &&
                                         data.data.data.map((val) => {
                                           setstu(val.StuName);
                                         });
-                                     setOpen1(true)   
                                     })
                                     .catch((err) => {
                                       console.log(err);
