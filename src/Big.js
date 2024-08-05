@@ -325,4 +325,4 @@ const handleClose1=()=>{
   );
 };
 
-export default MyCalendar;
+export default React.memo(MyCalendar);
