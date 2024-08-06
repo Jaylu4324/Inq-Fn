@@ -5,7 +5,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "axios";
 import Button from "@mui/material/Button";
 import { Box, styled, Paper } from "@mui/material";
-import NotInterestedIcon from "@mui/icons-material/NotInterested";
+
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
@@ -19,7 +19,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import jwttoken from './Token'
+import jwttoken from "./Token";
 
 const localizer = momentLocalizer(moment);
 const MyCalendar = () => {
@@ -39,7 +39,7 @@ const MyCalendar = () => {
   const [date, setDate] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
-  
+
   const [day, setDay] = React.useState("");
   const [arr, setArr] = React.useState([]);
   const [loading, setLoading] = useState(false);
@@ -55,17 +55,13 @@ const MyCalendar = () => {
 
   const handleClose = () => {
     setOpen(() => false);
-    // setDate(() => "");
-    // setDay(() => "");
-    // setArr(() => []);
-
-  };
-const handleClose1=()=>{
-  setOpen1(() => false);
     setDate(() => "");
     setDay(() => "");
-
-}
+    setArr(() => []);
+  };
+  const handleClose1 = () => {
+    setOpen1(() => false);
+  };
   function getDayName(dateString) {
     if (!dateString) {
       return "Invalid date";
@@ -79,14 +75,16 @@ const handleClose1=()=>{
   }
 
   useEffect(() => {
-    // if (open) {
-    //   setLoading(() => true);
-
+    if (open) {
+      setLoading(() => true);
       const dayName = getDayName(date);
       setDay(() => dayName);
       if (day) {
         axios
-          .get(`http://localhost:5000/Dashboard/CourseData?day=${day}`,jwttoken())
+          .get(
+            `http://localhost:5000/Dashboard/CourseData?day=${day}`,
+            jwttoken()
+          )
           .then((data) => {
             setLoading(() => false);
             setArr(() => data.data.data);
@@ -97,11 +95,10 @@ const handleClose1=()=>{
             console.log(err);
           });
       }
-    
-  }, [ date]);
+    }
+  }, [date]);
 
-  const handleSelectSlot = (slotInfo) => {
-    setOpen(() => true);
+  const handleSelectSlot = React.useCallback((slotInfo) => {
     const selectedDate = new Date(slotInfo.start);
     const timezoneOffset = 5.5 * 60;
     const adjustedDate = new Date(
@@ -109,22 +106,28 @@ const handleClose1=()=>{
     );
     const formattedDate = adjustedDate.toISOString();
     const dayName = getDayName(formattedDate);
-
     setArr(() => []);
+    setOpen(() => true);
+
     setDate(() => formattedDate);
     setDay(() => dayName);
-  };
-
-  return (
-    <div>
+  }, []);
+  
+  const cal = React.useMemo(
+    () => (
       <Calendar
         localizer={localizer}
         selectable
         startAccessor="start"
         style={{ height: "500px" }}
         onSelectSlot={handleSelectSlot}
+        views={["month"]}
       />
-
+    ),
+    []
+  );
+  const dialog1 = React.useMemo(
+    () => (
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
@@ -176,9 +179,7 @@ const handleClose1=()=>{
                         <TableCell align="center">Days</TableCell>
                         <TableCell align="center">Batch Time</TableCell>
                         <TableCell align="center">Course</TableCell>
-                        <TableCell align="center">
-                          Actions
-                        </TableCell>
+                        <TableCell align="center">Actions</TableCell>
                       </TableRow>
                     </TableHead>
 
@@ -234,15 +235,15 @@ const handleClose1=()=>{
                                 onClick={() => {
                                   axios
                                     .get(
-                                      `http://localhost:5000/Dashboard/StudentDetails?courseId=${row._id}`,jwttoken()
+                                      `http://localhost:5000/Dashboard/StudentDetails?courseId=${row._id}`,
+                                      jwttoken()
                                     )
                                     .then((data) => {
-                                      
                                       console.log(data);
                                       data &&
-                                      data.data.data.map((val) => {
-                                        setstu(val.StuName);
-                                        setOpen1(()=>(true))   
+                                        data.data.data.map((val) => {
+                                          setstu(val.StuName);
+                                          setOpen1(() => true);
                                         });
                                     })
                                     .catch((err) => {
@@ -253,7 +254,6 @@ const handleClose1=()=>{
                                 <RemoveRedEyeIcon />
                               </Button>
                             </TableCell>
-                          
                           </TableRow>
                         ))
                       )}
@@ -265,11 +265,15 @@ const handleClose1=()=>{
           </Box>
         </Box>
       </BootstrapDialog>
+    ),
+    [arr,open]
+  );
+  const dialog2 = React.useMemo(
+    () => (
       <BootstrapDialog
         onClose={handleClose1}
         aria-labelledby="customized-dialog-title"
         open={open1}
-       
       >
         <Box>
           <Grid container>
@@ -287,42 +291,48 @@ const handleClose1=()=>{
 
           <Box>
             <DialogContent>
-
-
               <Box sx={{ mt: 2 }}>
-                  <TableContainer component={Paper}>
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">Student Name</TableCell>
-                    <TableCell align="center">Contact</TableCell>
-                  </TableRow>
-                </TableHead>
-
-                {stu &&
-                  stu.map((row) => (
-                    <TableBody>
-                      <TableRow
-                        key={row.name}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell align="center">{row.FullName}</TableCell>
-                        <TableCell align="center">{row.Contact}</TableCell>
+                <TableContainer component={Paper}>
+                  <Table aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="center">Student Name</TableCell>
+                        <TableCell align="center">Contact</TableCell>
                       </TableRow>
-                    </TableBody>
-                  ))}
-              </Table>
-            </TableContainer>
+                    </TableHead>
+
+                    {stu &&
+                      stu.map((row) => (
+                        <TableBody>
+                          <TableRow
+                            key={row.name}
+                            sx={{
+                              "&:last-child td, &:last-child th": { border: 0 },
+                            }}
+                          >
+                            <TableCell align="center">{row.FullName}</TableCell>
+                            <TableCell align="center">{row.Contact}</TableCell>
+                          </TableRow>
+                        </TableBody>
+                      ))}
+                  </Table>
+                </TableContainer>
               </Box>
             </DialogContent>
           </Box>
         </Box>
       </BootstrapDialog>
-      
+    ),
+
+    [open1,stu]
+  );
+  return (
+    <div>
+      {cal}
+      {dialog1}
+      {dialog2}
     </div>
   );
 };
 
-export default React.memo(MyCalendar);
+export default MyCalendar;

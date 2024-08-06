@@ -4,7 +4,6 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import dayjs from "dayjs";
 
-
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 
@@ -40,17 +39,26 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import jwttoken from "../Token";
-import { Snackbar, Alert } from '@mui/material';
-
+import { Snackbar, Alert } from "@mui/material";
+import { styled } from "@mui/system";
 
 import Paper from "@mui/material/Paper";
 import { Grid } from "@mui/material";
 import axios from "axios";
+import Pagination from "@mui/material/Pagination";
 
 function Addcourse() {
-  
+  const CustomPagination = styled(Pagination)(({ theme }) => ({
+    "& .MuiPaginationItem-root": {
+      "&.Mui-selected": {
+        width: "80px", // Adjust width as needed
+        height: "80px", // Adjust height as needed
+      },
+    },
+  }));
+
   const [data, setdata] = React.useState({
-    StartDate: dayjs(''),
+    StartDate: dayjs(""),
     BatchTime: dayjs(""),
     Days: [],
   });
@@ -68,7 +76,6 @@ function Addcourse() {
   const [alertbatchMsg, setalertbatchMsg] = React.useState({
     open: false,
     message: "",
-    
   });
 
   const [alertSuccess, setAlertSuccess] = React.useState({
@@ -85,7 +92,7 @@ function Addcourse() {
     setdata({});
     setid("");
   };
-console.log(data)
+  console.log(data);
 
   const DaysArr = [
     "Monday",
@@ -128,7 +135,7 @@ console.log(data)
   const handleChange = (e, type) => {
     setdata({ ...data, [type]: e.target.value });
   };
-  
+
   const handleClose = () => {
     setopen(false);
     setid("");
@@ -169,7 +176,6 @@ console.log(data)
               : "Batch Updated Successfully",
         });
 
-
         setopen(false);
         setdata({});
         setid("");
@@ -180,8 +186,7 @@ console.log(data)
 
         if (err.response.data) {
           handleClick1({ vertical: "top", horizontal: "center" });
-          
-          
+
           setAlertMsg({
             open: true,
             message: err.response.data.error.details[0].message,
@@ -189,11 +194,11 @@ console.log(data)
         }
       });
   };
-  
+
   dayjs.extend(utc);
   const handleDateChange = (val) => {
     const selectedDate = new Date(val);
-    console.log(val)
+    console.log(val);
     const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
     const adjustedDate = new Date(
       selectedDate.getTime() + timezoneOffset * 60 * 1000
@@ -213,52 +218,35 @@ console.log(data)
   const handleClick1 = (newState) => {
     setState({ ...state, open1: true });
   };
-  
+
   const handleClose1 = () => {
     setState({ ...state, open1: false });
     setAlertSuccess({ ...alertSuccess, open: false });
     setAlertMsg({ ...alertMsg, open: false });
-    setalertbatchMsg({...alertbatchMsg,open:false})
+    setalertbatchMsg({ ...alertbatchMsg, open: false });
   };
-
-  return (
-    <>
-      <Snackbar
-        open={open1}
-        autoHideDuration={3000}
-        onClose={handleClose1}
-        anchorOrigin={{ vertical, horizontal }}
-        
+const grid=React.useMemo(()=>{
+  console.log('main grid called')
+return(
+  <Grid container spacing={2} justifyContent="left">
+  <Grid item xs={1} sx={{ mb: 3, mr: 3 }}>
+    <Tooltip title="Add Batch" arrow>
+      <Button
+        onClick={() => {
+          setopen(true);
+        }}
       >
-          {(alertSuccess.open || alertMsg.open || alertbatchMsg.open) && (
-    <Alert
-      onClose={handleClose1}
-      severity={alertSuccess.open ? "success" : alertMsg.open?"error": alertbatchMsg.open?'error':null}
-                // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
-
-      variant="filled"
-      sx={{ width: "100%" }}
-    >
-      {alertSuccess.open ? alertSuccess.message : alertMsg.open?alertMsg.message:alertbatchMsg.open?alertbatchMsg.message:null}
-    </Alert>
-  )}
-      </Snackbar>
-
-      <Grid container spacing={2} justifyContent="left">
-        <Grid item xs={1} sx={{ mb: 3, mr: 3 }}>
-          <Tooltip title="Add Batch" arrow>
-            <Button
-              onClick={() => {
-                setopen(true);
-              }}
-            >
-              <AddIcon />
-            </Button>
-          </Tooltip>
-        </Grid>
-      </Grid>
-
-      <Dialog open={open}>
+        <AddIcon />
+      </Button>
+    </Tooltip>
+  </Grid>
+</Grid>
+)
+},[open])
+const dialog1=React.useMemo(()=>{
+  console.log('dialog rendered')
+return(
+  <Dialog open={open}>
         <DialogContent>
           <Box sx={{ minWidth: 120, mb: 1 }}>
             <FormControl variant="filled" fullWidth>
@@ -290,7 +278,6 @@ console.log(data)
                   label="Start Date"
                   slotProps={{ textField: { variant: "filled", error: false } }}
                   defaultValue={id ? dayjs(data.StartDate) : null}
-                  
                   sx={{ width: 500 }}
                   onChange={handleDateChange}
                 />
@@ -311,7 +298,6 @@ console.log(data)
                 input={<FilledInput />}
                 renderValue={(selected) => selected.join(", ")}
                 MenuProps={menuprops}
-
               >
                 {DaysArr.map((name) => (
                   <MenuItem key={name} value={name}>
@@ -374,154 +360,237 @@ console.log(data)
           </DialogActions>
         </DialogContent>
       </Dialog>
+)
+},[open,data,id])
+const Snack=React.useMemo(()=>{
+  console.log('snack bar called')
+return (
+  <Snackbar
+  open={open1}
+  autoHideDuration={3000}
+  onClose={handleClose1}
+  anchorOrigin={{ vertical, horizontal }}
+>
+  {(alertSuccess.open || alertMsg.open || alertbatchMsg.open) && (
+    <Alert
+      onClose={handleClose1}
+      severity={
+        alertSuccess.open
+          ? "success"
+          : alertMsg.open
+          ? "error"
+          : alertbatchMsg.open
+          ? "error"
+          : null
+      }
+      // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
 
-      
-      <Box sx={{ mx: 2 }}>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  align="center"
-                  sx={{ position: "sticky", left: 0, backgroundColor: "white" }}
-                >
-                  Course
-                </TableCell>
+      variant="filled"
+      sx={{ width: "100%" }}
+    >
+      {alertSuccess.open
+        ? alertSuccess.message
+        : alertMsg.open
+        ? alertMsg.message
+        : alertbatchMsg.open
+        ? alertbatchMsg.message
+        : null}
+    </Alert>
+  )}
+</Snackbar>
+)
+},[open1])
+const table=React.useMemo(()=>{
+  console.log('table called')
+return(
 
-                <TableCell align="center">Start Date</TableCell>
-
-                <TableCell align="center">Days</TableCell>
-                <TableCell align="center">Batch Time</TableCell>
-                <TableCell align="center">Batch Name</TableCell>
-
-                <TableCell align="center" colSpan={2}>
-                  Actions
-                </TableCell>
-              </TableRow>
-            </TableHead>
-
-            {arr &&
-              arr.map((row) => (
-                <TableBody sx={{ height: arr && arr.length < 1 ? 200 : 0 }}>
-                  <TableRow
-                    key={row.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell
-                      align="center"
-                      sx={{
-                        position: "sticky",
-                        left: 0,
-                        backgroundColor: "white",
-                        zIndex: 1,
-                      }}
-                    >
-                      {row.Course}
-                    </TableCell>
-
-                    <TableCell align="center">
-                      {row.StartDate && row.StartDate.split("T")[0]}
-                    </TableCell>
-
-                    <TableCell align="center">
-                      {row.Days.map((val, index) => (
-                        <div key={index}>{val}</div>
-                      ))}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.BatchTime && convertToIST(row.BatchTime)}
-                    </TableCell>
-                    <TableCell align="center">{row.batchName}</TableCell>
-
-                    <TableCell align="center">
-                      <Tooltip title="Edit" arrow>
-                        <Button
-                          onClick={() => {
-                            setopen(true);
-                            setdata(row);
-                            setid(row._id);
-                          }}
-                        >
-                          <EditIcon />
-                        </Button>
-                      </Tooltip>
-                    </TableCell>
-
-                    <TableCell align="center">
-                      <Tooltip title="Complete" arrow>
-                        <Button
-                          color="success"
-                          onClick={() => {
-                            setid(row._id);
-                            handleClickOpen2();
-                          }}
-                        >
-                          <DoneAllIcon />
-                        </Button>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              ))}
-          </Table>
-        </TableContainer>
-      </Box>
-
-      <Dialog
-        open={open2}
-        onClose={handleClose2}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Complete Batch"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Do You Want To to complete?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose2}>Cancel</Button>
-          <Button
-            onClick={() => {
-              axios
-                .post(
-                  `http://localhost:5000/batchEvent/completedBevent?id=${id}`,
-                  {},
-                  jwttoken()
-                )
-                .then((data) => {
-                  doUpdate(!update);
-                  handleClick1({ vertical: "top", horizontal: "center" });
-        
-                  setAlertSuccess({
-                    open: true,
-                    message: "Completed Successfully",
-                    severity: "success",
-                  });
-                  handleClose2();
-                  
-                  console.log("data completed", data);
-                })
-                .catch((err) => {
-                  console.log("error", err);
-                  if (err.response.data) {
-                    handleClick1({ vertical: "top", horizontal: "center" });
-        
-                    setalertbatchMsg({
-                      open: true,
-                      message: err.response.data.error.details[0],
-                      
-                    });
-                    
-
-                  }
-                });
-            }}
+  <Box sx={{ mx: 2 }}>
+  <TableContainer component={Paper}>
+    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <TableHead>
+        <TableRow>
+          <TableCell
+            align="center"
+            sx={{ position: "sticky", left: 0, backgroundColor: "white" }}
           >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+            Course
+          </TableCell>
+
+          <TableCell align="center">Start Date</TableCell>
+
+          <TableCell align="center">Days</TableCell>
+          <TableCell align="center">Batch Time</TableCell>
+          <TableCell align="center">Batch Name</TableCell>
+
+          <TableCell align="center" colSpan={2}>
+            Actions
+          </TableCell>
+        </TableRow>
+      </TableHead>
+
+      {arr &&
+        arr.map((row) => (
+          <TableBody sx={{ height: arr && arr.length < 1 ? 200 : 0 }}>
+            <TableRow
+              key={row.name}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              <TableCell
+                align="center"
+                sx={{
+                  position: "sticky",
+                  left: 0,
+                  backgroundColor: "white",
+                  zIndex: 1,
+                }}
+              >
+                {row.Course}
+              </TableCell>
+
+              <TableCell align="center">
+                {row.StartDate && row.StartDate.split("T")[0]}
+              </TableCell>
+
+              <TableCell align="center">
+                {row.Days.map((val, index) => (
+                  <div key={index}>{val}</div>
+                ))}
+              </TableCell>
+              <TableCell align="center">
+                {row.BatchTime && convertToIST(row.BatchTime)}
+              </TableCell>
+              <TableCell align="center">{row.batchName}</TableCell>
+
+              <TableCell align="center">
+                <Tooltip title="Edit" arrow>
+                  <Button
+                    onClick={() => {
+                      setopen(true);
+                      setdata(row);
+                      setid(row._id);
+                    }}
+                  >
+                    <EditIcon />
+                  </Button>
+                </Tooltip>
+              </TableCell>
+
+              <TableCell align="center">
+                <Tooltip title="Complete" arrow>
+                  <Button
+                    color="success"
+                    onClick={() => {
+                      setid(row._id);
+                      handleClickOpen2();
+                    }}
+                  >
+                    <DoneAllIcon />
+                  </Button>
+                </Tooltip>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        ))}
+    </Table>
+  </TableContainer>
+</Box>
+)
+},[arr])
+const gination=React.useMemo(()=>{
+  console.log('pagination caled')
+return(
+  <Grid
+  container
+  direction="row"
+  justifyContent="center"
+  alignItems="center"
+>
+  <Grid
+    
+  >
+    <Box sx={{  mt: 2 }}>
+      <CustomPagination
+        count={10}
+        size="large"
+        onChange={(e, p) => {
+          console.log(e, p);
+        }}
+      />
+    </Box>
+  </Grid>
+</Grid>
+)
+},[])
+const completed=React.useMemo(()=>{
+  console.log('completed dialog called')
+return(
+  <Dialog
+  open={open2}
+  onClose={handleClose2}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+>
+  <DialogTitle id="alert-dialog-title">{"Complete Batch"}</DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-description">
+      Do You Want To to complete?
+    </DialogContentText>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleClose2}>Cancel</Button>
+    <Button
+      onClick={() => {
+        axios
+          .post(
+            `http://localhost:5000/batchEvent/completedBevent?id=${id}`,
+            {},
+            jwttoken()
+          )
+          .then((data) => {
+            doUpdate(!update);
+            handleClick1({ vertical: "top", horizontal: "center" });
+
+            setAlertSuccess({
+              open: true,
+              message: "Completed Successfully",
+              severity: "success",
+            });
+            handleClose2();
+
+            console.log("data completed", data);
+          })
+          .catch((err) => {
+            console.log("error", err);
+            if (err.response.data) {
+              handleClick1({ vertical: "top", horizontal: "center" });
+
+              setalertbatchMsg({
+                open: true,
+                message: err.response.data.error.details[0],
+              });
+            }
+          });
+      }}
+    >
+      Confirm
+    </Button>
+  </DialogActions>
+</Dialog>
+
+
+)
+},[open2])
+  return (
+    <>
+     {Snack}
+{grid}
+
+      {dialog1}
+
+     {table}
+     {gination}
+     {completed}
+     
     </>
   );
 }
