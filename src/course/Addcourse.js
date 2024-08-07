@@ -65,13 +65,16 @@ function Addcourse() {
 
   const [open, setopen] = React.useState(false);
   const [update, doUpdate] = React.useState(false);
-
+const[page,setpage]=React.useState(1)
+console.log(page)
+const[limit,setlimit]=React.useState(10)
+console.log(limit)
   const [arr, setarr] = React.useState([]);
 
   const [open2, setOpen2] = React.useState(false);
 
-  const [id, setid] = React.useState();
-
+  const [id, setid] = React.useState('');
+console.log(id)
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   const [alertbatchMsg, setalertbatchMsg] = React.useState({
     open: false,
@@ -124,7 +127,7 @@ function Addcourse() {
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/batchEvent/DisplayBevent", jwttoken())
+      .get(`http://localhost:5000/batchEvent/DisplayBevent?page=${page}&limit=${10}`, jwttoken())
       .then((data) => {
         setarr(data.data.data);
       })
@@ -155,7 +158,7 @@ function Addcourse() {
 
     return new Intl.DateTimeFormat("en-US", options).format(date);
   }
-
+console.log(alertSuccess)
   const handlesubmit = () => {
     const url = id
       ? `http://localhost:5000/batchEvent/UpdateBevent?id=${id}`
@@ -170,10 +173,7 @@ function Addcourse() {
         setAlertSuccess({
           open: true,
 
-          message:
-            id == undefined
-              ? "Batch Added Successfully"
-              : "Batch Updated Successfully",
+          message:!id? "Batch Added Successfully": "Batch Updated Successfully",
         });
 
         setopen(false);
@@ -399,7 +399,7 @@ return (
   )}
 </Snackbar>
 )
-},[open1])
+},[open1,alertSuccess,alertMsg,alertbatchMsg])
 const table=React.useMemo(()=>{
   console.log('table called')
 return(
@@ -510,10 +510,14 @@ return(
   >
     <Box sx={{  mt: 2 }}>
       <CustomPagination
-        count={10}
+        count={20}
         size="large"
-        onChange={(e, p) => {
-          console.log(e, p);
+        onChange={(e,p)=>{
+
+          setpage(p);
+          setlimit(p*10);
+          doUpdate(!update)         
+
         }}
       />
     </Box>
@@ -576,8 +580,6 @@ return(
     </Button>
   </DialogActions>
 </Dialog>
-
-
 )
 },[open2])
   return (
