@@ -118,16 +118,14 @@ export default function FormDialog() {
   const newdate = () => {
     const selectedDate = new Date();
 
-    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
-    const adjustedDate = new Date(
-      selectedDate.getTime() + timezoneOffset * 60 * 1000
-    );
-    const formattedDate = adjustedDate.toISOString();
+    selectedDate.setHours(12,0,0,0)
+    const formattedDate = selectedDate.toISOString();
+
 
     return formattedDate;
   }
   
-  const [data, setData] = React.useState({ invoiceDate: dayjs(newdate()) });
+  const [data, setData] = React.useState({ invoiceDate:newdate() });
   const [id, setId] = React.useState();
 
   const handleChange = (e, type) => {
@@ -181,7 +179,7 @@ export default function FormDialog() {
             open: true,
             message: "Invoice Updated Successfully",
           });
-          setData({invoiceDate:data.invoiceDate});
+          setData({invoiceDate:newdate()});
 
           setId();
           setOpen(false);
@@ -214,8 +212,8 @@ export default function FormDialog() {
             message: " Invoice Added Successfully",
           });
 
-          setData({invoiceDate:data.invoiceDate});
-          
+          setData({invoiceDate:newdate()});
+
           setId();
           setOpen(false);
         })
@@ -251,11 +249,10 @@ export default function FormDialog() {
   dayjs.extend(utc);
   const handleDateChange = (val) => {
     const selectedDate = new Date(val);
-    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
-    const adjustedDate = new Date(
-      selectedDate.getTime() + timezoneOffset * 60 * 1000
-    );
-    const formattedDate = adjustedDate.toISOString();
+    selectedDate.setHours(12,0,0,0)
+    const formattedDate = selectedDate.toISOString();
+
+
 
     setData({ ...data, invoiceDate: formattedDate });
   };
@@ -707,11 +704,14 @@ export default function FormDialog() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
-                  defaultValue={id ? dayjs(data.invoiceDate) : dayjs(newdate())}
+                  
                   slotProps={{ textField: { variant: "filled" } }}
                   label="Choose Your Date"
                   sx={{ width: 525 }}
+                  value={dayjs(data.invoiceDate)}
+                  
                   onChange={handleDateChange}
+                
                 />
               </DemoContainer>
             </LocalizationProvider>

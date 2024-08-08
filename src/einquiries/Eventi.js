@@ -93,10 +93,8 @@ function Eventi() {
     const selectedDate = new Date();
 
     const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
-    const adjustedDate = new Date(
-      selectedDate.getTime() + timezoneOffset * 60 * 1000
-    );
-    const formattedDate = adjustedDate.toISOString();
+    selectedDate.setHours(12,0,0,0)
+    const formattedDate = selectedDate.toISOString();
 
     return formattedDate;
   };
@@ -119,7 +117,7 @@ function Eventi() {
 
   const [value, setValue] = React.useState(0);
 
-  const [data, setData] = React.useState({ Date: dayjs(newdate()) });
+  const [data, setData] = React.useState({ Date: newdate() });
   const [open, setOpen] = React.useState(false);
   const [arr, setArr] = React.useState([]);
   const [ong, setong] = React.useState([]);
@@ -144,7 +142,6 @@ function Eventi() {
   const handleClick1 = (newState) => {
     setState({ ...state, op: true });
   };
-  console.log(state);
   const handleClose12 = () => {
     setState({ ...state, op: false });
     setAlertSuccess({ ...alertSuccess, open: false });
@@ -153,7 +150,12 @@ function Eventi() {
   };
 
 
+  const handleClose = () => {
+    setOpen(false);
+    setData({Date:newdate()})
 
+    setId();
+  };
   const handleChange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
   };
@@ -268,11 +270,7 @@ function Eventi() {
   const handleopen = () => {
     setOpen(!open);
   };
-  const handleClose = () => {
-    setOpen(false);
-    setData({Date:data.Date});
-    setId();
-  };
+
   const handlechange1 = (event, newValue) => {
     setValue(newValue);
   };
@@ -284,11 +282,8 @@ function Eventi() {
   dayjs.extend(utc);
   const handleDateChange = (val, type) => {
     const selectedDate = new Date(val);
-    const timezoneOffset = 5.5 * 60;
-    const adjustedDate = new Date(
-      selectedDate.getTime() + timezoneOffset * 60 * 1000
-    );
-    const formattedDate = adjustedDate.toISOString();
+    selectedDate.setHours(12,0,0,0)
+    const formattedDate = selectedDate.toISOString();
 
     setData({ ...data, Date: formattedDate });
   };
@@ -333,9 +328,6 @@ function Eventi() {
   const handleClosemenu1 = () => {
     setAnchorEl1(null);
   };
-  console.log('ong:',ong);
-  console.log('reject:',reject);
-  console.log('confirm:',confirm);
 
   const montharr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const monthname = [
@@ -362,6 +354,8 @@ function Eventi() {
   };
 
   const handleClose2 = () => {
+    setData({})
+    setId()
     setOpen2(false);
   };
   
@@ -370,538 +364,552 @@ function Eventi() {
   };
 
   const handleClose3 = () => {
+    setId()
     setOpen3(false);
   };
+const Snack=React.useMemo(()=>{
+  console.log('snackbar called')
+return(
+  <Snackbar
+  open={op}
+  autoHideDuration={2000}
+  onClose={handleClose12}
+  anchorOrigin={{ vertical, horizontal }}
+  
+>
+    {(alertSuccess.open || alertMsg.open) && (
+<Alert
+onClose={handleClose12}
+severity={alertSuccess.open ? "success" : "error"}
+          // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
 
-  return (
-    <React.Fragment>
-        <Snackbar
-        open={op}
-        autoHideDuration={3000}
-        onClose={handleClose12}
-        anchorOrigin={{ vertical, horizontal }}
-        
-      >
-          {(alertSuccess.open || alertMsg.open) && (
-    <Alert
-      onClose={handleClose12}
-      severity={alertSuccess.open ? "success" : "error"}
-                // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
-
-      variant="filled"
-      sx={{ width: "100%" }}
+variant="filled"
+sx={{ width: "100%" }}
+>
+{alertSuccess.open ? alertSuccess.message : alertMsg.message}
+</Alert>
+)}
+</Snackbar>
+)
+},[op])
+const ingredients=React.useMemo(()=>{
+  console.log('ingredients called')
+return(
+  <Grid container spacing={2}>
+  <Grid
+      item
+      xs={12}
+      sm={3}
+      sx={{
+        display: "flex",
+        justifyContent: "flex-start", // Adjusted for right alignment
+        alignItems: "flex-start",
+      }}
     >
-      {alertSuccess.open ? alertSuccess.message : alertMsg.message}
-    </Alert>
-  )}
-      </Snackbar>
-      <Grid container spacing={2}>
-      <Grid
-          item
-          xs={12}
-          sm={3}
-          sx={{
-            display: "flex",
-            justifyContent: "flex-start", // Adjusted for right alignment
-            alignItems: "flex-start",
+      <Box sx={{display:'flex',mt:1}}>
+      <div>
+      <Tooltip title="Add Event Inquiries">
+        <Button onClick={handleopen} disabled={parent._id ? false : true}>
+          <AddIcon />
+        </Button>
+      </Tooltip>
+      </div>
+      <div>
+        <Tooltip title="Filter" arrow>
+          <Button
+            id="basic-button"
+            aria-controls={openmenu1 ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={openmenu1 ? "true" : undefined}
+            onClick={handleClickmenu1}
+          >
+            <FilterAltIcon sx={{ color: "#0063cc" }} />
+          </Button>
+        </Tooltip>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl1}
+          open={openmenu1}
+          onClose={handleClosemenu1}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
           }}
         >
-          <Box sx={{display:'flex',mt:1}}>
-          <div>
-          <Tooltip title="Add Event Inquiries">
-            <Button onClick={handleopen} disabled={parent._id ? false : true}>
-              <AddIcon />
-            </Button>
-          </Tooltip>
-          </div>
-          <div>
-            <Tooltip title="Filter" arrow>
-              <Button
-                id="basic-button"
-                aria-controls={openmenu1 ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={openmenu1 ? "true" : undefined}
-                onClick={handleClickmenu1}
-              >
-                <FilterAltIcon sx={{ color: "#0063cc" }} />
-              </Button>
-            </Tooltip>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl1}
-              open={openmenu1}
-              onClose={handleClosemenu1}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              {montharr.map((val, index) => (
-                <MenuItem
-                  onClick={() => {
-                    console.log("clicked1");
-
-                    axios
-                      .get(
-                        `http://localhost:5000/Eventinquiry/filterbyMonth?month=${montharr[index]}&sortby=${order1}&type=${type}`,jwttoken())
-                      .then((data) => {
-                        console.log(data)
-                        if(type=='onGoing')
-                          {
-                            setong(data.data)
-                            setorder1(order1 === 1 ? -1 : 1);
-                          }
-                          else if(type=='Reject')
-                          {
-                            setReject(data.data)
-                            setorder1(order1 === 1 ? -1 : 1);
-                          }
-                          else{
-                            setconfirm(data.data)
-                            setorder1(order1 === 1 ? -1 : 1);
-                          }
-                     
-
-                      
-                      })
-                      .catch((error) => {
-                        console.error("API Request Error:", error);
-                      });
-
-                    handleClosemenu1();
-                  }}
-                >
-                  {monthname[index]}
-                </MenuItem>
-              ))}
-            </Menu>
-          </div>
-
-          <div>
-            <Tooltip title="Sort" arrow>
-              <Button
-                id="basic-button"
-                aria-controls={openmenu ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={openmenu ? "true" : undefined}
-                onClick={handleClickmenu}
-              >
-                <SortIcon sx={{ color: "#0063cc" }} />
-              </Button>
-            </Tooltip>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={openmenu}
-              onClose={handleClosemenu}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem
-                onClick={() => {
-              axios.get(`http://localhost:5000/Eventinquiry/alldata?key=${type}`,jwttoken())
-              .then((data) => {
-                console.log(data)
-                if(type=='onGoing')
-                  {
-                    setong(data.data.allData)
-                   
-                  }
-                  else if(type=='Reject')
-                  {
-                    setReject(data.data.allData)
-                
-                  }
-                  else{
-                    setconfirm(data.data.allData)
-                  
-                  }
-              
-              })
-              .catch((error) => {
-                console.error("API Request Error:", error);
-              });
-                  handleClosemenu();
-                }}
-              >
-                All
-              </MenuItem>
-
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=Date&sortBy=${order}&type=${type}`,jwttoken())
-                      .then((data) => {
-                        console.log(data)
-                        if(type=='onGoing')
-                          {
-                            setong(data.data.sortData)
-                            setorder(order == 1 ? -1 : 1);
-                          }
-                          else if(type=='Reject')
-                          {
-                            setReject(data.data.sortData)
-                            setorder(order == 1 ? -1 : 1);
-                          }
-                          else{
-                            setconfirm(data.data.sortData)
-                            setorder(order == 1 ? -1 : 1);
-                          }
-                      
-                      })
-                      .catch((error) => {
-                        console.error("API Request Error:", error);
-                      });
-                  handleClosemenu();
-                  
-                }}
-              >
-                Sort By Date
-              </MenuItem>
-              <MenuItem
-                 onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=FullName&sortBy=${order}&type=${type}`,jwttoken())
-                      .then((data) => {
-                        console.log(data)
-                        if(type=='onGoing')
-                          {
-                            setong(data.data.sortData)
-                            setorder(order == 1 ? -1 : 1);
-                          }
-                          else if(type=='Reject')
-                          {
-                            setReject(data.data.sortData)
-                            setorder(order == 1 ? -1 : 1);
-                          }
-                          else{
-                            setconfirm(data.data.sortData)
-                            setorder(order == 1 ? -1 : 1);
-                          }
-                      
-                      })
-                      .catch((error) => {
-                        console.error("API Request Error:", error);
-                      });
-                  handleClosemenu();
-                  
-                }}
-              >
-                Sort By Name
-              </MenuItem>
-            
-            </Menu>
-          </div>
-          </Box>
-        </Grid>
-      
-        <Grid item xs={12} sm={5}>
-          <Box sx={{ mx: 2 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                {" "}
-                Select Event Type
-              </InputLabel>
-              <Select
-                onChange={(e) => {
-                  handleparent(e);
-                }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Status"
-                renderValue={(data)=>{return (parent._id && data.Course || '')}}
-                sx={{
-                  height:50,
-                  borderRadius: "16px",
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      border: '2px solid #0063cc', // Default border color
-                    },
-                    '&:hover fieldset': {
-                      border: '2px solid #0063cc', // Border color on hover
-                    },
-                    '&.Mui-focused fieldset': {
-                      border: '2px solid #0063cc', // Border color when focused
-                    },
-                  },
-                }}
-              >
-                {arr &&
-                  arr.map((row) => (
-                    <MenuItem value={row}>
-                      <TableRow
-                        key={row.name}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell align="center">{row.Course}</TableCell>
-
-                        <TableCell align="center">{row.TypeOfEvent}</TableCell>
-                        <TableCell align="center">
-                          {row.TypeOfPayment}
-                        </TableCell>
-
-                        <TableCell align="center">{row.Amount}</TableCell>
-
-                        <TableCell align="center">
-                          {row.StartDate && row.StartDate.split("T")[0]}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.EndtDate && row.EndtDate.split("T")[0]}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.Days.map((val) => (
-                            <Box>{val}</Box>
-                          ))}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.BatchTime && convertToIST(row.BatchTime)}
-                        </TableCell>
-                      </TableRow>
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={4}
-          sx={{
-            display: "flex",
-            justifyContent: "left",
-            alignItems: "center",
-          }}
-        >
-          <Box sx={{ width: 400, ml: 3 }}>
-            <TextField
-              value={searchname}
-              id="filled-hidden-label-small"
-              placeholder="Search Students..."
-              variant="filled"
-              size="small"
-              onChange={handlesearchname}
-              sx={{
-                width: "100%",
-                maxWidth: 400,
-                "& .MuiFilledInput-root": {
-                  borderRadius: "16px",
-                  border: "2px solid #0063cc",
-                  backgroundColor: "white",
-                  padding: "0 16px", // Ensure background color is consistent
-                  "&:hover": {
-                    backgroundColor: "white",
-                  },
-                  "&.Mui-focused": {
-                    backgroundColor: "white",
-                  },
-                  "& input": {
-                    padding: "12px 0", // Adjust vertical padding to center text
-                    // Center the text horizontally
-                  },
-                },
-                "& .MuiFilledInput-underline:before": {
-                  borderBottom: "none", // Remove the default underline before focus
-                },
-                "& .MuiFilledInput-underline:after": {
-                  borderBottom: "none", // Remove the default underline after focus
-                },
-                "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
-                  borderBottom: "none", // Remove underline on hover
-                },
-              }}
-            />
-          </Box>
-          <Tooltip title="Search" arrow>
-            <Button sx={{ color: "#0063cc" }}>
-              <SearchIcon
+          {montharr.map((val, index) => (
+            <MenuItem
               onClick={() => {
-                if(searchname.length>0){
+                console.log("clicked1");
+
                 axios
                   .get(
-                    `http://localhost:5000/Eventinquiry/search?FullName=${searchname}&type=${type}`,jwttoken()
-                  )
+                    `http://localhost:5000/Eventinquiry/filterbyMonth?month=${montharr[index]}&sortby=${order1}&type=${type}`,jwttoken())
                   .then((data) => {
-                    console.log(data);
+                    console.log(data)
                     if(type=='onGoing')
-                    {
-                      setong(data.data.filterdata)
-                      
-                    }
-                    else if(type=='Reject')
-                    {
-                      setReject(data.data.filterdata)
-                    }
-                    else{
-                      setconfirm(data.data.filterdata)
-                    }
-                    console.log('coorect')
-                    setseearchname("");
+                      {
+                        setong(data.data)
+                        setorder1(order1 === 1 ? -1 : 1);
+                      }
+                      else if(type=='Reject')
+                      {
+                        setReject(data.data)
+                        setorder1(order1 === 1 ? -1 : 1);
+                      }
+                      else{
+                        setconfirm(data.data)
+                        setorder1(order1 === 1 ? -1 : 1);
+                      }
+                 
 
+                  
                   })
-              .catch((err)=>{
-                console.log(err)
-              })
-            }
-            else{
-              handleClick1({ vertical: "top", horizontal: "center" });
-              setAlertMsg({
-                open: true,
-                message: 'Please Enter Name First'
-              });
+                  .catch((error) => {
+                    console.error("API Request Error:", error);
+                  });
 
-            }
-            }}
+                handleClosemenu1();
+              }}
+            >
+              {monthname[index]}
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
 
-              />
-            </Button>
-          </Tooltip>
-        </Grid>
-       
-      </Grid>
-
-      <Dialog open={open} onClose={handleClose}>
-        <DialogContent>
-       
-
-          <TextField
-            id="outlined-basic"
-            label="Full Name"
-            variant="filled"
-            value={data.FullName}
-            onChange={(e) => {
-              handleChange(e, "FullName");
-            }}
-            fullWidth
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            id="outlined-basic"
-            type="number"
-            label="Contact"
-            variant="filled"
-            value={data.Contact}
-            onChange={(e) => {
-              console.log(e);
-              handleChange(e, "Contact");
-            }}
-            fullWidth
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            id="outlined-basic"
-            label="Email"
-            variant="filled"
-            value={data.Email}
-            onChange={(e) => {
-              handleChange(e, "Email");
-            }}
-            fullWidth
-            sx={{ mb: 1 }}
-          />
-
-          <Box sx={{ mb: 2 }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
-              <DemoContainer components={["DatePicker"]} fullWidth>
-                <DatePicker
-                  label="Choose Your Date"
-                  defaultValue={id ? dayjs(data.Date) : dayjs(newdate())}
-                  sx={{ width: 533 }}
-                  slotProps={{ textField: { variant: "filled" } }}
-                  onChange={handleDateChange}
-                  fullWidth
-                ></DatePicker>
-              </DemoContainer>
-            </LocalizationProvider>
-          </Box>
-
-          <TextField
-            id="outlined-basic"
-            label="College Name"
-            value={data.CollageName}
-            variant="filled"
-            onChange={(e) => {
-              handleChange(e, "CollageName");
-            }}
-            fullWidth
-            sx={{ mb: 2 }}
-          />
-
-          <Box sx={{ minWidth: 120, mb: 2 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Follow-Up</InputLabel>
-              <Select
-                value={data.FollowUp}
-                variant="filled"
-                onChange={(e) => {
-                  handleChange(e, "FollowUp");
-                }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Status"
-              >
-                <MenuItem value={"Yes"}>Yes</MenuItem>
-                <MenuItem value={"No"}>No</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-          <Box sx={{ minWidth: 120, mb: 2 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Interaction</InputLabel>
-              <Select
-                value={data.Interaction}
-                variant="filled"
-                onChange={(e) => {
-                  handleChange(e, "Interaction");
-                }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Status"
-              >
-                <MenuItem value={"Office"}>Office</MenuItem>
-                <MenuItem value={"Oncall"}>On-Call</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-
-          <TextField
-            fullWidth
-            label="Description"
-            value={data.Description}
-            variant="filled"
-            id="fullWidth"
-            sx={{ mb: 2 }}
-            onChange={(e) => {
-              handleChange(e, "Description");
-            }}
-          />
-          <Grid container spacing={2} justifyContent="right" sx={{ mt: 0.5 }}>
+      <div>
+        <Tooltip title="Sort" arrow>
           <Button
+            id="basic-button"
+            aria-controls={openmenu ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={openmenu ? "true" : undefined}
+            onClick={handleClickmenu}
+          >
+            <SortIcon sx={{ color: "#0063cc" }} />
+          </Button>
+        </Tooltip>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={openmenu}
+          onClose={handleClosemenu}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem
             onClick={() => {
-              handleClose();
-            }}
+          axios.get(`http://localhost:5000/Eventinquiry/alldata?key=${type}`,jwttoken())
+          .then((data) => {
+            console.log(data)
+            if(type=='onGoing')
+              {
+                setong(data.data.allData)
+               
+              }
+              else if(type=='Reject')
+              {
+                setReject(data.data.allData)
             
-          >
-            Cancel
-          </Button>
-          <Button
+              }
+              else{
+                setconfirm(data.data.allData)
+              
+              }
           
-            onClick={() => {
-              handlesubmit();
+          })
+          .catch((error) => {
+            console.error("API Request Error:", error);
+          });
+              handleClosemenu();
             }}
           >
-            Submit
-          </Button>
-          </Grid>
-        </DialogContent>
-        <DialogActions></DialogActions>
-      </Dialog>
+            All
+          </MenuItem>
 
-      <Box>
+          <MenuItem
+            onClick={() => {
+              axios
+                .get(
+                  `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=Date&sortBy=${order}&type=${type}`,jwttoken())
+                  .then((data) => {
+                    console.log(data)
+                    if(type=='onGoing')
+                      {
+                        setong(data.data.sortData)
+                        setorder(order == 1 ? -1 : 1);
+                      }
+                      else if(type=='Reject')
+                      {
+                        setReject(data.data.sortData)
+                        setorder(order == 1 ? -1 : 1);
+                      }
+                      else{
+                        setconfirm(data.data.sortData)
+                        setorder(order == 1 ? -1 : 1);
+                      }
+                  
+                  })
+                  .catch((error) => {
+                    console.error("API Request Error:", error);
+                  });
+              handleClosemenu();
+              
+            }}
+          >
+            Sort By Date
+          </MenuItem>
+          <MenuItem
+             onClick={() => {
+              axios
+                .get(
+                  `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=FullName&sortBy=${order}&type=${type}`,jwttoken())
+                  .then((data) => {
+                    console.log(data)
+                    if(type=='onGoing')
+                      {
+                        setong(data.data.sortData)
+                        setorder(order == 1 ? -1 : 1);
+                      }
+                      else if(type=='Reject')
+                      {
+                        setReject(data.data.sortData)
+                        setorder(order == 1 ? -1 : 1);
+                      }
+                      else{
+                        setconfirm(data.data.sortData)
+                        setorder(order == 1 ? -1 : 1);
+                      }
+                  
+                  })
+                  .catch((error) => {
+                    console.error("API Request Error:", error);
+                  });
+              handleClosemenu();
+              
+            }}
+          >
+            Sort By Name
+          </MenuItem>
+        
+        </Menu>
+      </div>
+      </Box>
+    </Grid>
+  
+    <Grid item xs={12} sm={5}>
+      <Box sx={{ mx: 2 }}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">
+            {" "}
+            Select Event Type
+          </InputLabel>
+          <Select
+            onChange={(e) => {
+              handleparent(e);
+            }}
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Status"
+            renderValue={(data)=>{return (parent._id && data.Course || '')}}
+            sx={{
+              height:50,
+              borderRadius: "16px",
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  border: '2px solid #0063cc', // Default border color
+                },
+                '&:hover fieldset': {
+                  border: '2px solid #0063cc', // Border color on hover
+                },
+                '&.Mui-focused fieldset': {
+                  border: '2px solid #0063cc', // Border color when focused
+                },
+              },
+            }}
+          >
+            {arr &&
+              arr.map((row) => (
+                <MenuItem value={row}>
+                  <TableRow
+                    key={row.name}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                    }}
+                  >
+                    <TableCell align="center">{row.Course}</TableCell>
+
+                    <TableCell align="center">{row.TypeOfEvent}</TableCell>
+                    <TableCell align="center">
+                      {row.TypeOfPayment}
+                    </TableCell>
+
+                    <TableCell align="center">{row.Amount}</TableCell>
+
+                    <TableCell align="center">
+                      {row.StartDate && row.StartDate.split("T")[0]}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.EndtDate && row.EndtDate.split("T")[0]}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.Days.map((val) => (
+                        <Box>{val}</Box>
+                      ))}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.BatchTime && convertToIST(row.BatchTime)}
+                    </TableCell>
+                  </TableRow>
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      </Box>
+    </Grid>
+    <Grid
+      item
+      xs={12}
+      sm={4}
+      sx={{
+        display: "flex",
+        justifyContent: "left",
+        alignItems: "center",
+      }}
+    >
+      <Box sx={{ width: 400, ml: 3 }}>
+        <TextField
+          value={searchname}
+          id="filled-hidden-label-small"
+          placeholder="Search Students..."
+          variant="filled"
+          size="small"
+          onChange={handlesearchname}
+          sx={{
+            width: "100%",
+            maxWidth: 400,
+            "& .MuiFilledInput-root": {
+              borderRadius: "16px",
+              border: "2px solid #0063cc",
+              backgroundColor: "white",
+              padding: "0 16px", // Ensure background color is consistent
+              "&:hover": {
+                backgroundColor: "white",
+              },
+              "&.Mui-focused": {
+                backgroundColor: "white",
+              },
+              "& input": {
+                padding: "12px 0", // Adjust vertical padding to center text
+                // Center the text horizontally
+              },
+            },
+            "& .MuiFilledInput-underline:before": {
+              borderBottom: "none", // Remove the default underline before focus
+            },
+            "& .MuiFilledInput-underline:after": {
+              borderBottom: "none", // Remove the default underline after focus
+            },
+            "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
+              borderBottom: "none", // Remove underline on hover
+            },
+          }}
+        />
+      </Box>
+      <Tooltip title="Search" arrow>
+        <Button sx={{ color: "#0063cc" }}>
+          <SearchIcon
+          onClick={() => {
+            if(searchname.length>0){
+            axios
+              .get(
+                `http://localhost:5000/Eventinquiry/search?FullName=${searchname}&type=${type}`,jwttoken()
+              )
+              .then((data) => {
+                console.log(data);
+                if(type=='onGoing')
+                {
+                  setong(data.data.filterdata)
+                  
+                }
+                else if(type=='Reject')
+                {
+                  setReject(data.data.filterdata)
+                }
+                else{
+                  setconfirm(data.data.filterdata)
+                }
+                console.log('coorect')
+                setseearchname("");
+
+              })
+          .catch((err)=>{
+            console.log(err)
+          })
+        }
+        else{
+          handleClick1({ vertical: "top", horizontal: "center" });
+          setAlertMsg({
+            open: true,
+            message: 'Please Enter Name First'
+          });
+
+        }
+        }}
+
+          />
+        </Button>
+      </Tooltip>
+    </Grid>
+   
+  </Grid>
+)
+},[open,anchorEl,anchorEl1,searchname,parent,arr,order,order1])
+const dialog=React.useMemo(()=>{
+  console.log('dilog called')
+return(
+  <Dialog open={open} onClose={handleClose}>
+  <DialogContent>
+ 
+
+    <TextField
+      id="outlined-basic"
+      label="Full Name"
+      variant="filled"
+      value={data.FullName}
+      onChange={(e) => {
+        handleChange(e, "FullName");
+      }}
+      fullWidth
+      sx={{ mb: 2 }}
+    />
+    <TextField
+      id="outlined-basic"
+      type="number"
+      label="Contact"
+      variant="filled"
+      value={data.Contact}
+      onChange={(e) => {
+        console.log(e);
+        handleChange(e, "Contact");
+      }}
+      fullWidth
+      sx={{ mb: 2 }}
+    />
+    <TextField
+      id="outlined-basic"
+      label="Email"
+      variant="filled"
+      value={data.Email}
+      onChange={(e) => {
+        handleChange(e, "Email");
+      }}
+      fullWidth
+      sx={{ mb: 1 }}
+    />
+
+    <Box sx={{ mb: 2 }}>
+      <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
+        <DemoContainer components={["DatePicker"]} fullWidth>
+          <DatePicker
+            label="Choose Your Date"
+            sx={{ width: 533 }}  
+          slotProps={{ textField: { variant: "filled" } }}
+          value={dayjs(data.Date)}
+          onChange={handleDateChange}
+            fullWidth
+          ></DatePicker>
+        </DemoContainer>
+      </LocalizationProvider>
+    </Box>
+
+    <TextField
+      id="outlined-basic"
+      label="College Name"
+      value={data.CollageName}
+      variant="filled"
+      onChange={(e) => {
+        handleChange(e, "CollageName");
+      }}
+      fullWidth
+      sx={{ mb: 2 }}
+    />
+
+    <Box sx={{ minWidth: 120, mb: 2 }}>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Follow-Up</InputLabel>
+        <Select
+          value={data.FollowUp}
+          variant="filled"
+          onChange={(e) => {
+            handleChange(e, "FollowUp");
+          }}
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          label="Status"
+        >
+          <MenuItem value={"Yes"}>Yes</MenuItem>
+          <MenuItem value={"No"}>No</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+    <Box sx={{ minWidth: 120, mb: 2 }}>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Interaction</InputLabel>
+        <Select
+          value={data.Interaction}
+          variant="filled"
+          onChange={(e) => {
+            handleChange(e, "Interaction");
+          }}
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          label="Status"
+        >
+          <MenuItem value={"Office"}>Office</MenuItem>
+          <MenuItem value={"Oncall"}>On-Call</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+
+    <TextField
+      fullWidth
+      label="Description"
+      value={data.Description}
+      variant="filled"
+      id="fullWidth"
+      sx={{ mb: 2 }}
+      onChange={(e) => {
+        handleChange(e, "Description");
+      }}
+    />
+    <Grid container spacing={2} justifyContent="right" sx={{ mt: 0.5 }}>
+    <Button
+      onClick={() => {
+        handleClose();
+      }}
+      
+    >
+      Cancel
+    </Button>
+    <Button
+    
+      onClick={() => {
+        handlesubmit();
+      }}
+    >
+      Submit
+    </Button>
+    </Grid>
+  </DialogContent>
+  <DialogActions></DialogActions>
+</Dialog>
+)
+},[open,data,id])
+const table=React.useMemo(()=>{
+  console.log('table czlled')
+return(
+<Box>
         <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
           <Tabs
             value={value}
@@ -1106,94 +1114,117 @@ function Eventi() {
           </TableContainer>
         </CustomTabPanel>
       </Box>
+)
+},[ong,reject,confirm,value])
+const rejectdialog=React.useMemo(()=>{
+  console.log('rejectdialog')
+return(
+  <Dialog
+  open={open2}
+  onClose={handleClose2}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+>
+  <DialogTitle id="alert-dialog-title">{"Reject Student"}</DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-description">
+     Do You Want To Reject?
+    </DialogContentText>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleClose2}>Cancel</Button>
+    <Button
+      onClick={() => {
+        axios
+          .post(
+            `http://localhost:5000/Eventinquiry/RejectedInquiry?id=${id}`,{},jwttoken()
+          )
 
-
-      <Dialog
-        open={open2}
-        onClose={handleClose2}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Reject Student"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-           Do You Want To Reject?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose2}>Cancel</Button>
-          <Button
-            onClick={() => {
-              axios
-                .post(
-                  `http://localhost:5000/Eventinquiry/RejectedInquiry?id=${id}`,{},jwttoken()
-                )
-
-                .then((data) => {
-                  console.log(data);
-                  doUpdate(!update);
-                  handleClick1({ vertical: "top", horizontal: "center" });
-                  setAlertSuccess({
-                    open: true,
-                    message: " Inquiry Rejected Successfully",
-                    
-                  });
+          .then((data) => {
+            console.log(data);
+            doUpdate(!update);
+            handleClick1({ vertical: "top", horizontal: "center" });
+            setAlertSuccess({
+              open: true,
+              message: " Inquiry Rejected Successfully",
               
-                  handleClose2()
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-             
-            }}
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+            });
         
-      <Dialog
-        open={open3}
-        onClose={handleClose3}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+            handleClose2()
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+       
+      }}
+    >
+      Confirm
+    </Button>
+  </DialogActions>
+</Dialog>
+)
+},[open2])
+const confirmdialog=React.useMemo(()=>{
+console.log('cofnrim dialog')
+  return(
+    <Dialog
+    open={open3}
+    onClose={handleClose3}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+  >
+    <DialogTitle id="alert-dialog-title">{"Confirm Student"}</DialogTitle>
+    <DialogContent>
+      <DialogContentText id="alert-dialog-description">
+       Do You Want To Confirm?
+      </DialogContentText>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={handleClose3}>Cancel</Button>
+      <Button
+         onClick={() => {
+          axios
+            .post(
+              `http://localhost:5000/Eventinquiry/ConfimInquiry?id=${id}`,{},jwttoken()
+            )
+            .then((data) => {
+              console.log(data);
+              doUpdate(!update);
+              handleClick1({ vertical: "top", horizontal: "center" });
+              setAlertSuccess({
+                open: true,
+                message: " Inquiry Confirmed Successfully",
+            
+              });
+            
+              handleClose2();
+              
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+            handleClose3()
+        }}
       >
-        <DialogTitle id="alert-dialog-title">{"Confirm Student"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-           Do You Want To Confirm?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose3}>Cancel</Button>
-          <Button
-             onClick={() => {
-              axios
-                .post(
-                  `http://localhost:5000/Eventinquiry/ConfimInquiry?id=${id}`,{},jwttoken()
-                )
-                .then((data) => {
-                  console.log(data);
-                  doUpdate(!update);
-                  handleClick1({ vertical: "top", horizontal: "center" });
-                  setAlertSuccess({
-                    open: true,
-                    message: " Inquiry Confirmed Successfully",
-                
-                  });
-                
-                  handleClose2();
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-                handleClose3()
-            }}
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+        Confirm
+      </Button>
+    </DialogActions>
+  </Dialog>
+)
+},[open3])
+  return (
+    <React.Fragment>
+   {Snack}
+    
+{ingredients}
+     
+{dialog}
+      
+{table}
+
+  {rejectdialog}
+        {confirmdialog}
+   
     </React.Fragment>
   );
 }

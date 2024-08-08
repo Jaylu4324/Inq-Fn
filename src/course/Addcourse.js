@@ -67,10 +67,9 @@ function Addcourse() {
   const [update, doUpdate] = React.useState(false);
 const[page,setpage]=React.useState(1)
 console.log(page)
-const[limit,setlimit]=React.useState(10)
-console.log(limit)
-  const [arr, setarr] = React.useState([]);
 
+  const [arr, setarr] = React.useState([]);
+const[totalpages,settotalpages]=React.useState('')
   const [open2, setOpen2] = React.useState(false);
 
   const [id, setid] = React.useState('');
@@ -106,7 +105,7 @@ console.log(id)
     "Saturday",
     "Sunday",
   ];
-
+         
   const handleChange1 = (event) => {
     const {
       target: { value },
@@ -126,19 +125,22 @@ console.log(id)
   };
 
   React.useEffect(() => {
+    console.log('pag called api')
     axios
       .get(`http://localhost:5000/batchEvent/DisplayBevent?page=${page}&limit=${10}`, jwttoken())
       .then((data) => {
+        console.log(data)
         setarr(data.data.data);
+        settotalpages(data.data.totalPages)
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [update]);
+  }, [update,page]);
   const handleChange = (e, type) => {
     setdata({ ...data, [type]: e.target.value });
   };
-
+console.log(totalpages)
   const handleClose = () => {
     setopen(false);
     setid("");
@@ -495,7 +497,7 @@ return(
   </TableContainer>
 </Box>
 )
-},[arr])
+},[arr,page])
 const gination=React.useMemo(()=>{
   console.log('pagination caled')
 return(
@@ -510,12 +512,12 @@ return(
   >
     <Box sx={{  mt: 2 }}>
       <CustomPagination
-        count={20}
+        count={totalpages}
         size="large"
         onChange={(e,p)=>{
 
           setpage(p);
-          setlimit(p*10);
+          
           doUpdate(!update)         
 
         }}
@@ -524,7 +526,7 @@ return(
   </Grid>
 </Grid>
 )
-},[])
+},[totalpages])
 const completed=React.useMemo(()=>{
   console.log('completed dialog called')
 return(

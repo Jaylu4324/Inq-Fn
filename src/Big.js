@@ -39,7 +39,7 @@ const MyCalendar = () => {
   const [date, setDate] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
-
+const[getstudent,setgetstudent]=React.useState([])
   const [day, setDay] = React.useState("");
   const [arr, setArr] = React.useState([]);
   const [loading, setLoading] = useState(false);
@@ -52,7 +52,7 @@ const MyCalendar = () => {
       padding: theme.spacing(1),
     },
   }));
-
+console.log(stu)
   const handleClose = () => {
     setOpen(() => false);
     setDate(() => "");
@@ -73,7 +73,7 @@ const MyCalendar = () => {
 
     return date.toLocaleDateString("en-US", { weekday: "long" });
   }
-
+console.log(getstudent)
   useEffect(() => {
     if (open) {
       setLoading(() => true);
@@ -240,11 +240,24 @@ const MyCalendar = () => {
                                     )
                                     .then((data) => {
                                       console.log(data);
-                                      data &&
-                                        data.data.data.map((val) => {
+                                          if(!data.data.data==[])
+                                          {
+                                            console.log(data.data.data)
+                                            
+                                          data.data.data.map((val) => {
                                           setstu(val.StuName);
                                           setOpen1(() => true);
-                                        });
+                                          
+
+                                        })
+                                      }
+                                      else
+                                      {
+                                      
+                                        console.log('no students')
+                                      }
+
+                                              
                                     })
                                     .catch((err) => {
                                       console.log(err);

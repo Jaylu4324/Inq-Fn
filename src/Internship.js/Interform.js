@@ -243,10 +243,10 @@ function Interform() {
 
     setdata({ ...data, [type]: formattedDate });
   };
-
-  return (
-    <React.Fragment>
-        <Snackbar
+const snack=React.useMemo(()=>{
+  console.log('snakc bar called')
+return(
+  <Snackbar
         open={op}
         autoHideDuration={3000}
         onClose={handleClose1}
@@ -266,7 +266,12 @@ function Interform() {
     </Alert>
   )}
       </Snackbar>
-      <Grid container spacing={2} justifyContent="left">
+)
+},[op])
+const add=React.useMemo(()=>{
+  console.log('addicon allecd')
+  return(
+<Grid container spacing={2} justifyContent="left">
         <Grid item xs={1} sx={{ mb: 3, mr: 1 }}>
           <Tooltip title="Add Events">
             <Button
@@ -279,190 +284,196 @@ function Interform() {
           </Tooltip>
         </Grid>
       </Grid>
+  )
+},[open])
+const dialog1=React.useMemo(()=>{
+  console.log('dialog clalled')
+  return(
+  <Dialog open={open}>
+  <DialogContent>
+    <Box sx={{ minWidth: 120, mb: 2 }}>
 
-      <Dialog open={open}>
-        <DialogContent>
-          <Box sx={{ minWidth: 120, mb: 2 }}>
+      <FormControl variant="filled" fullWidth>
+        <InputLabel id="demo-simple-select-label">Course</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          label="Course"
+          value={data.Course}
+          onChange={(e) => {
+            handleChange(e, "Course");
+          }}
+        >
+          <MenuItem value={"React"}>React</MenuItem>
+          <MenuItem value={"Node"}>Node</MenuItem>
+          <MenuItem value={"AWS"}>AWS</MenuItem>
+          <MenuItem value={"C"}>C</MenuItem>
+          <MenuItem value={"C++"}>C++</MenuItem>
+          <MenuItem value={"Python"}>Python</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+    <Box sx={{ minWidth: 120, mb: 2 }}>
+      <FormControl variant="filled" fullWidth>
+        <InputLabel id="demo-simple-select-label">
+          Type Of Event
+        </InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          label="Type Of Event"
+          value={data.TypeOfEvent}
+          onChange={(e) => {
+            handleChange(e, "TypeOfEvent");
+          }}
+        >
+          <MenuItem value={"Internship"}>Internship</MenuItem>
+          <MenuItem value={"Workshop"}>Workshop</MenuItem>
+          <MenuItem value={"Seminar"}>Seminar</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+    <Box sx={{ my: 2 }}>
+      <FormControl>
+        <FormLabel id="demo-row-radio-buttons-group-label">
+          Type Of Payment
+        </FormLabel>
+        <RadioGroup
+          row
+          aria-labelledby="demo-row-radio-buttons-group-label"
+          name="row-radio-buttons-group"
+          onChange={(e) => {
+            handleChange(e, "TypeOfPayment");
+          }}
+          defaultValue={data.TypeOfPayment}
+        >
+          <FormControlLabel
+            value="Free"
+            control={<Radio />}
+            label="Free"
+          />
+          <br />
+          <FormControlLabel
+            value="Paid"
+            control={<Radio />}
+            label="Paid"
+          />
+        </RadioGroup>
+      </FormControl>
+    </Box>
+    {data.TypeOfPayment == "Paid" ? (
+      <TextField
+        id="outlined-basic"
+        type="number"
+        label="Amount"
+        variant="filled"
+        value={data.Amount}
+        onChange={(e) => {
+          handleChange(e, "Amount");
+        }}
+        fullWidth
+        sx={{ mb: 2 }}
+      />
+    ) : null}
 
-            <FormControl variant="filled" fullWidth>
-              <InputLabel id="demo-simple-select-label">Course</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Course"
-                value={data.Course}
-                onChange={(e) => {
-                  handleChange(e, "Course");
-                }}
-              >
-                <MenuItem value={"React"}>React</MenuItem>
-                <MenuItem value={"Node"}>Node</MenuItem>
-                <MenuItem value={"AWS"}>AWS</MenuItem>
-                <MenuItem value={"C"}>C</MenuItem>
-                <MenuItem value={"C++"}>C++</MenuItem>
-                <MenuItem value={"Python"}>Python</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-          <Box sx={{ minWidth: 120, mb: 2 }}>
-            <FormControl variant="filled" fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Type Of Event
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Type Of Event"
-                value={data.TypeOfEvent}
-                onChange={(e) => {
-                  handleChange(e, "TypeOfEvent");
-                }}
-              >
-                <MenuItem value={"Internship"}>Internship</MenuItem>
-                <MenuItem value={"Workshop"}>Workshop</MenuItem>
-                <MenuItem value={"Seminar"}>Seminar</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-          <Box sx={{ my: 2 }}>
-            <FormControl>
-              <FormLabel id="demo-row-radio-buttons-group-label">
-                Type Of Payment
-              </FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
-                onChange={(e) => {
-                  handleChange(e, "TypeOfPayment");
-                }}
-                defaultValue={data.TypeOfPayment}
-              >
-                <FormControlLabel
-                  value="Free"
-                  control={<Radio />}
-                  label="Free"
-                />
-                <br />
-                <FormControlLabel
-                  value="Paid"
-                  control={<Radio />}
-                  label="Paid"
-                />
-              </RadioGroup>
-            </FormControl>
-          </Box>
-          {data.TypeOfPayment == "Paid" ? (
-            <TextField
-              id="outlined-basic"
-              type="number"
-              label="Amount"
-              variant="filled"
-              value={data.Amount}
-              onChange={(e) => {
-                handleChange(e, "Amount");
-              }}
-              fullWidth
-              sx={{ mb: 2 }}
-            />
-          ) : null}
+    <Box sx={{ mb: 1 }}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DemoContainer components={["DatePicker"]}>
+          <DatePicker
+            label="Start Date"
+            slotProps={{ textField: { variant: "filled" } }}
+            defaultValue={id ? dayjs(data.StartDate) : null}
+            sx={{ width: 500 }}
+            onChange={(val) => {
+              handleDateChange(val, "StartDate");
+            }}
+          ></DatePicker>
+        </DemoContainer>
+      </LocalizationProvider>
+    </Box>
+    <Box sx={{ mb: 2 }}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DemoContainer components={["DatePicker"]}>
+          <DatePicker
+            label="End Date"
+            slotProps={{ textField: { variant: "filled" } }}
+            defaultValue={id ? dayjs(data.EndtDate) : null}
+            sx={{ width: 500 }}
+            onChange={(val) => {
+              handleDateChange(val, "EndtDate");
+            }}
+          ></DatePicker>
+        </DemoContainer>
+      </LocalizationProvider>
+    </Box>
+    <Box sx={{ minWidth: 120, mb: 1 }} fullWidth>
+      <FormControl variant="filled" fullWidth>
+        <InputLabel id="demo-multiple-checkbox-label"> Days</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={data.Days || []}
+          onChange={handleChange1}
+          fullWidth
+          input={<FilledInput />}
+          renderValue={(selected) => selected.join(", ")}
+          MenuProps={menuprops}
+        >
+          {DaysArr.map((name) => (
+            <MenuItem key={name} value={name}>
+              <Checkbox
+                checked={data.Days && data.Days.indexOf(name) > -1}
+              />
 
-          <Box sx={{ mb: 1 }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={["DatePicker"]}>
-                <DatePicker
-                  label="Start Date"
-                  slotProps={{ textField: { variant: "filled" } }}
-                  defaultValue={id ? dayjs(data.StartDate) : null}
-                  sx={{ width: 500 }}
-                  onChange={(val) => {
-                    handleDateChange(val, "StartDate");
-                  }}
-                ></DatePicker>
-              </DemoContainer>
-            </LocalizationProvider>
-          </Box>
-          <Box sx={{ mb: 2 }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={["DatePicker"]}>
-                <DatePicker
-                  label="End Date"
-                  slotProps={{ textField: { variant: "filled" } }}
-                  defaultValue={id ? dayjs(data.EndtDate) : null}
-                  sx={{ width: 500 }}
-                  onChange={(val) => {
-                    handleDateChange(val, "EndtDate");
-                  }}
-                ></DatePicker>
-              </DemoContainer>
-            </LocalizationProvider>
-          </Box>
-          <Box sx={{ minWidth: 120, mb: 1 }} fullWidth>
-            <FormControl variant="filled" fullWidth>
-              <InputLabel id="demo-multiple-checkbox-label"> Days</InputLabel>
-              <Select
-                labelId="demo-multiple-checkbox-label"
-                id="demo-multiple-checkbox"
-                multiple
-                value={data.Days || []}
-                onChange={handleChange1}
-                fullWidth
-                input={<FilledInput />}
-                renderValue={(selected) => selected.join(", ")}
-                MenuProps={menuprops}
-              >
-                {DaysArr.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    <Checkbox
-                      checked={data.Days && data.Days.indexOf(name) > -1}
-                    />
+              <ListItemText primary={name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Box>
+    <Box sx={{ mt: 1 }}>
+      <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
+        <DemoContainer components={["TimePicker"]} fullWidth>
+          <TimePicker
+            label="Batch Timings"
+            slotProps={{ textField: { variant: "filled" } }}
+            sx={{ width: 500 }}
+            defaultValue={id ? dayjs(data.BatchTime) : null}
+            fullWidth
+            onChange={(val) => {
+              setdata({ ...data, BatchTime: val });
+            }}
+          />
+        </DemoContainer>
+      </LocalizationProvider>
+    </Box>
 
-                    <ListItemText primary={name} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-          <Box sx={{ mt: 1 }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
-              <DemoContainer components={["TimePicker"]} fullWidth>
-                <TimePicker
-                  label="Batch Timings"
-                  slotProps={{ textField: { variant: "filled" } }}
-                  sx={{ width: 500 }}
-                  defaultValue={id ? dayjs(data.BatchTime) : null}
-                  fullWidth
-                  onChange={(val) => {
-                    setdata({ ...data, BatchTime: val });
-                  }}
-                />
-              </DemoContainer>
-            </LocalizationProvider>
-          </Box>
+    <DialogActions>
+      <Button
+        onClick={() => {
+          handleClose();
+        }}
+      >
+        Cancel
+      </Button>
+      <Button
+        onClick={(event) => {
+          event.stopPropagation();
 
-          <DialogActions>
-            <Button
-              onClick={() => {
-                handleClose();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={(event) => {
-                event.stopPropagation();
-
-                handlesubmit(event);
-              }}
-            >
-              Submit
-            </Button>
-          </DialogActions>
-        </DialogContent>
-      </Dialog>
-      
-      
-      <Box sx={{ mx: 2 }}>
+          handlesubmit(event);
+        }}
+      >
+        Submit
+      </Button>
+    </DialogActions>
+  </DialogContent>
+</Dialog>)
+},[open,data,id])
+const table=React.useMemo(()=>{
+  console.log('tablec called')
+  return(
+<Box sx={{ mx: 2 }}>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -565,59 +576,74 @@ function Interform() {
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>
+      </Box>)
+},[arr])
+const completdialo=React.useMemo(()=>{
+  console.log('compokledialog claled')
+return(
+    
+  <Dialog
+  open={open2}
+  onClose={handleClose2}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+>
+  <DialogTitle id="alert-dialog-title">{"Complete Event"}</DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-description">
+      Do You Want To Complete Event?
+    </DialogContentText>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleClose2}>Cancel</Button>
+    <Button
+      onClick={() => {
+        axios
+          .post(`http://localhost:5000/event/Completed/?id=${id}`,{},jwttoken())
+          .then((data) => {
+            console.log("event completed", data);
+            doUpdate(!update);
+            handleClick1({ vertical: "top", horizontal: "center" });
+            setAlertSuccess({
+              open: true,
+              message: " Event Completed Successfully",
+              
+            });
+   
+            handleClose2();
+        
+          })
+          .catch((err) => {
+            console.log(err);
+            if (err.response.data) {
+              handleClick1({ vertical: "top", horizontal: "center" });
+    
+              setalertbatchMsg({
+                open: true,
+                message: err.response.data.error.details[0],
+             
+              });
+           
+            }
+          });
+        
+      }}
+    >
+      Confirm
+    </Button>
+  </DialogActions>
+</Dialog>
+)
+},[open2])
+  return (
+    <React.Fragment>
+      {snack}
+      {add}
+ {dialog1}
       
-      <Dialog
-        open={open2}
-        onClose={handleClose2}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Complete Event"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Do You Want To Complete Event?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose2}>Cancel</Button>
-          <Button
-            onClick={() => {
-              axios
-                .post(`http://localhost:5000/event/Completed/?id=${id}`,{},jwttoken())
-                .then((data) => {
-                  console.log("event completed", data);
-                  doUpdate(!update);
-                  handleClick1({ vertical: "top", horizontal: "center" });
-                  setAlertSuccess({
-                    open: true,
-                    message: " Event Completed Successfully",
-                    
-                  });
-         
-                  handleClose2();
-              
-                })
-                .catch((err) => {
-                  console.log(err);
-                  if (err.response.data) {
-                    handleClick1({ vertical: "top", horizontal: "center" });
-          
-                    setalertbatchMsg({
-                      open: true,
-                      message: err.response.data.error.details[0],
-                   
-                    });
-                 
-                  }
-                });
-              
-            }}
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {table}
+      
+  {completdialo}
     </React.Fragment>
   );
 }

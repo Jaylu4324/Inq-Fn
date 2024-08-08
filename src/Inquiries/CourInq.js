@@ -90,19 +90,17 @@ function Form1() {
   const newdate = () => {
     const selectedDate = new Date();
 
-    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
-    const adjustedDate = new Date(
-      selectedDate.getTime() + timezoneOffset * 60 * 1000
-    );
-    const formattedDate = adjustedDate.toISOString();
+    selectedDate.setHours(12,0,0,0)
+    const formattedDate = selectedDate.toISOString();
 
     return formattedDate;
   };
 
   
   const [data, setData] = React.useState({
-    Date: dayjs(newdate()),
-    Course: [],
+    // Date: dayjs(newdate().toISOString()),
+    Date: newdate(),
+    Course: []
   });
   const CustomPagination = styled(Pagination)(({ theme }) => ({
     "& .MuiPaginationItem-root": {
@@ -237,14 +235,15 @@ function Form1() {
         console.log(err);
       });
   }, [update]);
-
+console.log(data)
   const handlesubmit = () => {
     if (id) {
       axios
         .post(`http://localhost:5000/inquiry/Update?id=${id}`, data, jwttoken())
         .then((data1) => {
           doUpdate(!update);
-          setData({Date:data.Date});
+          setData({Date:newdate()})
+
           setOpen(false)
           setId("");
           handleClick1({ vertical: "top", horizontal: "center" });
@@ -265,14 +264,15 @@ function Form1() {
             });
           }
         });
+        console.log(data)
+
     } else {
       axios
         .post("http://localhost:5000/inquiry/addInquiry", data, jwttoken())
         .then((data) => {
           doUpdate(!update);
           handleClick1({ vertical: "top", horizontal: "center" });
-          setData({Date:data.Date});
-          
+          setData({Date:newdate()})
           
           setOpen(false);
                   
@@ -294,6 +294,8 @@ function Form1() {
             });
           }
         });
+        console.log(data)
+  
     }
   };
   const ITEM_HEIGHT = 48;
@@ -309,11 +311,9 @@ function Form1() {
 
   const handleDateChange = (val) => {
     const selectedDate = new Date(val);
-    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
-    const adjustedDate = new Date(
-      selectedDate.getTime() + timezoneOffset * 60 * 1000
-    );
-    const formattedDate = adjustedDate.toISOString();
+    selectedDate.setHours(12,0,0,0)
+    const formattedDate = selectedDate.toISOString();
+
 
     setData({ ...data, Date: formattedDate });
   };
@@ -356,11 +356,11 @@ function Form1() {
     "December",
   ];
 const snack=React.useMemo(()=>{
-  console.log('snackbar called')
+  
 return(
   <Snackbar
         open={op}
-        autoHideDuration={3000}
+        autoHideDuration={2000}
         onClose={handleClose12}
         anchorOrigin={{ vertical, horizontal }}
       >
@@ -381,7 +381,7 @@ return(
 },[op])
 
 const ingredients=React.useMemo(()=>{
-  console.log('ingredients called')
+  
 return(
   <Grid container spacing={2}>
   <Grid
@@ -439,7 +439,7 @@ return(
                     jwttoken()
                   )
                   .then((data) => {
-                    console.log(data);
+                    
                     if (type == "onGoing") {
                       setArr(data.data);
                       setorder1(order1 === 1 ? -1 : 1);
@@ -493,7 +493,7 @@ return(
                   jwttoken()
                 )
                 .then((data) => {
-                  console.log(data);
+                  
                   if (type == "onGoing") {
                     setArr(data.data.allData);
                   } else if (type == "Reject") {
@@ -516,7 +516,7 @@ return(
                   jwttoken()
                 )
                 .then((data) => {
-                  console.log(data);
+                  
                   if (type == "onGoing") {
                     setArr(data.data.data);
                     setorder(order === 1 ? -1 : 1);
@@ -544,7 +544,7 @@ return(
                   jwttoken()
                 )
                 .then((data) => {
-                  console.log(data);
+                  
                   if (type == "onGoing") {
                     setArr(data.data.data);
                     setorder(order === 1 ? -1 : 1);
@@ -629,7 +629,7 @@ return(
                   jwttoken()
                 )
                 .then((data) => {
-                  console.log(data);
+                  
                   if (type == "onGoing") {
                     setArr(data.data.filterdata);
                   } else if (type == "Reject") {
@@ -663,7 +663,6 @@ return(
 )
 },[open,arr,reject,confirm,order,order1,anchorEl,anchorEl1,searchname])
 const table=React.useMemo(()=>{
-  console.log('tabs and tabe clled')
   return(
     <Box>
     <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
@@ -946,7 +945,6 @@ const table=React.useMemo(()=>{
 
 },[value,arr,reject,confirm])
 const dialog=React.useMemo(()=>{
-  console.log('dialog called')
   return(
     <Dialog open={open} onClose={handleClose}>
           <DialogContent>
@@ -991,7 +989,9 @@ const dialog=React.useMemo(()=>{
                   <DatePicker
                     slotProps={{ textField: { variant: "filled" } }}
                     label="Choose Your Date"
-                    defaultValue={id ? dayjs(data.Date) : dayjs(newdate())}
+                    // defaultValue={id ? dayjs(data.Date) : dayjs(newdate())}
+                  value={dayjs(data.Date)}
+
                     onChange={handleDateChange}
                     sx={{ width: 530 }}
                   />
@@ -1121,7 +1121,6 @@ const dialog=React.useMemo(()=>{
 
 },[open,data,id])
 const dialogreject=React.useMemo(()=>{
-  console.log('dialog rejetc called')
   return(
     <Dialog
     open={open1}
@@ -1146,7 +1145,7 @@ const dialogreject=React.useMemo(()=>{
               jwttoken()
             )
             .then((data) => {
-              console.log(data);
+              
               doUpdate(!update);
               handleClick1({ vertical: "top", horizontal: "center" });
 
@@ -1169,7 +1168,6 @@ const dialogreject=React.useMemo(()=>{
 
 },[open1])
 const dialogconfirm=React.useMemo(()=>{
-  console.log('dialog  complete called')
   return(
     <Dialog
         open={open2}
@@ -1238,7 +1236,7 @@ const dialogconfirm=React.useMemo(()=>{
         count={10}
         size="large"
         onChange={(e, p) => {
-          console.log(e, p);
+          
         }}
       />
     </Box>

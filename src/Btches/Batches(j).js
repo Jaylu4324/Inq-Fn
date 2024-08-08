@@ -78,7 +78,9 @@ function Batches() {
   const [map, maparr] = React.useState([]);
   const [arr1, seteventarr] = React.useState([]);
   
-  
+  console.log(arr)
+  console.log(map)
+  console.log(arr1)
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
@@ -110,7 +112,7 @@ const handleClose1 = () => {
       .get("http://localhost:5000/event/Displayevent",jwttoken())
       .then((data) => {
         seteventarr(data.data.data);
-    console.log('first api')
+         console.log('first api')
         console.log("arr is set ", arr);
       })
       .catch((err) => {
@@ -122,7 +124,7 @@ const handleClose1 = () => {
           .get(`http://localhost:5000/Batch/Display?id=${parent._id}`,jwttoken())
           .then((data) => {
             console.log(data.data.data);
-      console.log('second api')
+            
             maparr(data.data.data);
           })
           .catch((err) => {
@@ -215,10 +217,10 @@ console.log('thid api')
       return selectedNames.join(", ")
     }
   };
-
-  return (
-    <>
-    <Snackbar
+const snack=React.useMemo(()=>{
+  console.log('snack bar called')
+return(
+  <Snackbar
         open={open1}
         autoHideDuration={3000}
         onClose={handleClose1}
@@ -238,350 +240,375 @@ console.log('thid api')
     </Alert>
   )}
       </Snackbar>
-   <Grid container spacing={2}>
-   <Grid item  xs={2} sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
-   <Box sx={{mt:1}}>
-  <Tooltip title="Add Batches" arrow>
-          <Button
-       disabled={parent._id?false:true}
-            onClick={() => {
-              setarr([...arr])
-              console.log(arr)
+)
+},[open1])
+const addicons=React.useMemo(()=>{
+  console.log('studnet select called')
+return(
+  <Dialog open={open}>
+  <DialogContent>
 
-              setopen(true);
-              setData({ StuName: [] })
-              setId("");
-            }}
-          >
-    <AddIcon/>
-          </Button>
-          </Tooltip>
-          </Box>
-       </Grid>
-     <Grid xs={5}></Grid>
-   <Grid item xs={5}>
-       
-   <Box sx={{ mr: 3 }}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">
-            {" "}
-            Select Event Type
-          </InputLabel>
-          <Select
-            onChange={(e) => {
-              handleparent(e);
-            }}
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Status"
-            renderValue={(data)=>{return(parent._id && data.Course || '')}}
-            sx={{
-              height:50,
-              borderRadius: "16px",
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  border: '2px solid #0063cc', // Default border color
-                },
-                '&:hover fieldset': {
-                  border: '2px solid #0063cc', // Border color on hover
-                },
-                '&.Mui-focused fieldset': {
-                  border: '2px solid #0063cc', // Border color when focused
-                },
-              },
-            }}
-          >
-            {arr1 &&
-              arr1.map((row) => (
-                <MenuItem value={row}>
-                  <TableRow
-                    key={row.name}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                    }}
-                  >
-                    <TableCell align="center">{row.Course}</TableCell>
+    <Grid container spacing={2} justifyContent="left">
+      <Grid item xs={4}>
+        <Box>
+          <FormControl sx={{ width: 300, mt: 3 }}>
+            <InputLabel id="demo-multiple-checkbox-label">
+              Select Students
+            </InputLabel>
 
-                    <TableCell align="center">{row.TypeOfEvent}</TableCell>
-                    <TableCell align="center">{row.TypeOfPayment}</TableCell>
-
-                    <TableCell align="center">{row.Amount}</TableCell>
-
-                    <TableCell align="center">
-                      {row.StartDate && row.StartDate.split("T")[0]}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.EndtDate && row.EndtDate.split("T")[0]}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.Days.map((val) => (
-                        <Box>{val}</Box>
-                      ))}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.BatchTime && convertToIST(row.BatchTime)}
-                    </TableCell>
-                  </TableRow>
+            <Select
+              labelId="demo-multiple-checkbox-label"
+              id="demo-multiple-checkbox"
+              multiple
+              value={data.StuName && data.StuName.map(
+                (item) => `${item.FullName}-${item.Contact}-${item._id}`
+              )}
+              onChange={handleChange}
+            
+              sx={{ width: 300 }}
+              fullWidth
+              input={<FilledInput/>}
+              renderValue={renderSelectedValue}
+              MenuProps={MenuProps}
+            >
+              {arr.map((name) => (
+                <MenuItem
+                  key={name._id}
+                  value={`${name.FullName}-${name.Contact}-${name._id}`}
+                >
+                  <Checkbox
+                    checked={
+                      data.StuName && data.StuName.findIndex(
+                        (item) =>
+                          item.Contact == name.Contact &&
+                          item.FullName == name.FullName &&
+                          item._id == name._id
+                      ) > -1
+                    }
+                   
+                  />
+                  <ListItemText
+                    primary={`${name.FullName}  ${name.Contact}`}
+                  />
                 </MenuItem>
               ))}
-          </Select>
-        </FormControl>
-      </Box>
-</Grid>
+            </Select>
 
+          </FormControl>
+        </Box>
+      </Grid>
+    </Grid>
 
+    <DialogActions>
+      <Button
+        onClick={() => {
+          handleOpen();
+        }}
+      >
+        Cancel
+      </Button>
+      <Button
+        onClick={() => {
+          if (id) {
+            axios
+              .post(`http://localhost:5000/Batch/Update?id=${id}`, {...data,EventId:parent._id},jwttoken())
+              .then((data) => {
+                console.log(arr);
+                setId("");
+                setData({ StuName: [] });
+                console.log(data.StuName)
+                setopen(false);
+                doupdate(!update);
+                handleClick1({ vertical: "top", horizontal: "center" });
+    
+                setAlertSuccess({
+                  open: true,
+                  message: "Student Updated Successfully",
+          
+                });
+          
+              })
+              .catch((err) => {
+                console.log(err);
+                if (err.response.data) {
+                  handleClick1({ vertical: "top", horizontal: "center" });
+    
+                  setAlertMsg({
+                    open: true,
+                    message: err.response.data.error.details[0].message,
+                  });
+      
+                }
+              });
+          } else {
+            axios
+              .post("http://localhost:5000/Batch/addbatch", {
+                ...data,
+                EventId: parent._id,
+              },jwttoken())
+              .then((data1) => {
 
+                console.log(arr);
 
-</Grid>
-      <Box>
-        <Box sx={{ mt: 4 }}>
-          <TableContainer>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center"
-                  sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
-                  }}
-                  
-                  >Student Name</TableCell>
-                  <TableCell align="center">Contact</TableCell>
-                  <TableCell align="center">Days</TableCell>
-                  <TableCell align="center">Date</TableCell>
-                  <TableCell align="center">Batch Time</TableCell>
+                setopen(false);
+                setId("");
+                setData({ StuName: [] })
+                doupdate(!update);
+                handleClick1({ vertical: "top", horizontal: "center" });
+    
+                setAlertSuccess({
+                  open: true,
+                  message: "Student Added Successfully",
+           
+                });
+            
 
+              })
+              .catch((err) => {
+                console.log(err);
+                if (err.response.data) {
+                  handleClick1({ vertical: "top", horizontal: "center" });
+    
+                  setAlertMsg({
+                    open: true,
+                    message: err.response.data.error.details[0].message,
+                  });
+      
+             
+                }
+              });
+          }
+        }}
+      >
+        Submit
+      </Button>
+    </DialogActions>
+  </DialogContent>
+</Dialog>
+)
+},[open,data,id])
+const table=React.useMemo(()=>{
+console.log('tabel called')
+return(
+  <Box>
+  <Box sx={{ mt: 4 }}>
+    <TableContainer>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell align="center"
+            sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
+            }}
+            
+            >Student Name</TableCell>
+            <TableCell align="center">Contact</TableCell>
+            <TableCell align="center">Days</TableCell>
+            <TableCell align="center">Date</TableCell>
+            <TableCell align="center">Batch Time</TableCell>
+
+            <TableCell align="center">
+          Actions
+        </TableCell>
+        
+          </TableRow>
+        </TableHead>
+<TableBody sx={{height:map && map.length<1?220:0}}>
+        {map &&
+          map.map((row) => (
+            <TableRow
+              key={row.name}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
+                              }}
+            >
+                {row.StuName.map((data, index) => (
+               <Box align="center">
+                    <TableCell align="center"> {data.FullName}</TableCell>
+                    </Box>
+                ))}
+              </TableCell>
+
+              <TableCell align="center">
+                {row.StuName.map((data) => (
+            <Box align="center">
+                    <TableCell align="center">{data.Contact}</TableCell>
+                    </Box>
+                ))}
+              </TableCell>
+              <TableCell align="center">
+                {row.EventId.Days &&
+                  row.EventId.Days.map((data) => (
+                    <Box align="center">
+                      {data}
+                      </Box>
+                  ))}
+              </TableCell>
+              <TableCell align="center">
+              <Box align="center">
                   <TableCell align="center">
-                Actions
+                    {row.EventId.StartDate.split("T")[0]}
+                  </TableCell>
+                  </Box>
+              </TableCell>
+              <TableCell align="center">
+              <Box align="center">
+                  <TableCell align="center">
+                    {row.EventId.BatchTime.split("T")[1]
+                      .split(".")[0]
+                      .slice(0, 5)}
+                  </TableCell>
+                  </Box>
+              </TableCell>
+<Box sx={{display:'flex',justifyContent:'center',mt:2}}>
+              <TableCell align="center">
+              <Tooltip title="Edit" arrow>
+                
+                <Button
+             
+                  onClick={() => {
+                    console.log("row")
+
+                    setData({ ...row });
+                    setId(row._id);
+                    console.log("rwow", arr)
+                    // setData({...row,StuName:[...data.StuName]})
+                    // console.log(...data.StuName,...arr)
+                    console.log("wdfd", row, "arr", ...arr)
+                    setarr([...row.StuName, ...arr])
+
+                    setopen(true);
+                  }}
+                >
+                  <EditIcon />
+                </Button>
+                </Tooltip>
               </TableCell>
               
-                </TableRow>
-              </TableHead>
-<TableBody sx={{height:map && map.length<1?220:0}}>
-              {map &&
-                map.map((row) => (
-                  <TableRow
-                    key={row.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell align="center" sx={{ position: "sticky", left: 0, backgroundColor: "white", zIndex: 1,
-                                    }}
-                  >
-                      {row.StuName.map((data, index) => (
-                     <Box align="center">
-                          <TableCell align="center"> {data.FullName}</TableCell>
-                          </Box>
-                      ))}
-                    </TableCell>
 
-                    <TableCell align="center">
-                      {row.StuName.map((data) => (
-                  <Box align="center">
-                          <TableCell align="center">{data.Contact}</TableCell>
-                          </Box>
-                      ))}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.EventId.Days &&
-                        row.EventId.Days.map((data) => (
-                          <Box align="center">
-                            {data}
-                            </Box>
-                        ))}
-                    </TableCell>
-                    <TableCell align="center">
-                    <Box align="center">
-                        <TableCell align="center">
-                          {row.EventId.StartDate.split("T")[0]}
-                        </TableCell>
-                        </Box>
-                    </TableCell>
-                    <TableCell align="center">
-                    <Box align="center">
-                        <TableCell align="center">
-                          {row.EventId.BatchTime.split("T")[1]
-                            .split(".")[0]
-                            .slice(0, 5)}
-                        </TableCell>
-                        </Box>
-                    </TableCell>
-<Box sx={{display:'flex',justifyContent:'center',mt:2}}>
-                    <TableCell align="center">
-                    <Tooltip title="Edit" arrow>
-                      
-                      <Button
-                   
-                        onClick={() => {
-                          console.log("row")
-
-                          setData({ ...row });
-                          setId(row._id);
-                          console.log("rwow", arr)
-                          // setData({...row,StuName:[...data.StuName]})
-                          // console.log(...data.StuName,...arr)
-                          console.log("wdfd", row, "arr", ...arr)
-                          setarr([...row.StuName, ...arr])
-
-                          setopen(true);
-                        }}
-                      >
-                        <EditIcon />
-                      </Button>
-                      </Tooltip>
-                    </TableCell>
-                    
-    
-                  
-                    </Box>
-                  </TableRow>
-                ))}
-</TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
-
-       
-      </Box>
-
-      <Dialog open={open}>
-        <DialogContent>
-      
-          <Grid container spacing={2} justifyContent="left">
-            <Grid item xs={4}>
-              <Box>
-                <FormControl sx={{ width: 300, mt: 3 }}>
-                  <InputLabel id="demo-multiple-checkbox-label">
-                    Select Students
-                  </InputLabel>
-
-                  <Select
-                    labelId="demo-multiple-checkbox-label"
-                    id="demo-multiple-checkbox"
-                    multiple
-                    value={data.StuName && data.StuName.map(
-                      (item) => `${item.FullName}-${item.Contact}-${item._id}`
-                    )}
-                    onChange={handleChange}
-                  
-                    sx={{ width: 300 }}
-                    fullWidth
-                    input={<FilledInput/>}
-                    renderValue={renderSelectedValue}
-                    MenuProps={MenuProps}
-                  >
-                    {arr.map((name) => (
-                      <MenuItem
-                        key={name._id}
-                        value={`${name.FullName}-${name.Contact}-${name._id}`}
-                      >
-                        <Checkbox
-                          checked={
-                            data.StuName && data.StuName.findIndex(
-                              (item) =>
-                                item.Contact == name.Contact &&
-                                item.FullName == name.FullName &&
-                                item._id == name._id
-                            ) > -1
-                          }
-                         
-                        />
-                        <ListItemText
-                          primary={`${name.FullName}  ${name.Contact}`}
-                        />
-                      </MenuItem>
-                    ))}
-                  </Select>
-
-                </FormControl>
+            
               </Box>
-            </Grid>
-          </Grid>
+            </TableRow>
+          ))}
+</TableBody>
+      </Table>
+    </TableContainer>
+  </Box>
 
-          <DialogActions>
-            <Button
-              onClick={() => {
-                handleOpen();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={() => {
-                if (id) {
-                  axios
-                    .post(`http://localhost:5000/Batch/Update?id=${id}`, {...data,EventId:parent._id},jwttoken())
-                    .then((data) => {
-                      console.log(arr);
-                      setId("");
-                      setData({ StuName: [] });
-                      console.log(data.StuName)
-                      setopen(false);
-                      doupdate(!update);
-                      handleClick1({ vertical: "top", horizontal: "center" });
-          
-                      setAlertSuccess({
-                        open: true,
-                        message: "Student Updated Successfully",
-                
-                      });
-                
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                      if (err.response.data) {
-                        handleClick1({ vertical: "top", horizontal: "center" });
-          
-                        setAlertMsg({
-                          open: true,
-                          message: err.response.data.error.details[0].message,
-                        });
-            
-                      }
-                    });
-                } else {
-                  axios
-                    .post("http://localhost:5000/Batch/addbatch", {
-                      ...data,
-                      EventId: parent._id,
-                    },jwttoken())
-                    .then((data1) => {
+ 
+</Box>
 
-                      console.log(arr);
+)
+},[map])
+const selectcourse=React.useMemo(()=>{
+  console.log('course select called')
+return(
+  <Grid container spacing={2}>
+  <Grid item  xs={2} sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
+  <Box sx={{mt:1}}>
+ <Tooltip title="Add Batches" arrow>
+         <Button
+      disabled={parent._id?false:true}
+           onClick={() => {
+             setarr([...arr])
+             console.log(arr)
 
-                      setopen(false);
-                      setId("");
-                      setData({ StuName: [] })
-                      doupdate(!update);
-                      handleClick1({ vertical: "top", horizontal: "center" });
-          
-                      setAlertSuccess({
-                        open: true,
-                        message: "Student Added Successfully",
-                 
-                      });
-                  
+             setopen(true);
+             setData({ StuName: [] })
+             setId("");
+           }}
+         >
+   <AddIcon/>
+         </Button>
+         </Tooltip>
+         </Box>
+      </Grid>
+    <Grid xs={5}></Grid>
+  <Grid item xs={5}>
+      
+  <Box sx={{ mr: 3 }}>
+       <FormControl fullWidth>
+         <InputLabel id="demo-simple-select-label">
+           {" "}
+           Select Event Type
+         </InputLabel>
+         <Select
+           onChange={(e) => {
+             handleparent(e);
+           }}
+           labelId="demo-simple-select-label"
+           id="demo-simple-select"
+           label="Status"
+           renderValue={(data)=>{return(parent._id && data.Course || '')}}
+           sx={{
+             height:50,
+             borderRadius: "16px",
+             '& .MuiOutlinedInput-root': {
+               '& fieldset': {
+                 border: '2px solid #0063cc', // Default border color
+               },
+               '&:hover fieldset': {
+                 border: '2px solid #0063cc', // Border color on hover
+               },
+               '&.Mui-focused fieldset': {
+                 border: '2px solid #0063cc', // Border color when focused
+               },
+             },
+           }}
+         >
+           {arr1 &&
+             arr1.map((row) => (
+               <MenuItem value={row}>
+                 <TableRow
+                   key={row.name}
+                   sx={{
+                     "&:last-child td, &:last-child th": { border: 0 },
+                   }}
+                 >
+                   <TableCell align="center">{row.Course}</TableCell>
 
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                      if (err.response.data) {
-                        handleClick1({ vertical: "top", horizontal: "center" });
-          
-                        setAlertMsg({
-                          open: true,
-                          message: err.response.data.error.details[0].message,
-                        });
-            
-                   
-                      }
-                    });
-                }
-              }}
-            >
-              Submit
-            </Button>
-          </DialogActions>
-        </DialogContent>
-      </Dialog>
+                   <TableCell align="center">{row.TypeOfEvent}</TableCell>
+                   <TableCell align="center">{row.TypeOfPayment}</TableCell>
+
+                   <TableCell align="center">{row.Amount}</TableCell>
+
+                   <TableCell align="center">
+                     {row.StartDate && row.StartDate.split("T")[0]}
+                   </TableCell>
+                   <TableCell align="center">
+                     {row.EndtDate && row.EndtDate.split("T")[0]}
+                   </TableCell>
+                   <TableCell align="center">
+                     {row.Days.map((val) => (
+                       <Box>{val}</Box>
+                     ))}
+                   </TableCell>
+                   <TableCell align="center">
+                     {row.BatchTime && convertToIST(row.BatchTime)}
+                   </TableCell>
+                 </TableRow>
+               </MenuItem>
+             ))}
+         </Select>
+       </FormControl>
+     </Box>
+</Grid>
+
+
+
+
+</Grid>
+)
+},[open,parent,arr1,arr])
+
+  return (
+    <>
+{snack}  
+{addicons}
+{selectcourse}
    
+    {table}
+    
       
     </>
   );

@@ -68,11 +68,9 @@ function SD() {
   const newdate = () => {
     const selectedDate = new Date();
 
-    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
-    const adjustedDate = new Date(
-      selectedDate.getTime() + timezoneOffset * 60 * 1000
-    );
-    const formattedDate = adjustedDate.toISOString();
+    selectedDate.setHours(12,0,0,0)
+    const formattedDate = selectedDate.toISOString();
+
 
     return formattedDate;
   };
@@ -81,10 +79,11 @@ function SD() {
   const[render,setrender]=React.useState('no')
   console.log(render)
   const [data, setData] = React.useState({
-    Date: dayjs(newdate()),
+    Date: newdate(),
     btime: "",
     days: [],
   });
+
   const [arr, setarr] = React.useState([]);
   const [update, doupdate] = React.useState(false);
   const [coursearr, setcoursearr] = React.useState([]);
@@ -210,7 +209,10 @@ console.log(data)
           console.log(data);
           doupdate(!update);
           setrender('yes')
+          setOpen(!open);
+          setData({Date:newdate()})
 
+          setId("");
           handleClick12({ vertical: "top", horizontal: "center" });
           setAlertSuccess({
             open: true,
@@ -218,9 +220,7 @@ console.log(data)
           
           });
 
-          setOpen(!open);
-          setData({Date:data.Date});
-          setId("");
+      
         })
         .catch((err) => {
           console.log(err);
@@ -241,7 +241,10 @@ console.log(data)
           console.log("data posted", data);
           doupdate(!update);
           setrender('yes')
-          
+          setOpen(!open);
+          setData({Date:newdate()})
+
+          setId("");
           handleClick12({ vertical: "top", horizontal: "center" });
           setAlertSuccess({
             open: true,
@@ -249,9 +252,7 @@ console.log(data)
             
           });
    
-          setOpen(!open);
-          setData({Date:data.Date});
-          setId("");
+    
         })
         .catch((err) => {
           console.log(err);
@@ -316,11 +317,8 @@ const maxsize=1000 * 130;
   dayjs.extend(utc);
   const handleDateChange = (val) => {
     const selectedDate = new Date(val);
-    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
-    const adjustedDate = new Date(
-      selectedDate.getTime() + timezoneOffset * 60 * 1000
-    );
-    const formattedDate = adjustedDate.toISOString();
+    selectedDate.setHours(12,0,0,0)
+    const formattedDate = selectedDate.toISOString();
 
     setData({ ...data, Date: formattedDate });
   };
@@ -333,8 +331,7 @@ const maxsize=1000 * 130;
   const handlesearchname = (e) => {
     setseearchname(e.target.value);
   };
-  console.log(searchname);
-  
+  console.log(data.Date)
   const handleClosemenu = () => {
     setAnchorEl(null);
   };
@@ -365,337 +362,346 @@ const maxsize=1000 * 130;
   ];
   
 const[student,setstudent]=React.useState([])
-  return (
-    <React.Fragment>
-        <Snackbar
-        open={op}
-        autoHideDuration={3000}
-        onClose={handleClose12}
-        anchorOrigin={{ vertical, horizontal }}
-        
+const snack=React.useMemo(()=>{
+  console.log('snackbar called')
+return(
+  <Snackbar
+  open={op}
+  autoHideDuration={3000}
+  onClose={handleClose12}
+  anchorOrigin={{ vertical, horizontal }}
+  
+>
+    {(alertSuccess.open || alertMsg.open) && (
+<Alert
+onClose={handleClose12}
+severity={alertSuccess.open ? "success" : "error"}
+          // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
+
+variant="filled"
+sx={{ width: "100%" }}
+>
+{alertSuccess.open ? alertSuccess.message : alertMsg.message}
+</Alert>
+)}
+</Snackbar>
+)
+},[op])
+const ingredients=React.useMemo(()=>{
+  console.log('ingredients called')
+return(
+  <Grid
+  container
+  spacing={2}
+  
+>
+<Grid item xs={12} sm={3} sx={{ display: "flex",
+  justifyContent: "flex-start",
+  alignItems: "flex-start"}}>
+    <Box sx={{display:'flex',mt:1}}>
+    <div>
+    <Tooltip title="Add Student Details" arrow>
+      <Button
+      
+      disabled={parent._id?false:true}
+        onClick={() => {
+          handleopen();
+        }}
       >
-          {(alertSuccess.open || alertMsg.open) && (
-    <Alert
-      onClose={handleClose12}
-      severity={alertSuccess.open ? "success" : "error"}
-                // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
-
-      variant="filled"
-      sx={{ width: "100%" }}
-    >
-      {alertSuccess.open ? alertSuccess.message : alertMsg.message}
-    </Alert>
-  )}
-      </Snackbar>
-   
-      <Grid
-        container
-        spacing={2}
-        
+  <AddIcon/>
+      </Button>
+      </Tooltip>
+      </div>
+    <div>
+      <Tooltip title="Filter" arrow>
+        <Button
+          id="basic-button"
+          aria-controls={openmenu1 ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={openmenu1 ? "true" : undefined}
+          onClick={handleClickmenu1}
+        >
+          <FilterAltIcon sx={{ color: "#0063cc" }} />
+        </Button>
+      </Tooltip>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl1}
+        open={openmenu1}
+        onClose={handleClosemenu1}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
       >
-  <Grid item xs={12} sm={3} sx={{ display: "flex",
-        justifyContent: "flex-start",
-        alignItems: "flex-start"}}>
-          <Box sx={{display:'flex',mt:1}}>
-          <div>
-          <Tooltip title="Add Student Details" arrow>
-            <Button
-            
-            disabled={parent._id?false:true}
-              onClick={() => {
-                handleopen();
-              }}
-            >
-        <AddIcon/>
-            </Button>
-            </Tooltip>
-            </div>
-          <div>
-            <Tooltip title="Filter" arrow>
-              <Button
-                id="basic-button"
-                aria-controls={openmenu1 ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={openmenu1 ? "true" : undefined}
-                onClick={handleClickmenu1}
-              >
-                <FilterAltIcon sx={{ color: "#0063cc" }} />
-              </Button>
-            </Tooltip>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl1}
-              open={openmenu1}
-              onClose={handleClosemenu1}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              {montharr && montharr.map((val, index) => (
-                <MenuItem
-                  onClick={() => {
-                    axios
-                      .get(
-                        `http://localhost:5000/student/filtermonth?perentId=${
-                          parent._id ? parent._id : ""
-                        }&month=${montharr[index]}&sort=${order1}`,jwttoken()
-                      )
-                      .then((data) => {
-                        console.log(data);
-                        setarr(data.data);
+        {montharr && montharr.map((val, index) => (
+          <MenuItem
+            onClick={() => {
+              axios
+                .get(
+                  `http://localhost:5000/student/filtermonth?perentId=${
+                    parent._id ? parent._id : ""
+                  }&month=${montharr[index]}&sort=${order1}`,jwttoken()
+                )
+                .then((data) => {
+                  console.log(data);
+                  setarr(data.data);
 
-                        setorder1(order1 == 1 ? -1 : 1);
-                      })
+                  setorder1(order1 == 1 ? -1 : 1);
+                })
 
-                      .catch((err) => {
-                        console.log(err);
-                      });
-                    handleClosemenu1();
-                  }}
-                >
-                  {monthname[index]}
+                .catch((err) => {
+                  console.log(err);
+                });
+              handleClosemenu1();
+            }}
+          >
+            {monthname[index]}
+          </MenuItem>
+        ))}
+      </Menu>
+    </div>
+    <div>
+      <Tooltip title="Sort" arrow>
+        <Button
+          id="basic-button"
+          aria-controls={openmenu ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={openmenu ? "true" : undefined}
+          onClick={handleClickmenu}
+        >
+          <SortIcon sx={{ color: "#0063cc" }} />
+        </Button>
+      </Tooltip>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={openmenu}
+        onClose={handleClosemenu}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            setParent({});
+            handleClosemenu();
+          }}
+        >
+          All
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            axios
+              .get(
+                `http://localhost:5000/student/fillter?key=Date&sortby=${order}&courseid=${
+                  parent._id ? parent._id : ""
+                }`,jwttoken()
+              )
+              .then((data) => {
+                console.log(data);
+                setorder(order == 1 ? -1 : 1);
+                setarr(data.data.data);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            handleClosemenu();
+          }}
+        >
+          Sort By Date
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            axios
+              .get(
+                `http://localhost:5000/student/fillter?key=Name&sortby=${order}&courseid=${parent._id ? parent._id : ""}`,jwttoken()
+
+              )
+              .then((data) => {
+                console.log(data);
+                setorder(order == 1 ? -1 : 1);
+                setarr(data.data.data);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            handleClosemenu();
+          }}
+        >
+          Sort By Name
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            axios
+              .get(
+                `http://localhost:5000/student/fillter?key=Rfees&sortby=${order}&courseid=${
+                  parent._id ? parent._id : ""
+                }`,jwttoken()
+              )
+              .then((data) => {
+                console.log(data);
+                setorder(order == 1 ? -1 : 1);
+                setarr(data.data.data);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            handleClosemenu();
+          }}
+        >
+          Sort By RF
+        </MenuItem>
+      </Menu>
+    </div>
+    </Box>
+    </Grid>
+ 
+  <Grid
+     item xs={12} sm={5}
+
+  >
+     <Box sx={{ mx: 2 }}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">
+            {" "}
+            Select Course
+          </InputLabel>
+          <Select
+            onChange={(e) => {
+              handleparent(e);
+            }}
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Status"
+            sx={{
+              height:50,
+              minWidth:'100%',
+              borderRadius: "16px",
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  border: '2px solid #0063cc', // Default border color
+                },
+                '&:hover fieldset': {
+                  border: '2px solid #0063cc', // Border color on hover
+                },
+                '&.Mui-focused fieldset': {
+                  border: '2px solid #0063cc', // Border color when focused
+                },
+              },
+            }}
+            renderValue={(data) => {
+              return (parent._id && data.batchName) || "";
+            }}
+          >
+            {coursearr &&
+              coursearr.map((row) => (
+                <MenuItem key={row._id} value={row}>
+                  <TableRow>
+                    <TableCell align="center">{row.batchName}</TableCell>
+                    <TableCell align="center">{row.Amount}</TableCell>
+                    <TableCell align="center">{row.Days}</TableCell>
+                    <TableCell align="center">
+                      {row.StartDate && row.StartDate.split("T")[0]}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.BatchTime && convertToIST(row.BatchTime)}
+                    </TableCell>
+                  </TableRow>
                 </MenuItem>
               ))}
-            </Menu>
-          </div>
-          <div>
-            <Tooltip title="Sort" arrow>
-              <Button
-                id="basic-button"
-                aria-controls={openmenu ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={openmenu ? "true" : undefined}
-                onClick={handleClickmenu}
-              >
-                <SortIcon sx={{ color: "#0063cc" }} />
-              </Button>
-            </Tooltip>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={openmenu}
-              onClose={handleClosemenu}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem
-                onClick={() => {
-                  setParent({});
-                  handleClosemenu();
-                }}
-              >
-                All
-              </MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+   
+  </Grid>
 
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/student/fillter?key=Date&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`,jwttoken()
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setarr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  handleClosemenu();
-                }}
-              >
-                Sort By Date
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/student/fillter?key=Name&sortby=${order}&courseid=${parent._id ? parent._id : ""}`,jwttoken()
+  
+  <Grid
+ xs={12} sm={4} 
+    sx={{ display: "flex", justifyContent: "center", alignItems: "center"}}
+  >
+    <Box sx={{ width: 400,ml:3,mt:2 }}>
+      <TextField
+        value={searchname}
 
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setarr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  handleClosemenu();
-                }}
-              >
-                Sort By Name
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  axios
-                    .get(
-                      `http://localhost:5000/student/fillter?key=Rfees&sortby=${order}&courseid=${
-                        parent._id ? parent._id : ""
-                      }`,jwttoken()
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setorder(order == 1 ? -1 : 1);
-                      setarr(data.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  handleClosemenu();
-                }}
-              >
-                Sort By RF
-              </MenuItem>
-            </Menu>
-          </div>
-          </Box>
-          </Grid>
-       
-        <Grid
-           item xs={12} sm={5}
+        id="filled-hidden-label-small"
+        placeholder="Search Students..."
+        variant="filled"
+        size="small"
+        onChange={handlesearchname}
 
-        >
-           <Box sx={{ mx: 2 }}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  {" "}
-                  Select Course
-                </InputLabel>
-                <Select
-                  onChange={(e) => {
-                    handleparent(e);
-                  }}
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Status"
-                  sx={{
-                    height:50,
-                    minWidth:'100%',
-                    borderRadius: "16px",
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': {
-                        border: '2px solid #0063cc', // Default border color
-                      },
-                      '&:hover fieldset': {
-                        border: '2px solid #0063cc', // Border color on hover
-                      },
-                      '&.Mui-focused fieldset': {
-                        border: '2px solid #0063cc', // Border color when focused
-                      },
-                    },
-                  }}
-                  renderValue={(data) => {
-                    return (parent._id && data.batchName) || "";
-                  }}
-                >
-                  {coursearr &&
-                    coursearr.map((row) => (
-                      <MenuItem key={row._id} value={row}>
-                        <TableRow>
-                          <TableCell align="center">{row.batchName}</TableCell>
-                          <TableCell align="center">{row.Amount}</TableCell>
-                          <TableCell align="center">{row.Days}</TableCell>
-                          <TableCell align="center">
-                            {row.StartDate && row.StartDate.split("T")[0]}
-                          </TableCell>
-                          <TableCell align="center">
-                            {row.BatchTime && convertToIST(row.BatchTime)}
-                          </TableCell>
-                        </TableRow>
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            </Box>
-         
-        </Grid>
-
+        sx={{
+          width: "100%",
+          maxWidth: 400,
+          "& .MuiFilledInput-root": {
+            borderRadius: "16px",
+            border: "2px solid #0063cc",
+            backgroundColor: "white",
+            padding: "0 16px", // Ensure background color is consistent
+            "&:hover": {
+              backgroundColor: "white",
+            },
+            "&.Mui-focused": {
+              backgroundColor: "white",
+            },
+            "& input": {
+              padding: "12px 0", // Adjust vertical padding to center text
+              // Center the text horizontally
+            },
+          },
+          "& .MuiFilledInput-underline:before": {
+            borderBottom: "none", // Remove the default underline before focus
+          },
+          "& .MuiFilledInput-underline:after": {
+            borderBottom: "none", // Remove the default underline after focus
+          },
+          "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
+            borderBottom: "none", // Remove underline on hover
+          },
+        }}
+      />
+    </Box>
+    <Box sx={{mt:2}}>
+    <Tooltip title="Search" arrow>
+      <Button sx={{ color: "#0063cc" }}>
+        <SearchIcon
+          onClick={() => {
+            if(searchname.length>0){
+            axios.get(`http://localhost:5000/student/stusearch?Name=${searchname}`,jwttoken())
+            .then((data)=>{
         
-        <Grid
-       xs={12} sm={4} 
-          sx={{ display: "flex", justifyContent: "center", alignItems: "center"}}
-        >
-          <Box sx={{ width: 400,ml:3,mt:2 }}>
-            <TextField
-              value={searchname}
-
-              id="filled-hidden-label-small"
-              placeholder="Search Students..."
-              variant="filled"
-              size="small"
-              onChange={handlesearchname}
-
-              sx={{
-                width: "100%",
-                maxWidth: 400,
-                "& .MuiFilledInput-root": {
-                  borderRadius: "16px",
-                  border: "2px solid #0063cc",
-                  backgroundColor: "white",
-                  padding: "0 16px", // Ensure background color is consistent
-                  "&:hover": {
-                    backgroundColor: "white",
-                  },
-                  "&.Mui-focused": {
-                    backgroundColor: "white",
-                  },
-                  "& input": {
-                    padding: "12px 0", // Adjust vertical padding to center text
-                    // Center the text horizontally
-                  },
-                },
-                "& .MuiFilledInput-underline:before": {
-                  borderBottom: "none", // Remove the default underline before focus
-                },
-                "& .MuiFilledInput-underline:after": {
-                  borderBottom: "none", // Remove the default underline after focus
-                },
-                "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
-                  borderBottom: "none", // Remove underline on hover
-                },
-              }}
-            />
-          </Box>
-          <Box sx={{mt:2}}>
-          <Tooltip title="Search" arrow>
-            <Button sx={{ color: "#0063cc" }}>
-              <SearchIcon
-                onClick={() => {
-                  if(searchname.length>0){
-                  axios.get(`http://localhost:5000/student/stusearch?Name=${searchname}`,jwttoken())
-                  .then((data)=>{
-              
-                    setarr(data.data.data)
-                    setseearchname("");
-                      
-                  })
-                  .catch((err)=>{
-                    console.log(err)
+              setarr(data.data.data)
+              setseearchname("");
+                
+            })
+            .catch((err)=>{
+              console.log(err)
 
 
-                  })
-                }
-                else{
-                  handleClick12({ vertical: "top", horizontal: "center" });
-                  setAlertMsg({
-                    open: true,
-                    message: 'Please Enter Name First'
-                  });
-                }
-                }}
-              />
-            </Button>
-          </Tooltip>
-          </Box>
-        </Grid>
-      
-      </Grid>
+            })
+          }
+          else{
+            handleClick12({ vertical: "top", horizontal: "center" });
+            setAlertMsg({
+              open: true,
+              message: 'Please Enter Name First'
+            });
+          }
+          }}
+        />
+      </Button>
+    </Tooltip>
+    </Box>
+  </Grid>
 
-      <Dialog
+</Grid>
+)
+},[open,anchorEl1,anchorEl,searchname,order,order1,parent,coursearr])
+const dialogdata=React.useMemo(()=>{
+  console.log('dialog called')
+return(
+  <Dialog
         open={open}
         PaperProps={{
           component: "form",
@@ -833,7 +839,9 @@ const[student,setstudent]=React.useState([])
                   label="Choose Your Date"
                   slotProps={{ textField: { variant: "filled" } }}
                   onChange={handleDateChange}
-                  defaultValue={id ? dayjs(data.Date) : dayjs(newdate())}
+                  // defaultValue={id ? dayjs(data.Date) : dayjs(newdate())}
+                  value={dayjs(data.Date)}
+
                   sx={{ width: 530}}
                   fullWidth
                 ></DatePicker>
@@ -883,119 +891,133 @@ const[student,setstudent]=React.useState([])
           </Button>
         </DialogActions>
       </Dialog>
-
-      <Box sx={{ mx: 2, my: 2 }}>
-  <TableContainer>
-    <Table sx={{ minWidth: 650, mx: 3 }} aria-label="simple table">
-      <TableHead>
-        <TableRow>
-          <TableCell
-            align="center"
-            sx={{
-              position: "sticky",
-              left: 0,
-              backgroundColor: "white",
-              zIndex: 1,
-            }}
-          >
-            Student Name
-          </TableCell>
-          <TableCell align="center">Contact</TableCell>
-          <TableCell align="center">Parent Contact</TableCell>
-          <TableCell align="center">Email</TableCell>
-          <TableCell align="center">College Name</TableCell>
-          <TableCell align="center">Academic Course</TableCell>
-          <TableCell align="center">Course</TableCell>
-          <TableCell align="center">Total Fees</TableCell>
-          <TableCell align="center">Paid Fees</TableCell>
-          <TableCell align="center">Remaining Fees</TableCell>
-          <TableCell align="center">Date</TableCell>
-          <TableCell align="center">Batch Days</TableCell>
-          <TableCell align="center">Batch Timing</TableCell>
-          <TableCell align="center" colSpan={2}>
-            Actions
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody sx={{ height: arr && arr.length < 1 ? 300 : 0 }}>
-        {arr && arr.length > 0 ? (
-          arr.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell
-                align="center"
-                sx={{
-                  position: "sticky",
-                  left: 0,
-                  backgroundColor: "white",
-                  zIndex: 1,
-                }}
-              >
-                {row.Name}
-              </TableCell>
-              <TableCell align="center">{row.Contact}</TableCell>
-              <TableCell align="center">{row.Parentcontact}</TableCell>
-              <TableCell align="center">{row.Email}</TableCell>
-              <TableCell align="center">{row.CollegeName}</TableCell>
-              <TableCell align="center">{row.AcademicCourse}</TableCell>
-              <TableCell align="center">
-                {row && row.CourseId && row.CourseId.Course}
-              </TableCell>
-              <TableCell align="center">{row.Tfees}</TableCell>
-              <TableCell align="center">{row.Pfees}</TableCell>
-              <TableCell align="center">{row.Rfees}</TableCell>
-              <TableCell align="center">
-                {row.Date && row.Date.split("T")[0]}
-              </TableCell>
-              <TableCell align="center">
-                {row &&
-                  row.CourseId &&
-                  row.CourseId.Days.map((val) => (
-                    <Box key={val}>{val}</Box>
-                  ))}
-              </TableCell>
-              <TableCell align="center">
-                {row && row.CourseId && convertToIST(row.CourseId.BatchTime)}
-              </TableCell>
-              <TableCell align="center">
-                <Tooltip title="Download Aadhar">
-                  <Button
-                    onClick={() => {
-                      var a = document.createElement("a"); // Create <a>
-                      a.href = row.baseString; // Image Base64 Goes here
-                      console.log(row);
-                      a.download = `${row.Name}Aadhar.png`; // File name Here
-                      a.click(); // Downloaded file
-                    }}
-                  >
-                    <DownloadIcon />
-                  </Button>
-                </Tooltip>
-              </TableCell>
-              <TableCell align="center">
-                <Tooltip title="Edit" arrow>
-                  <Button onClick={() => handleupdate(row)}>
-                    <EditIcon />
-                  </Button>
-                </Tooltip>  
-              </TableCell>
-            
-          
-            </TableRow>
-          ))
-        ) : (
+)
+},[open,data,id])
+const table=React.useMemo(()=>{
+  console.log('table callwd')
+  return(
+    <Box sx={{ mx: 2, my: 2 }}>
+    <TableContainer>
+      <Table sx={{ minWidth: 650, mx: 3 }} aria-label="simple table">
+        <TableHead>
           <TableRow>
-            <TableCell colSpan={14} align="center">
-              No data available
+            <TableCell
+              align="center"
+              sx={{
+                position: "sticky",
+                left: 0,
+                backgroundColor: "white",
+                zIndex: 1,
+              }}
+            >
+              Student Name
+            </TableCell>
+            <TableCell align="center">Contact</TableCell>
+            <TableCell align="center">Parent Contact</TableCell>
+            <TableCell align="center">Email</TableCell>
+            <TableCell align="center">College Name</TableCell>
+            <TableCell align="center">Academic Course</TableCell>
+            <TableCell align="center">Course</TableCell>
+            <TableCell align="center">Total Fees</TableCell>
+            <TableCell align="center">Paid Fees</TableCell>
+            <TableCell align="center">Remaining Fees</TableCell>
+            <TableCell align="center">Date</TableCell>
+            <TableCell align="center">Batch Days</TableCell>
+            <TableCell align="center">Batch Timing</TableCell>
+            <TableCell align="center" colSpan={2}>
+              Actions
             </TableCell>
           </TableRow>
-        )}
-      </TableBody>
-    </Table>
-  </TableContainer>
-</Box>;
+        </TableHead>
+        <TableBody sx={{ height: arr && arr.length < 1 ? 300 : 0 }}>
+          {arr && arr.length > 0 ? (
+            arr.map((row) => (
+              <TableRow
+                key={row.name}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell
+                  align="center"
+                  sx={{
+                    position: "sticky",
+                    left: 0,
+                    backgroundColor: "white",
+                    zIndex: 1,
+                  }}
+                >
+                  {row.Name}
+                </TableCell>
+                <TableCell align="center">{row.Contact}</TableCell>
+                <TableCell align="center">{row.Parentcontact}</TableCell>
+                <TableCell align="center">{row.Email}</TableCell>
+                <TableCell align="center">{row.CollegeName}</TableCell>
+                <TableCell align="center">{row.AcademicCourse}</TableCell>
+                <TableCell align="center">
+                  {row && row.CourseId && row.CourseId.Course}
+                </TableCell>
+                <TableCell align="center">{row.Tfees}</TableCell>
+                <TableCell align="center">{row.Pfees}</TableCell>
+                <TableCell align="center">{row.Rfees}</TableCell>
+                <TableCell align="center">
+                  {row.Date && row.Date.split("T")[0]}
+                </TableCell>
+                <TableCell align="center">
+                  {row &&
+                    row.CourseId &&
+                    row.CourseId.Days.map((val) => (
+                      <Box key={val}>{val}</Box>
+                    ))}
+                </TableCell>
+                <TableCell align="center">
+                  {row && row.CourseId && convertToIST(row.CourseId.BatchTime)}
+                </TableCell>
+                <TableCell align="center">
+                  <Tooltip title="Download Aadhar">
+                    <Button
+                      onClick={() => {
+                        var a = document.createElement("a"); // Create <a>
+                        a.href = row.baseString; // Image Base64 Goes here
+                        console.log(row);
+                        a.download = `${row.Name}Aadhar.png`; // File name Here
+                        a.click(); // Downloaded file
+                      }}
+                    >
+                      <DownloadIcon />
+                    </Button>
+                  </Tooltip>
+                </TableCell>
+                <TableCell align="center">
+                  <Tooltip title="Edit" arrow>
+                    <Button onClick={() => handleupdate(row)}>
+                      <EditIcon />
+                    </Button>
+                  </Tooltip>  
+                </TableCell>
+              
+            
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={14} align="center">
+                No data available
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  </Box>
+  )
+},[arr])
+  return (
+    <React.Fragment>
+     {snack}
+   
+   {ingredients}
+{dialogdata}
+      {table}
+
 
       
     
@@ -1005,10 +1027,4 @@ const[student,setstudent]=React.useState([])
 }
 
 export default SD;
-{
-  /* {alertSuccess.open  ? (
-        <Alert>{alertSuccess.message}</Alert>
-      ) : (
-        <div></div>
-      )} */
-}
+
