@@ -50,13 +50,23 @@ import Pagination from "@mui/material/Pagination";
 function Addcourse() {
   const CustomPagination = styled(Pagination)(({ theme }) => ({
     "& .MuiPaginationItem-root": {
+      width: "50px",  // Default width
+      height: "50px", // Default height
+      "&:hover": {
+        width: "30px",  // Adjust width on hover
+        height: "30px", // Keep height consistent on hover
+      },
       "&.Mui-selected": {
-        width: "80px", // Adjust width as needed
-        height: "80px", // Adjust height as needed
+        width: "30px", // Width for selected item
+        height: "30px", // Height for selected item
+        "&:hover": {
+          width: "30px", // Adjust width on hover when selected
+          height: "30px", // Keep height consistent on hover when selected
+        },
       },
     },
   }));
-
+  
   const [data, setdata] = React.useState({
     StartDate: dayjs(""),
     BatchTime: dayjs(""),
@@ -65,15 +75,15 @@ function Addcourse() {
 
   const [open, setopen] = React.useState(false);
   const [update, doUpdate] = React.useState(false);
-const[page,setpage]=React.useState(1)
-console.log(page)
+  const [page, setpage] = React.useState(1);
+  console.log(page);
 
   const [arr, setarr] = React.useState([]);
-const[totalpages,settotalpages]=React.useState('')
+  const [totalpages, settotalpages] = React.useState("");
   const [open2, setOpen2] = React.useState(false);
 
-  const [id, setid] = React.useState('');
-console.log(id)
+  const [id, setid] = React.useState("");
+  console.log(id);
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   const [alertbatchMsg, setalertbatchMsg] = React.useState({
     open: false,
@@ -105,7 +115,7 @@ console.log(id)
     "Saturday",
     "Sunday",
   ];
-         
+
   const handleChange1 = (event) => {
     const {
       target: { value },
@@ -125,22 +135,25 @@ console.log(id)
   };
 
   React.useEffect(() => {
-    console.log('pag called api')
+    console.log("pag called api");
     axios
-      .get(`http://localhost:5000/batchEvent/DisplayBevent?page=${page}&limit=${10}`, jwttoken())
+      .get(
+        `http://localhost:5000/batchEvent/DisplayBevent?page=${page}&limit=${10}`,
+        jwttoken()
+      )
       .then((data) => {
-        console.log(data)
+        console.log(data);
         setarr(data.data.data);
-        settotalpages(data.data.totalPages)
+        settotalpages(data.data.totalPages);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [update,page]);
+  }, [update, page]);
   const handleChange = (e, type) => {
     setdata({ ...data, [type]: e.target.value });
   };
-console.log(totalpages)
+  console.log(totalpages);
   const handleClose = () => {
     setopen(false);
     setid("");
@@ -160,7 +173,7 @@ console.log(totalpages)
 
     return new Intl.DateTimeFormat("en-US", options).format(date);
   }
-console.log(alertSuccess)
+  console.log(alertSuccess);
   const handlesubmit = () => {
     const url = id
       ? `http://localhost:5000/batchEvent/UpdateBevent?id=${id}`
@@ -175,7 +188,9 @@ console.log(alertSuccess)
         setAlertSuccess({
           open: true,
 
-          message:!id? "Batch Added Successfully": "Batch Updated Successfully",
+          message: !id
+            ? "Batch Added Successfully"
+            : "Batch Updated Successfully",
         });
 
         setopen(false);
@@ -227,28 +242,43 @@ console.log(alertSuccess)
     setAlertMsg({ ...alertMsg, open: false });
     setalertbatchMsg({ ...alertbatchMsg, open: false });
   };
-const grid=React.useMemo(()=>{
-  console.log('main grid called')
-return(
-  <Grid container spacing={2} justifyContent="left">
-  <Grid item xs={1} sx={{ mb: 3, mr: 3 }}>
-    <Tooltip title="Add Batch" arrow>
-      <Button
-        onClick={() => {
-          setopen(true);
-        }}
-      >
-        <AddIcon />
-      </Button>
-    </Tooltip>
-  </Grid>
-</Grid>
-)
-},[open])
-const dialog1=React.useMemo(()=>{
-  console.log('dialog rendered')
-return(
-  <Dialog open={open}>
+  const grid = React.useMemo(() => {
+    console.log("main grid called");
+    return (
+      <Grid container spacing={2} sx={{mb:2}}>
+ <Grid  xs={3}>
+ <Tooltip title="Add Batch" arrow>
+            <Button
+            sx={{ml:1,mt:2}}
+              onClick={() => {
+                setopen(true);
+              }}
+            >
+              <AddIcon />
+            </Button>
+          </Tooltip>
+          </Grid>
+          <Grid xs={9} sx={{display:'flex',justifyContent:'center'}}>
+            <Box sx={{ mt: 2 }}>
+              <CustomPagination
+                count={totalpages}
+                size="large"
+                onChange={(e, p) => {
+                  setpage(p);
+                  doUpdate(!update);
+                }}
+              />
+            </Box>
+            </Grid>
+
+         
+      </Grid>
+    );
+  }, [open,totalpages]);
+  const dialog1 = React.useMemo(() => {
+    console.log("dialog rendered");
+    return (
+      <Dialog open={open}>
         <DialogContent>
           <Box sx={{ minWidth: 120, mb: 1 }}>
             <FormControl variant="filled" fullWidth>
@@ -362,239 +392,209 @@ return(
           </DialogActions>
         </DialogContent>
       </Dialog>
-)
-},[open,data,id])
-const Snack=React.useMemo(()=>{
-  console.log('snack bar called')
-return (
-  <Snackbar
-  open={open1}
-  autoHideDuration={3000}
-  onClose={handleClose1}
-  anchorOrigin={{ vertical, horizontal }}
->
-  {(alertSuccess.open || alertMsg.open || alertbatchMsg.open) && (
-    <Alert
-      onClose={handleClose1}
-      severity={
-        alertSuccess.open
-          ? "success"
-          : alertMsg.open
-          ? "error"
-          : alertbatchMsg.open
-          ? "error"
-          : null
-      }
-      // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
-
-      variant="filled"
-      sx={{ width: "100%" }}
-    >
-      {alertSuccess.open
-        ? alertSuccess.message
-        : alertMsg.open
-        ? alertMsg.message
-        : alertbatchMsg.open
-        ? alertbatchMsg.message
-        : null}
-    </Alert>
-  )}
-</Snackbar>
-)
-},[open1,alertSuccess,alertMsg,alertbatchMsg])
-const table=React.useMemo(()=>{
-  console.log('table called')
-return(
-
-  <Box sx={{ mx: 2 }}>
-  <TableContainer component={Paper}>
-    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-      <TableHead>
-        <TableRow>
-          <TableCell
-            align="center"
-            sx={{ position: "sticky", left: 0, backgroundColor: "white" }}
-          >
-            Course
-          </TableCell>
-
-          <TableCell align="center">Start Date</TableCell>
-
-          <TableCell align="center">Days</TableCell>
-          <TableCell align="center">Batch Time</TableCell>
-          <TableCell align="center">Batch Name</TableCell>
-
-          <TableCell align="center" colSpan={2}>
-            Actions
-          </TableCell>
-        </TableRow>
-      </TableHead>
-
-      {arr &&
-        arr.map((row) => (
-          <TableBody sx={{ height: arr && arr.length < 1 ? 200 : 0 }}>
-            <TableRow
-              key={row.name}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell
-                align="center"
-                sx={{
-                  position: "sticky",
-                  left: 0,
-                  backgroundColor: "white",
-                  zIndex: 1,
-                }}
-              >
-                {row.Course}
-              </TableCell>
-
-              <TableCell align="center">
-                {row.StartDate && row.StartDate.split("T")[0]}
-              </TableCell>
-
-              <TableCell align="center">
-                {row.Days.map((val, index) => (
-                  <div key={index}>{val}</div>
-                ))}
-              </TableCell>
-              <TableCell align="center">
-                {row.BatchTime && convertToIST(row.BatchTime)}
-              </TableCell>
-              <TableCell align="center">{row.batchName}</TableCell>
-
-              <TableCell align="center">
-                <Tooltip title="Edit" arrow>
-                  <Button
-                    onClick={() => {
-                      setopen(true);
-                      setdata(row);
-                      setid(row._id);
-                    }}
-                  >
-                    <EditIcon />
-                  </Button>
-                </Tooltip>
-              </TableCell>
-
-              <TableCell align="center">
-                <Tooltip title="Complete" arrow>
-                  <Button
-                    color="success"
-                    onClick={() => {
-                      setid(row._id);
-                      handleClickOpen2();
-                    }}
-                  >
-                    <DoneAllIcon />
-                  </Button>
-                </Tooltip>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        ))}
-    </Table>
-  </TableContainer>
-</Box>
-)
-},[arr,page])
-const gination=React.useMemo(()=>{
-  console.log('pagination caled')
-return(
-  <Grid
-  container
-  direction="row"
-  justifyContent="center"
-  alignItems="center"
->
-  <Grid
-    
-  >
-    <Box sx={{  mt: 2 }}>
-      <CustomPagination
-        count={totalpages}
-        size="large"
-        onChange={(e,p)=>{
-
-          setpage(p);
-          
-          doUpdate(!update)         
-
-        }}
-      />
-    </Box>
-  </Grid>
-</Grid>
-)
-},[totalpages])
-const completed=React.useMemo(()=>{
-  console.log('completed dialog called')
-return(
-  <Dialog
-  open={open2}
-  onClose={handleClose2}
-  aria-labelledby="alert-dialog-title"
-  aria-describedby="alert-dialog-description"
->
-  <DialogTitle id="alert-dialog-title">{"Complete Batch"}</DialogTitle>
-  <DialogContent>
-    <DialogContentText id="alert-dialog-description">
-      Do You Want To to complete?
-    </DialogContentText>
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={handleClose2}>Cancel</Button>
-    <Button
-      onClick={() => {
-        axios
-          .post(
-            `http://localhost:5000/batchEvent/completedBevent?id=${id}`,
-            {},
-            jwttoken()
-          )
-          .then((data) => {
-            doUpdate(!update);
-            handleClick1({ vertical: "top", horizontal: "center" });
-
-            setAlertSuccess({
-              open: true,
-              message: "Completed Successfully",
-              severity: "success",
-            });
-            handleClose2();
-
-            console.log("data completed", data);
-          })
-          .catch((err) => {
-            console.log("error", err);
-            if (err.response.data) {
-              handleClick1({ vertical: "top", horizontal: "center" });
-
-              setalertbatchMsg({
-                open: true,
-                message: err.response.data.error.details[0],
-              });
+    );
+  }, [open, data, id]);
+  const Snack = React.useMemo(() => {
+    console.log("snack bar called");
+    return (
+      <Snackbar
+        open={open1}
+        autoHideDuration={3000}
+        onClose={handleClose1}
+        anchorOrigin={{ vertical, horizontal }}
+      >
+        {(alertSuccess.open || alertMsg.open || alertbatchMsg.open) && (
+          <Alert
+            onClose={handleClose1}
+            severity={
+              alertSuccess.open
+                ? "success"
+                : alertMsg.open
+                ? "error"
+                : alertbatchMsg.open
+                ? "error"
+                : null
             }
-          });
-      }}
-    >
-      Confirm
-    </Button>
-  </DialogActions>
-</Dialog>
-)
-},[open2])
+            // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
+
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {alertSuccess.open
+              ? alertSuccess.message
+              : alertMsg.open
+              ? alertMsg.message
+              : alertbatchMsg.open
+              ? alertbatchMsg.message
+              : null}
+          </Alert>
+        )}
+      </Snackbar>
+    );
+  }, [open1, alertSuccess, alertMsg, alertbatchMsg]);
+  const table = React.useMemo(() => {
+    console.log("table called");
+    return (
+      <Box sx={{ mx: 2 }}>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  align="center"
+                  sx={{ position: "sticky", left: 0, backgroundColor: "white" }}
+                >
+                  Course
+                </TableCell>
+
+                <TableCell align="center">Start Date</TableCell>
+
+                <TableCell align="center">Days</TableCell>
+                <TableCell align="center">Batch Time</TableCell>
+                <TableCell align="center">Batch Name</TableCell>
+
+                <TableCell align="center" colSpan={2}>
+                  Actions
+                </TableCell>
+              </TableRow>
+            </TableHead>
+
+            {arr &&
+              arr.map((row) => (
+                <TableBody sx={{ height: arr && arr.length < 1 ? 200 : 0 }}>
+                  <TableRow
+                    key={row.name}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell
+                      align="center"
+                      sx={{
+                        position: "sticky",
+                        left: 0,
+                        backgroundColor: "white",
+                        zIndex: 1,
+                      }}
+                    >
+                      {row.Course}
+                    </TableCell>
+
+                    <TableCell align="center">
+                      {row.StartDate && row.StartDate.split("T")[0]}
+                    </TableCell>
+
+                    <TableCell align="center">
+                      {row.Days.map((val, index) => (
+                        <div key={index}>{val}</div>
+                      ))}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.BatchTime && convertToIST(row.BatchTime)}
+                    </TableCell>
+                    <TableCell align="center">{row.batchName}</TableCell>
+
+                    <TableCell align="center">
+                      <Tooltip title="Edit" arrow>
+                        <Button
+                          onClick={() => {
+                            setopen(true);
+                            setdata(row);
+                            setid(row._id);
+                          }}
+                        >
+                          <EditIcon />
+                        </Button>
+                      </Tooltip>
+                    </TableCell>
+
+                    <TableCell align="center">
+                      <Tooltip title="Complete" arrow>
+                        <Button
+                          color="success"
+                          onClick={() => {
+                            setid(row._id);
+                            handleClickOpen2();
+                          }}
+                        >
+                          <DoneAllIcon />
+                        </Button>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              ))}
+          </Table>
+        </TableContainer>
+      </Box>
+    );
+  }, [arr, page]);
+  
+  const completed = React.useMemo(() => {
+    console.log("completed dialog called");
+    return (
+      <Dialog
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Complete Batch"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do You Want To to complete?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose2}>Cancel</Button>
+          <Button
+            onClick={() => {
+              axios
+                .post(
+                  `http://localhost:5000/batchEvent/completedBevent?id=${id}`,
+                  {},
+                  jwttoken()
+                )
+                .then((data) => {
+                  doUpdate(!update);
+                  handleClick1({ vertical: "top", horizontal: "center" });
+
+                  setAlertSuccess({
+                    open: true,
+                    message: "Completed Successfully",
+                    severity: "success",
+                  });
+                  handleClose2();
+
+                  console.log("data completed", data);
+                })
+                .catch((err) => {
+                  console.log("error", err);
+                  if (err.response.data) {
+                    handleClick1({ vertical: "top", horizontal: "center" });
+
+                    setalertbatchMsg({
+                      open: true,
+                      message: err.response.data.error.details[0],
+                    });
+                  }
+                });
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }, [open2]);
   return (
     <>
-     {Snack}
-{grid}
+      {Snack}
+      {grid}
 
       {dialog1}
 
-     {table}
-     {gination}
-     {completed}
-     
+      {table}
+      
+      {completed}
     </>
   );
 }

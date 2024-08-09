@@ -5,7 +5,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "axios";
 import Button from "@mui/material/Button";
 import { Box, styled, Paper } from "@mui/material";
-
+import DialogTitle from "@mui/material/DialogTitle";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
@@ -39,7 +39,7 @@ const MyCalendar = () => {
   const [date, setDate] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
-const[getstudent,setgetstudent]=React.useState([])
+  const [eventdata, seteventdata] = React.useState([]);
   const [day, setDay] = React.useState("");
   const [arr, setArr] = React.useState([]);
   const [loading, setLoading] = useState(false);
@@ -52,7 +52,7 @@ const[getstudent,setgetstudent]=React.useState([])
       padding: theme.spacing(1),
     },
   }));
-console.log(stu)
+  console.log(stu);
   const handleClose = () => {
     setOpen(() => false);
     setDate(() => "");
@@ -73,7 +73,8 @@ console.log(stu)
 
     return date.toLocaleDateString("en-US", { weekday: "long" });
   }
-console.log(getstudent)
+  console.log(eventdata);
+
   useEffect(() => {
     if (open) {
       setLoading(() => true);
@@ -88,6 +89,7 @@ console.log(getstudent)
           .then((data) => {
             setLoading(() => false);
             setArr(() => data.data.data);
+            seteventdata(data.data.eventdata);
             console.log(data);
           })
           .catch((err) => {
@@ -112,7 +114,9 @@ console.log(getstudent)
     setDate(() => formattedDate);
     setDay(() => dayName);
   }, []);
+
   
+
   const cal = React.useMemo(
     () => (
       <Calendar
@@ -140,18 +144,22 @@ console.log(getstudent)
         }}
       >
         <Box>
-          <Grid container>
-            <Grid item xs={11}></Grid>
-            <IconButton
-              aria-label="close"
-              onClick={handleClose}
-              sx={{
-                color: (theme) => theme.palette.grey[500],
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
+        <Grid container>
+  <Grid item xs={9}>
+    <DialogTitle>Courses</DialogTitle>
+  </Grid>
+  <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+    <IconButton
+      aria-label="close"
+      onClick={handleClose}
+      sx={{
+        color: (theme) => theme.palette.grey[500],
+      }}
+    >
+      <CloseIcon />
+    </IconButton>
+  </Grid>
+</Grid>
 
           <Box>
             <DialogContent
@@ -160,6 +168,7 @@ console.log(getstudent)
                 padding: 0,
               }}
             >
+
               <Box>
                 <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -234,31 +243,149 @@ console.log(getstudent)
                                 sx={{ color: "black" }}
                                 onClick={() => {
                                   axios
+                                  .get(
+                                    `http://localhost:5000/Dashboard/StudentDetails?courseId=${row._id}`,
+                                    jwttoken()
+                                  )
+
+                                  .then((data) => {
+                                    console.log(data);
+                                    if (data.data.data.length > 0) {
+                                      console.log(data.data.data);
+
+                                      data.data.data.map((val) => {
+                                        setstu(val.StuName);
+                                        
+                                      });
+                                      setOpen1(() => true);
+                                      
+                                    } else {
+                                      console.log("no students");
+                                    }
+                                  })
+                                  .catch((err) => {
+                                    console.log(err);
+                                  });
+                                }}
+                              >
+                                <RemoveRedEyeIcon />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
+            </DialogContent>
+          </Box>
+          <DialogTitle>Events</DialogTitle>
+
+          <Box>
+            <DialogContent
+              sx={{
+                width: "100%", // Ensure the content takes up full width
+                padding: 0,
+              }}
+            >
+              <Box>
+                <TableContainer component={Paper}>
+                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell
+                          align="center"
+                          sx={{
+                            position: "sticky",
+                            left: 0,
+                            backgroundColor: "white",
+                          }}
+                        >
+                          Event
+                        </TableCell>
+                        <TableCell align="center">Course</TableCell>
+
+                        <TableCell align="center">Start Date</TableCell>
+                        <TableCell align="center">Days</TableCell>
+                        <TableCell align="center">Batch Time</TableCell>
+
+                        <TableCell align="center">Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+
+                    <TableBody>
+                      {loading ? (
+                        <TableRow>
+                          <TableCell colSpan={6} align="center">
+                            Loading batches...
+                          </TableCell>
+                        </TableRow>
+                      ) : eventdata.length < 1 ? (
+                        <TableRow>
+                          <TableCell colSpan={6} align="center">
+                            No Batches For Today!
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        eventdata.map((row, index) => (
+                          <TableRow
+                            key={index}
+                            sx={{
+                              "&:last-child td, &:last-child th": { border: 0 },
+                            }}
+                          >
+                            <TableCell
+                              align="center"
+                              sx={{
+                                position: "sticky",
+                                left: 0,
+                                backgroundColor: "white",
+                                zIndex: 1,
+                              }}
+                            >
+                              {row.TypeOfEvent}
+                            </TableCell>
+                            <TableCell align="center">{row.Course}</TableCell>
+
+                            <TableCell align="center">
+                              {row.StartDate && row.StartDate.split("T")[0]}
+                            </TableCell>
+
+                            <TableCell align="center">
+                              {row.Days.map((val, index) => (
+                                <div key={index}>{val}</div>
+                              ))}
+                            </TableCell>
+                            <TableCell align="center">
+                              {row.BatchTime && convertToIST(row.BatchTime)}
+                            </TableCell>
+
+                            <TableCell align="center">
+                              <Button
+                                sx={{ color: "black" }}
+                                onClick={() => {
+                                  console.log("second api");
+                                  axios
                                     .get(
-                                      `http://localhost:5000/Dashboard/StudentDetails?courseId=${row._id}`,
+                                      `http://localhost:5000/Dashboard/EventStudentDetails?courseId=${row._id}`,
                                       jwttoken()
                                     )
                                     .then((data) => {
                                       console.log(data);
-                                          if(!data.data.data==[])
-                                          {
-                                            console.log(data.data.data)
-                                            
-                                          data.data.data.map((val) => {
-                                          setstu(val.StuName);
-                                          setOpen1(() => true);
-                                          
-
-                                        })
-                                      }
-                                      else
+                                      if(data.data.data.length>0)
                                       {
-                                      
-                                        console.log('no students')
-                                      }
-
-                                              
+                                      data.data.data.map((val)=>(
+                                        setstu(val.StuName)
+                                      ))
+                                      setOpen1(true)
+                                    }
+                                    else
+                                    {
+                                      console.log('no students')
+                                    }
                                     })
+                                  
                                     .catch((err) => {
                                       console.log(err);
                                     });
@@ -279,7 +406,7 @@ console.log(getstudent)
         </Box>
       </BootstrapDialog>
     ),
-    [arr,open]
+    [arr, open,eventdata]
   );
   const dialog2 = React.useMemo(
     () => (
@@ -337,7 +464,7 @@ console.log(getstudent)
       </BootstrapDialog>
     ),
 
-    [open1,stu]
+    [open1, stu]
   );
   return (
     <div>
