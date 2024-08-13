@@ -42,6 +42,7 @@ import jwttoken from "../Token";
 import { Snackbar, Alert } from "@mui/material";
 import { styled } from "@mui/system";
 
+
 import Paper from "@mui/material/Paper";
 import { Grid } from "@mui/material";
 import axios from "axios";
@@ -80,6 +81,8 @@ function Addcourse() {
 
   const [arr, setarr] = React.useState([]);
   const [totalpages, settotalpages] = React.useState("");
+
+  
   const [open2, setOpen2] = React.useState(false);
 
   const [id, setid] = React.useState("");
@@ -173,7 +176,7 @@ function Addcourse() {
 
     return new Intl.DateTimeFormat("en-US", options).format(date);
   }
-  console.log(alertSuccess);
+  
   const handlesubmit = () => {
     const url = id
       ? `http://localhost:5000/batchEvent/UpdateBevent?id=${id}`
@@ -246,7 +249,7 @@ function Addcourse() {
     console.log("main grid called");
     return (
       <Grid container spacing={2} sx={{mb:2}}>
- <Grid  xs={3}>
+ <Grid  xs={5}>
  <Tooltip title="Add Batch" arrow>
             <Button
             sx={{ml:1,mt:2}}
@@ -258,23 +261,25 @@ function Addcourse() {
             </Button>
           </Tooltip>
           </Grid>
-          <Grid xs={9} sx={{display:'flex',justifyContent:'center'}}>
+          <Grid xs={7} sx={{display:'flex',justifyContent:'flex-start'}}>
             <Box sx={{ mt: 2 }}>
               <CustomPagination
                 count={totalpages}
+                page={page}
                 size="large"
                 onChange={(e, p) => {
                   setpage(p);
-                  doUpdate(!update);
+                  
                 }}
               />
             </Box>
+            
             </Grid>
 
          
       </Grid>
     );
-  }, [open,totalpages]);
+  }, [open,totalpages,page]);
   const dialog1 = React.useMemo(() => {
     console.log("dialog rendered");
     return (
@@ -431,7 +436,7 @@ function Addcourse() {
         )}
       </Snackbar>
     );
-  }, [open1, alertSuccess, alertMsg, alertbatchMsg]);
+  }, [open1]);
   const table = React.useMemo(() => {
     console.log("table called");
     return (

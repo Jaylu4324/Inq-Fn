@@ -126,6 +126,7 @@ export default function Old() {
     axios
       .get("http://localhost:5000/EventComleted/getAllData",jwttoken())
       .then((data) => {
+        console.log(data)
         setarr(data.data.data);
         console.log("arr is set");
       })

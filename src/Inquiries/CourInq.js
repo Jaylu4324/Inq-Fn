@@ -128,7 +128,7 @@ function Form1() {
   const [update, doUpdate] = React.useState(false);
   const [id, setId] = React.useState();
   const [page, setpage] = React.useState(1);
-  
+
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
@@ -196,11 +196,12 @@ function Form1() {
   const handleClose = () => {
     setOpen(false);
   };
+
   const handlechange1 = (event, newValue) => {
     setValue(newValue);
   };
 
-const[totalPages,settotalpages]=React.useState()
+  const [totalPages, settotalpages] = React.useState();
   React.useEffect(() => {
     if (value == 0) {
       settype("onGoing");
@@ -216,51 +217,58 @@ const[totalPages,settotalpages]=React.useState()
     let value = e.target.value;
     setData({ ...data, Course: value });
   };
-console.log('page:',page)
-console.log('value:',value)
+  console.log("page:", page);
+  console.log("value:", value);
   React.useEffect(() => {
-    if(value==0)
-    {
-    axios
-      .get(`http://localhost:5000/inquiry/OnGoing?page=${page}&limit=${10}`, jwttoken())
-      .then((data) => {
-        console.log(data)
-        setArr(data.data.data);
-        settotalpages(data.data.totalPages)
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
-    else if(value==1){
-    axios
-      .get(`http://localhost:5000/inquiry/Reject?page=${page}&limit=${10}`, jwttoken())
-      .then((data) => {
-        console.log(data)
-        setReject(data.data.data);
-        settotalpages(data.data.totalPages)
+    if (value == 0) {
+      
+      axios
+        .get(
+          `http://localhost:5000/inquiry/OnGoing?page=${page}&limit=${10}`,
+          jwttoken()
+        )
+        .then((data) => {
+          console.log(data);
+          setArr(data.data.data);
+          settotalpages(data.data.totalPages);
 
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else if (value == 1) {
+      
+      axios
+        .get(
+          `http://localhost:5000/inquiry/Reject?page=${page}&limit=${10}`,
+          jwttoken()
+        )
+        .then((data) => {
+          console.log(data);
+          setReject(data.data.data);
+          settotalpages(data.data.totalPages);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      
+      axios
+        .get(
+          `http://localhost:5000/inquiry/Confirm?page=${page}&limit=${10}`,
+          jwttoken()
+        )
+        .then((data) => {
+          console.log(data);
+          setconfirm(data.data.data);
+          settotalpages(data.data.totalPages);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-    else{
-    axios
-      .get(`http://localhost:5000/inquiry/Confirm?page=${page}&limit=${10}`, jwttoken())
-      .then((data) => {
-        console.log(data)
-        setconfirm(data.data.data);
-        settotalpages(data.data.totalPages)
-        
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
+  }, [update, value,page]);
 
-  }, [update,value,page]);
-  
   const handlesubmit = () => {
     if (id) {
       axios
@@ -289,8 +297,6 @@ console.log('value:',value)
             });
           }
         });
-      
-
     } else {
       axios
         .post("http://localhost:5000/inquiry/addInquiry", data, jwttoken())
@@ -319,7 +325,6 @@ console.log('value:',value)
             });
           }
         });
-      
     }
   };
   const ITEM_HEIGHT = 48;
@@ -332,7 +337,7 @@ console.log('value:',value)
   };
 
   dayjs.extend(utc);
-  
+
   const handleDateChange = (val) => {
     const selectedDate = new Date(val);
     selectedDate.setHours(12, 0, 0, 0);
@@ -378,7 +383,9 @@ console.log('value:',value)
     "November",
     "December",
   ];
+  
   const snack = React.useMemo(() => {
+    console.log("snaclbar");
     return (
       <Snackbar
         open={op}
@@ -401,16 +408,43 @@ console.log('value:',value)
       </Snackbar>
     );
   }, [op]);
-
+const pagination=React.useMemo(()=>{
+return(
+<Grid
+          xs={5}
+          sm={5}
+          sx={{
+            
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Box>
+            <CustomPagination
+              count={totalPages?totalPages:1}
+              size="large"
+              page={page}
+              onChange={(e,p)=>{
+                    setpage(p);
+                    
+              }}
+            />
+          </Box>
+        </Grid>
+)
+},[totalPages,page])
   const ingredients = React.useMemo(() => {
+    console.log("ingredients");
     return (
       <Grid container spacing={2}>
         <Grid
-          xs={3}
+          xs={2}
+          sm={2}
           sx={{
             display: "flex",
             justifyContent: "flex-start", // Adjusted to 'flex-end' for right alignment
             alignItems: "flex-start",
+            
           }}
         >
           <Box
@@ -585,12 +619,17 @@ console.log('value:',value)
             </div>
           </Box>
         </Grid>
+{pagination}
+        
+
         <Grid
-          xs={9}
+          xs={5}
+          sm={5}
           sx={{
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
+            
           }}
         >
           <Box sx={{ width: 400, ml: 2 }}>
@@ -640,16 +679,23 @@ console.log('value:',value)
                     if (searchname.length > 0) {
                       axios
                         .get(
-                          `http://localhost:5000/inquiry/commansearchstu?FullName=${searchname}&type=${type}`,
+                          `http://localhost:5000/inquiry/commansearchstu?FullName=${searchname}&type=${type}&page=${page}&limit=${10}`,
                           jwttoken()
                         )
                         .then((data) => {
+                          console.log(data)
                           if (type == "onGoing") {
                             setArr(data.data.filterdata);
+                            settotalpages(data.data.totalPages);
+          
                           } else if (type == "Reject") {
                             setReject(data.data.filterdata);
+                            settotalpages(data.data.totalPages);
+          
                           } else {
                             setconfirm(data.data.filterdata);
+                            settotalpages(data.data.totalPages);
+          
                           }
 
                           setseearchname("");
@@ -671,8 +717,12 @@ console.log('value:',value)
           </Box>
         </Grid>
       </Grid>
+
     );
   }, [
+    totalPages,
+    value,
+    
     open,
     arr,
     reject,
@@ -682,6 +732,7 @@ console.log('value:',value)
     anchorEl,
     anchorEl1,
     searchname,
+    
   ]);
   const table = React.useMemo(() => {
     return (
@@ -951,6 +1002,7 @@ console.log('value:',value)
     );
   }, [value, arr, reject, confirm,page]);
   const dialog = React.useMemo(() => {
+    console.log("datad ialog");
     return (
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
@@ -1117,6 +1169,7 @@ console.log('value:',value)
     );
   }, [open, data, id]);
   const dialogreject = React.useMemo(() => {
+    console.log("rejct");
     return (
       <Dialog
         open={open1}
@@ -1163,6 +1216,7 @@ console.log('value:',value)
     );
   }, [open1]);
   const dialogconfirm = React.useMemo(() => {
+    console.log("confirm");
     return (
       <Dialog
         open={open2}
@@ -1207,35 +1261,11 @@ console.log('value:',value)
       </Dialog>
     );
   }, [open2]);
-const pagination=React.useMemo(()=>{
-  return(
-    <Grid
-    container
-    direction="row"
-    justifyContent="center"
-    alignItems="center"
-  >
-    <Grid>
-      <Box sx={{ mt: 2 }}>
-        <CustomPagination
-          count={totalPages}
-          size="large"
-          onChange={(e, p) => {
-            setpage(p);
-            doUpdate(!update);
-          }}
-        />
-      </Box>
-    </Grid>
-  </Grid>
-  )
-},[totalPages,value])
+
   return (
     <>
       {snack}
       <React.Fragment>
-      {pagination}
-
         {ingredients}
         {table}
 

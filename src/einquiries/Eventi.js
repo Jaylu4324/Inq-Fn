@@ -154,6 +154,7 @@ function Eventi() {
     setOpen(false);
     setData({Date:newdate()})
 
+
     setId();
   };
   const handleChange = (e, type) => {
@@ -354,7 +355,8 @@ function Eventi() {
   };
 
   const handleClose2 = () => {
-    setData({})
+    setData({Date:newdate()})
+    
     setId()
     setOpen2(false);
   };
@@ -364,6 +366,8 @@ function Eventi() {
   };
 
   const handleClose3 = () => {
+    setData({Date:newdate()})
+    
     setId()
     setOpen3(false);
   };
@@ -1143,6 +1147,8 @@ return(
           .then((data) => {
             console.log(data);
             doUpdate(!update);
+            setData({Date:newdate()})
+    
             handleClick1({ vertical: "top", horizontal: "center" });
             setAlertSuccess({
               open: true,
@@ -1190,6 +1196,8 @@ console.log('cofnrim dialog')
             .then((data) => {
               console.log(data);
               doUpdate(!update);
+              setData({Date:newdate()})
+    
               handleClick1({ vertical: "top", horizontal: "center" });
               setAlertSuccess({
                 open: true,

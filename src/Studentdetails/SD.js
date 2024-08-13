@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import DownloadIcon from "@mui/icons-material/Download";
-
+import Pagination from "@mui/material/Pagination";
+import { styled } from "@mui/system";
 import jwttoken from '../Token'
 import Snackbar from '@mui/material/Snackbar';
 import Dialog from "@mui/material/Dialog";
@@ -46,7 +47,6 @@ import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { styled, alpha } from "@mui/material/styles";
 
 
 import SearchIcon from "@mui/icons-material/Search";
@@ -65,6 +65,25 @@ function convertToIST(utcDateStr) {
 }
 
 function SD() {
+  const CustomPagination = styled(Pagination)(({ theme }) => ({
+    "& .MuiPaginationItem-root": {
+      width: "50px",  // Default width
+      height: "50px", // Default height
+      "&:hover": {
+        width: "30px",  // Adjust width on hover
+        height: "30px", // Keep height consistent on hover
+      },
+      "&.Mui-selected": {
+        width: "30px", // Width for selected item
+        height: "30px", // Height for selected item
+        "&:hover": {
+          width: "30px", // Adjust width on hover when selected
+          height: "30px", // Keep height consistent on hover when selected
+        },
+      },
+    },
+  }));
+  
   const newdate = () => {
     const selectedDate = new Date();
 
@@ -74,7 +93,12 @@ function SD() {
 
     return formattedDate;
   };
+  const [page, setpage] = React.useState(1);
+  console.log(page);
 
+  
+  const [totalpages, settotalpages] = React.useState("");
+ 
   const [id, setId] = React.useState('');
   const[render,setrender]=React.useState('no')
   console.log(render)
@@ -156,12 +180,15 @@ console.log(data)
         console.log(err);
       });
 
-    console.log(coursearr);
+    
     if (!parent._id) {
       axios
-        .get("http://localhost:5000/student/Alldata",jwttoken())
+        .get(`http://localhost:5000/student/Alldata?page=${page}&limit=${5}`,jwttoken())
         .then((data) => {
+          console.log(data)
           setarr(data.data.data);
+          settotalpages(data.data.totalPages)
+
         })
         .catch((err) => {
           console.log(err);
@@ -170,9 +197,12 @@ console.log(data)
 
     if (parent._id) {
       axios
-        .get(`http://localhost:5000/student/allStuden?id=${parent._id}`,jwttoken())
+        .get(`http://localhost:5000/student/allStuden?id=${parent._id}&page=${page}&limit=${5}`,jwttoken())
         .then((data) => {
+          console.log(data)
           setarr(data.data.data);
+settotalpages(data.data.totalPages)
+          
         })
         .catch((err) => {
           console.log(err);
@@ -180,7 +210,7 @@ console.log(data)
 
     }
     
-  }, [parent, update,render]);
+  }, [parent, update,render,page]);
   React.useEffect(()=>{
     
     if(parent._id){
@@ -362,6 +392,21 @@ const maxsize=1000 * 130;
   ];
   
 const[student,setstudent]=React.useState([])
+const pagination=React.useMemo(()=>{
+  return(
+    <Box sx={{ mt: 2 }}>
+    <CustomPagination
+      count={totalpages}
+      size="large"
+      onChange={(e, p) => {
+        setpage(p);
+        doupdate(!update);
+      }}
+    />
+  </Box>
+  )
+
+},[totalpages])
 const snack=React.useMemo(()=>{
   console.log('snackbar called')
 return(
@@ -440,12 +485,12 @@ return(
                 .get(
                   `http://localhost:5000/student/filtermonth?perentId=${
                     parent._id ? parent._id : ""
-                  }&month=${montharr[index]}&sort=${order1}`,jwttoken()
+                  }&month=${montharr[index]}&sort=${order1}&page=${page}&limit=${5}`,jwttoken()
                 )
                 .then((data) => {
                   console.log(data);
-                  setarr(data.data);
-
+                  setarr(data.data.data);
+                  settotalpages(data.data.totalPages)
                   setorder1(order1 == 1 ? -1 : 1);
                 })
 
@@ -494,7 +539,7 @@ return(
           onClick={() => {
             axios
               .get(
-                `http://localhost:5000/student/fillter?key=Date&sortby=${order}&courseid=${
+                `http://localhost:5000/student/fillter?key=Date&page=${page}&limit=${5}&sortby=${order}&courseid=${
                   parent._id ? parent._id : ""
                 }`,jwttoken()
               )
@@ -502,6 +547,7 @@ return(
                 console.log(data);
                 setorder(order == 1 ? -1 : 1);
                 setarr(data.data.data);
+                settotalpages(data.data.totalPages)
               })
               .catch((err) => {
                 console.log(err);
@@ -515,13 +561,14 @@ return(
           onClick={() => {
             axios
               .get(
-                `http://localhost:5000/student/fillter?key=Name&sortby=${order}&courseid=${parent._id ? parent._id : ""}`,jwttoken()
+                `http://localhost:5000/student/fillter?key=Name&sortby=${order}&page=${page}&limit=${5}&courseid=${parent._id ? parent._id : ""}`,jwttoken()
 
               )
               .then((data) => {
                 console.log(data);
                 setorder(order == 1 ? -1 : 1);
                 setarr(data.data.data);
+                settotalpages(data.data.totalPages)
               })
               .catch((err) => {
                 console.log(err);
@@ -535,7 +582,7 @@ return(
           onClick={() => {
             axios
               .get(
-                `http://localhost:5000/student/fillter?key=Rfees&sortby=${order}&courseid=${
+                `http://localhost:5000/student/fillter?key=Rfees&sortby=${order}&page=${page}&limit=${5}&courseid=${
                   parent._id ? parent._id : ""
                 }`,jwttoken()
               )
@@ -543,6 +590,7 @@ return(
                 console.log(data);
                 setorder(order == 1 ? -1 : 1);
                 setarr(data.data.data);
+                settotalpages(data.data.totalPages)
               })
               .catch((err) => {
                 console.log(err);
@@ -562,7 +610,7 @@ return(
 
   >
      <Box sx={{ mx: 2 }}>
-        <FormControl fullWidth>
+        <FormControl sx={{width:140}}>
           <InputLabel id="demo-simple-select-label">
             {" "}
             Select Course
@@ -599,14 +647,7 @@ return(
                 <MenuItem key={row._id} value={row}>
                   <TableRow>
                     <TableCell align="center">{row.batchName}</TableCell>
-                    <TableCell align="center">{row.Amount}</TableCell>
-                    <TableCell align="center">{row.Days}</TableCell>
-                    <TableCell align="center">
-                      {row.StartDate && row.StartDate.split("T")[0]}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.BatchTime && convertToIST(row.BatchTime)}
-                    </TableCell>
+                    
                   </TableRow>
                 </MenuItem>
               ))}
@@ -668,10 +709,11 @@ return(
         <SearchIcon
           onClick={() => {
             if(searchname.length>0){
-            axios.get(`http://localhost:5000/student/stusearch?Name=${searchname}`,jwttoken())
+            axios.get(`http://localhost:5000/student/stusearch?Name=${searchname}&page=${page}&limit=${5}`,jwttoken())
             .then((data)=>{
         
               setarr(data.data.data)
+              settotalpages(data.data.totalPages)
               setseearchname("");
                 
             })
@@ -697,7 +739,7 @@ return(
 
 </Grid>
 )
-},[open,anchorEl1,anchorEl,searchname,order,order1,parent,coursearr])
+},[totalpages,open,anchorEl1,anchorEl,searchname,order,order1,parent,coursearr])
 const dialogdata=React.useMemo(()=>{
   console.log('dialog called')
 return(
@@ -1012,6 +1054,8 @@ const table=React.useMemo(()=>{
 },[arr])
   return (
     <React.Fragment>
+
+      {pagination}
      {snack}
    
    {ingredients}

@@ -24,8 +24,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import { styled } from "@mui/material/styles";
+
 import jwttoken from '../Token'
+import Pagination from "@mui/material/Pagination";
+import { styled } from "@mui/system";
+
 function convertToIST(utcDateStr) {
   const date = new Date(utcDateStr);
 
@@ -41,10 +44,34 @@ function convertToIST(utcDateStr) {
 }
 
 export default function Completedcourse() {
+  const CustomPagination = styled(Pagination)(({ theme }) => ({
+    "& .MuiPaginationItem-root": {
+      width: "50px",  // Default width
+      height: "50px", // Default height
+      "&:hover": {
+        width: "30px",  // Adjust width on hover
+        height: "30px", // Keep height consistent on hover
+      },
+      "&.Mui-selected": {
+        width: "30px", // Width for selected item
+        height: "30px", // Height for selected item
+        "&:hover": {
+          width: "30px", // Adjust width on hover when selected
+          height: "30px", // Keep height consistent on hover when selected
+        },
+      },
+    },
+  }));
+  
   const [open, setOpen] = React.useState(false);
   
   const [count, setcount] = React.useState(0);
   const [count1, setcount1] = React.useState(0);
+  const [page, setpage] = React.useState(1);
+  console.log(page);
+
+  
+  const [totalpages, settotalpages] = React.useState("");
 
   const [alertMsg, setAlertMsg] = React.useState({open: false, message: "" });
   const [alertSuccess, setAlertSuccess] = React.useState({
@@ -87,21 +114,19 @@ export default function Completedcourse() {
   const [data, setData] = React.useState({ Date: dayjs("") });
   const [student, setstudent] = React.useState([]);
   
-console.log(alertMsg)
-console.log(alertSuccess)
-  React.useEffect(() => {
+React.useEffect(() => {
     axios
-      .get("http://localhost:5000/ISC/getAllData",jwttoken())
+      .get(`http://localhost:5000/ISC/getAllData?page=${page}&limit=${10}`,jwttoken())
       .then((data) => {
-        console.log("data", data.data.data);
+        console.log(data)
         setarr(data.data.data);
-
+        settotalpages(data.data.totalPages)
         console.log("arr is set");
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [update]);
+  }, [update,page]);
   const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
       padding: theme.spacing(2),
@@ -124,6 +149,22 @@ console.log(alertSuccess)
   const handlechange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
   };
+  const pagination=React.useMemo(()=>{
+return(
+  <Box sx={{ mt: 2 }}>
+              <CustomPagination
+                count={totalpages}
+                size="large"
+                onChange={(e, p) => {
+                  setpage(p);
+                  doupdate(!update);
+
+                }}
+              />
+            </Box>
+            
+)
+  },[totalpages])
   const snack=React.useMemo(()=>{
     console.log('snack bar called')
     return(
@@ -461,6 +502,7 @@ const dialog=React.useMemo(()=>{
 },[open,data,student])
   return (
     <>
+    {pagination}
 {snack}
 {table}
     {boot}

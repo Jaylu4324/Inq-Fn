@@ -47,6 +47,9 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
 import FormLabel from "@mui/material/FormLabel";
+import { styled } from "@mui/system";
+
+import Pagination from "@mui/material/Pagination";
 
 function convertToIST(utcDateStr) {
   const date = new Date(utcDateStr);
@@ -136,6 +139,25 @@ function Interform() {
     setAlertMsg({ ...alertMsg, open: false });
     setalertbatchMsg({...alertbatchMsg,open:false})
   };
+  const CustomPagination = styled(Pagination)(({ theme }) => ({
+    "& .MuiPaginationItem-root": {
+      width: "50px",  // Default width
+      height: "50px", // Default height
+      "&:hover": {
+        width: "30px",  // Adjust width on hover
+        height: "30px", // Keep height consistent on hover
+      },
+      "&.Mui-selected": {
+        width: "30px", // Width for selected item
+        height: "30px", // Height for selected item
+        "&:hover": {
+          width: "30px", // Adjust width on hover when selected
+          height: "30px", // Keep height consistent on hover when selected
+        },
+      },
+    },
+  }));
+  
   const handlesubmit = (e) => {
     if (id) {
       axios
@@ -200,6 +222,11 @@ function Interform() {
         });
     }
   };
+  const [page, setpage] = React.useState(1);
+  console.log(page);
+
+  
+  const [totalpages, settotalpages] = React.useState("");
 
   const DaysArr = [
     "Monday",
@@ -221,16 +248,18 @@ function Interform() {
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/event/Displayevent",jwttoken())
+      .get(`http://localhost:5000/event/Displayevent?page=${page}&limit=${10}`,jwttoken())
       .then((data) => {
+        console.log(data)
         setarr(data.data.data);
+        settotalpages(data.data.totalPages)
         console.log("arr is set ");
       })
       .catch((err) => {
         console.log(err);
         console.log(data);
       });
-  }, [update]);
+  }, [update,page]);
 
   dayjs.extend(utc);
   const handleDateChange = (val, type) => {
@@ -268,11 +297,12 @@ return(
       </Snackbar>
 )
 },[op])
+
 const add=React.useMemo(()=>{
   console.log('addicon allecd')
   return(
-<Grid container spacing={2} justifyContent="left">
-        <Grid item xs={1} sx={{ mb: 3, mr: 1 }}>
+<Grid container spacing={2} sx={{mb:2}}>
+<Grid  xs={3}>
           <Tooltip title="Add Events">
             <Button
               onClick={() => {
@@ -283,9 +313,23 @@ const add=React.useMemo(()=>{
             </Button>
           </Tooltip>
         </Grid>
+        <Grid xs={9} sx={{display:'flex',justifyContent:'center'}}>
+           <Box sx={{ mt: 2 }}>
+             <CustomPagination
+               count={totalpages}
+               size="large"
+               onChange={(e, p) => {
+                 setpage(p);
+                 doUpdate(!update);
+               }}
+             />
+           </Box>
+           
+           </Grid>
+
       </Grid>
   )
-},[open])
+},[open,totalpages])
 const dialog1=React.useMemo(()=>{
   console.log('dialog clalled')
   return(
@@ -329,7 +373,7 @@ const dialog1=React.useMemo(()=>{
         >
           <MenuItem value={"Internship"}>Internship</MenuItem>
           <MenuItem value={"Workshop"}>Workshop</MenuItem>
-          <MenuItem value={"Seminar"}>Seminar</MenuItem>
+          
         </Select>
       </FormControl>
     </Box>
@@ -577,7 +621,7 @@ const table=React.useMemo(()=>{
           </Table>
         </TableContainer>
       </Box>)
-},[arr])
+},[arr,page])
 const completdialo=React.useMemo(()=>{
   console.log('compokledialog claled')
 return(

@@ -17,7 +17,7 @@ import AddIcon from "@mui/icons-material/Add";
 import autoTable from "jspdf-autotable";
 import SearchIcon from "@mui/icons-material/Search";
 import jwttoken from "../Token";
-
+import Pagination from '@mui/material/Pagination';
 import { Snackbar, Alert } from "@mui/material";
 
 import Tooltip from "@mui/material/Tooltip";
@@ -44,14 +44,35 @@ import axios from "axios";
 
 import FilledInput from "@mui/material/FilledInput";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { styled } from "@mui/system";
 
 import SortIcon from "@mui/icons-material/Sort";
 
 export default function FormDialog() {
   const [coursearr, setcoursearr] = React.useState([]);
-
+  const CustomPagination = styled(Pagination)(({ theme }) => ({
+    "& .MuiPaginationItem-root": {
+      width: "50px",  // Default width
+      height: "50px", // Default height
+      "&:hover": {
+        width: "30px",  // Adjust width on hover
+        height: "30px", // Keep height consistent on hover
+      },
+      "&.Mui-selected": {
+        width: "30px", // Width for selected item
+        height: "30px", // Height for selected item
+        "&:hover": {
+          width: "30px", // Adjust width on hover when selected
+          height: "30px", // Keep height consistent on hover when selected
+        },
+      },
+    },
+  }));
+  const [totalpages, settotalpages] = React.useState(1);
   const [arr, setArr] = React.useState([]);
   const [update, doUpdate] = React.useState(false);
+  const [page, setpage] = React.useState(1);
+  console.log(page);
 
   const [stuarr, setstuarr] = React.useState([]);
   const [parent, setParent] = React.useState({});
@@ -68,17 +89,19 @@ export default function FormDialog() {
       .then((data) => {
         setcoursearr(data.data.data);
 
-        console.log("arr is set");
       })
       .catch((err) => {
         console.log(err);
       });
-    console.log(coursearr);
+    
     if (!parent._id) {
       axios
-        .get("http://localhost:5000/invoice/Display", jwttoken())
+        .get(`http://localhost:5000/invoice/Display?page=${page}&limit=${10}`, jwttoken())
         .then((data) => {
+          console.log(data)
           setArr(data.data.data);
+          settotalpages(data.data.totalPages)
+          console.log("Updated totalpages:", data.data.totalPages);
         })
         .catch((err) => {
           console.log("error ", err);
@@ -86,12 +109,13 @@ export default function FormDialog() {
     } else {
       axios
         .get(
-          `http://localhost:5000/invoice/courseIn?parentId=${parent._id}`,
+          `http://localhost:5000/invoice/courseIn?parentId=${parent._id}&page=${page}&limit=${10}`,
           jwttoken()
         )
         .then((data) => {
-          console.log(data);
+          console.log(data)
           setArr(data.data.data);
+          settotalpages(data.data.totalPages)
         })
         .catch((err) => {
           console.log("error ", err);
@@ -110,7 +134,7 @@ export default function FormDialog() {
           console.log(err);
         });
     }
-  }, [update, parent, s]);
+  }, [page,update, parent, s]);
 
   React.useEffect(() => {}, []);
 
@@ -131,7 +155,7 @@ export default function FormDialog() {
   const handleChange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
   };
-  console.log(data);
+  
   const handleClose = () => {
     setData({invoiceDate:data.invoiceDate});
           
@@ -159,7 +183,7 @@ export default function FormDialog() {
   const handleClick1 = (newState) => {
     setState({ ...state, open1: true });
   };
-  console.log(state);
+  
   const handleClose1 = () => {
     setState({ ...state, open1: false });
     setAlertSuccess({ ...alertSuccess, open: false });
@@ -168,7 +192,6 @@ export default function FormDialog() {
 
   const AddorUpdate = (message) => {
     if (id) {
-      console.log(data);
 
       axios
         .post(`http://localhost:5000/invoice/Update?id=${id}`, data, jwttoken())
@@ -213,6 +236,7 @@ export default function FormDialog() {
           });
 
           setData({invoiceDate:newdate()});
+          
 
           setId();
           setOpen(false);
@@ -231,20 +255,6 @@ export default function FormDialog() {
     }
   };
 
-  function convertToIST(utcDateStr) {
-    const date = new Date(utcDateStr);
-
-    const options = {
-      timeZone: "Asia/Kolkata",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false, // 24-hour format
-    };
-
-    return new Intl.DateTimeFormat("en-US", options).format(date);
-  }
-  console.log("NORMAL datafgffgf", data);
 
   dayjs.extend(utc);
   const handleDateChange = (val) => {
@@ -257,7 +267,7 @@ export default function FormDialog() {
     setData({ ...data, invoiceDate: formattedDate });
   };
 
-  console.log(id);
+  console.log(totalpages)
   let str = "Total Paid Fees";
   const [searchname, setseearchname] = React.useState("");
 
@@ -285,9 +295,6 @@ export default function FormDialog() {
   const handlesearchname = (e) => {
     setseearchname(e.target.value);
   };
-  console.log(searchname);
-
-  console.log(arr);
 
   const montharr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const monthname = [
@@ -305,459 +312,503 @@ export default function FormDialog() {
     "December",
   ];
   
-  return (
-    <React.Fragment>
-      <Snackbar
-        open={open1}
-        autoHideDuration={3000}
-        onClose={handleClose1}
-        anchorOrigin={{ vertical, horizontal }}
-      >
-        {(alertSuccess.open || alertMsg.open) && (
-          <Alert
-            onClose={handleClose1}
-            severity={alertSuccess.open ? "success" : "error"}
-            // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
-
-            variant="filled"
-            sx={{ width: "100%" }}
-          >
-            {alertSuccess.open ? alertSuccess.message : alertMsg.message}
-          </Alert>
-        )}
-      </Snackbar>
-      <Grid container spacing={2}>
-        {/* Left Section */}
-        <Grid
-          item
-          xs={12}
-          sm={3}
-          sx={{
-            display: "flex",
-            justifyContent: "flex-start", // Adjusted for right alignment
-            alignItems: "flex-start",
-          }}
-        >
-          <Box sx={{ display: "flex", mt: 1 }}>
-            <div>
-              <Tooltip title="Add Invoice" arrow>
-                <Button
-                  disabled={parent._id ? false : true}
-                  onClick={handleopenclose}
-                >
-                  <AddIcon />
-                </Button>
-              </Tooltip>
-            </div>
-            <div>
-              <Tooltip title="Filter" arrow>
-                <Button
-                  id="basic-button"
-                  aria-controls={openmenu1 ? "basic-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={openmenu1 ? "true" : undefined}
-                  onClick={handleClickmenu1}
-                >
-                  <FilterAltIcon sx={{ color: "#0063cc" }} />
-                </Button>
-              </Tooltip>
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl1}
-                open={openmenu1}
-                onClose={handleClosemenu1}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-              >
-                {montharr.map((val, index) => (
-                  <MenuItem
-                    onClick={() => {
-                      console.log("clicked1");
-
-                      axios
-                        .get(
-                          `http://localhost:5000/invoice/fillterinvocemonth?courseId=${
-                            parent._id ? parent._id : ""
-                          }&month=${montharr[index]}&sort=${order1}`,
-                          jwttoken()
-                        )
-                        .then((data) => {
-                          console.log("API Response:", data);
-                          setArr(data.data);
-
-                          setorder1(order1 === 1 ? -1 : 1);
-                        })
-                        .catch((error) => {
-                          console.error("API Request Error:", error);
-                        });
-
-                      handleClosemenu1();
-                    }}
-                  >
-                    {monthname[index]}
-                  </MenuItem>
-                ))}
-              </Menu>
-            </div>
-
-            <div>
-              <Tooltip title="Sort" arrow>
-                <Button
-                  id="basic-button"
-                  aria-controls={openmenu ? "basic-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={openmenu ? "true" : undefined}
-                  onClick={handleClickmenu}
-                >
-                  <SortIcon sx={{ color: "#0063cc" }} />
-                </Button>
-              </Tooltip>
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={openmenu}
-                onClose={handleClosemenu}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-              >
-                <MenuItem
-                  onClick={() => {
-                    setParent({});
-                    handleClosemenu();
-                  }}
-                >
-                  All
-                </MenuItem>
-
-                <MenuItem
-                  onClick={() => {
-                    axios
-                      .get(
-                        `http://localhost:5000/invoice/filterinvocedate?key=invoiceDate&sortby=${order}&courseid=${
-                          parent._id ? parent._id : ""
-                        }`,
-                        jwttoken()
-                      )
-                      .then((data) => {
-                        console.log(data);
-                        setorder(order == 1 ? -1 : 1);
-                        setArr(data.data.data);
-                      })
-                      .catch((err) => {
-                        console.log(err);
-                      });
-                    handleClosemenu();
-                  }}
-                >
-                  Sort By Date
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    axios
-                      .get(
-                        `http://localhost:5000/invoice/filterinvocedate?key=Name&sortby=${order}&courseid=${
-                          parent._id ? parent._id : ""
-                        }`,
-                        jwttoken()
-                      )
-                      .then((data) => {
-                        console.log(data);
-                        setorder(order == 1 ? -1 : 1);
-                        setArr(data.data.data);
-                      })
-                      .catch((err) => {
-                        console.log(err);
-                      });
-                    handleClosemenu();
-                  }}
-                >
-                  Sort By Name
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    axios
-                      .get(
-                        `http://localhost:5000/invoice/filterinvocedate?key=Rfees&sortby=${order}&courseid=${
-                          parent._id ? parent._id : ""
-                        }`,
-                        jwttoken()
-                      )
-                      .then((data) => {
-                        console.log(data);
-                        setorder(order == 1 ? -1 : 1);
-                        setArr(data.data.data);
-                      })
-                      .catch((err) => {
-                        console.log(err);
-                      });
-                    handleClosemenu();
-                  }}
-                >
-                  Sort By RF
-                </MenuItem>
-              </Menu>
-            </div>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={5} sx={{}}>
-          <Box>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Select Course
-              </InputLabel>
-              <Select
-                onChange={(e) => {
-                  handleparent(e);
-                }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Status"
-                renderValue={(data) => {
-                  return (parent._id && data.batchName) || "";
-                }}
-                sx={{
-                  height: 50,
-                  minWidth: "100%",
-                  borderRadius: "16px",
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      border: "2px solid #0063cc", // Default border color
-                    },
-                    "&:hover fieldset": {
-                      border: "2px solid #0063cc", // Border color on hover
-                    },
-                    "&.Mui-focused fieldset": {
-                      border: "2px solid #0063cc", // Border color when focused
-                    },
-                  },
-                }}
-              >
-                {coursearr &&
-                  coursearr.map((row) => (
-                    <MenuItem key={row.name} value={row}>
-                      <TableRow
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell align="center">{row.batchName}</TableCell>
-                        <TableCell align="center">{row.Amount}</TableCell>
-                        <TableCell align="center">{row.Days}</TableCell>
-                        <TableCell align="center">
-                          {row.StartDate && row.StartDate.split("T")[0]}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.BatchTime && convertToIST(row.BatchTime)}
-                        </TableCell>
-                      </TableRow>
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          sm={4}
-          sx={{
-            display: "flex",
-            justifyContent: "left",
-            alignItems: "center",
-          }}
-        >
-          <Box sx={{ width: 400, ml: 3 }}>
-            <TextField
-              value={searchname}
-              id="filled-hidden-label-small"
-              placeholder="Search Students..."
-              variant="filled"
-              size="small"
-              onChange={handlesearchname}
-              sx={{
-                width: "100%",
-                maxWidth: 400,
-                "& .MuiFilledInput-root": {
-                  borderRadius: "16px",
-                  border: "2px solid #0063cc",
-                  backgroundColor: "white",
-                  padding: "0 16px", // Ensure background color is consistent
-                  "&:hover": {
-                    backgroundColor: "white",
-                  },
-                  "&.Mui-focused": {
-                    backgroundColor: "white",
-                  },
-                  "& input": {
-                    padding: "12px 0", // Adjust vertical padding to center text
-                    // Center the text horizontally
-                  },
-                },
-                "& .MuiFilledInput-underline:before": {
-                  borderBottom: "none", // Remove the default underline before focus
-                },
-                "& .MuiFilledInput-underline:after": {
-                  borderBottom: "none", // Remove the default underline after focus
-                },
-                "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
-                  borderBottom: "none", // Remove underline on hover
-                },
-              }}
-            />
-          </Box>
-
-          <Tooltip title="Search" arrow>
-            <Button sx={{ color: "#0063cc" }}>
-              <SearchIcon
-                onClick={() => {
-                  if(searchname.length>0){
-                  axios
-                    .get(
-                      `http://localhost:5000/invoice/searchinstu?name=${searchname}`,
-                      jwttoken()
-                    )
-                    .then((data) => {
-                      console.log(data);
-                      setArr(data.data.filterdata);
-                      setseearchname("");
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                  }
-                  else{
-                    handleClick1({ vertical: "top", horizontal: "center" });
-                    setAlertMsg({
-                      open: true,
-                      message: 'Please Enter Name First'
-                    });
-                  }
-                }}
-              />
-            </Button>
-          </Tooltip>
-        </Grid>
-      </Grid>
-
-      <Dialog open={open} onClose={handleClose}>
-        <DialogContent>
-          {id ? (
-            <TextField
-              id="outlined-basic"
-              label="Student Name"
-              variant="filled"
-              value={id && data.stuId.Name}
-              disabled={true}
-              fullWidth
-              sx={{ mb: 2 }}
-            />
-          ) : (
-            <Box>
-              <FormControl sx={{ my: 2 }} fullWidth>
-                <InputLabel id="demo-multiple-checkbox-label">
-                  Select Students
-                </InputLabel>
-
-                <Select
-                  labelId="demo-multiple-checkbox-label"
-                  disabled={id ? true : false}
-                  // renderValue={() => (id ? selectedStudentName : '')}
-                  id="demo-multiple-checkbox"
-                  onChange={(e) => {
-                    handleChange(e, "stuId");
-                  }}
-                  sx={{ width: 530 }}
-                  fullWidth
-                  input={<FilledInput />}
-                >
-                  {stuarr &&
-                    stuarr.map((row) => (
-                      <MenuItem key={row._id} value={row._id}>
-                        <TableCell align="center">{row.Name}</TableCell>
-                        <TableCell align="center">{row.Contact}</TableCell>
-                        <TableCell align="center">{row.Rfees}</TableCell>
-                        <TableCell align="center">{row.Pfees}</TableCell>
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            </Box>
-          )}
-
-          <TextField
-            id="outlined-basic"
-            type="Number"
-            label="Amount"
-            variant="filled"
-            value={data.Amount}
-            onChange={(e) => {
-              handleChange(e, "Amount");
-            }}
-            fullWidth
-            sx={{ mb: 2 }}
+  const handlePageChange = (event, value) => {
+    setpage(value); // This will trigger the useEffect dependent on 'page'
+  };
+  
+  const pagination = React.useMemo(() => {
+    return (
+      <Grid item xs={3} sx={{ border: '2px solid yellow' }}>
+        <Box>
+          <CustomPagination
+            count={totalpages}
+            page={page}
+            size="large"
+            onChange={handlePageChange} // Using the handler function
           />
+        </Box>
+      </Grid>
+    );
+  }, [totalpages, page]); // Add 'page' to the dependency array
+  
+    
 
-          <Box sx={{ mb: 2 }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={["DatePicker"]}>
-                <DatePicker
-                  
-                  slotProps={{ textField: { variant: "filled" } }}
-                  label="Choose Your Date"
-                  sx={{ width: 525 }}
-                  value={dayjs(data.invoiceDate)}
-                  
-                  onChange={handleDateChange}
-                
-                />
-              </DemoContainer>
-            </LocalizationProvider>
-          </Box>
+  const snack=React.useMemo(()=>{
+    console.log('snackbar called')
+    return(
+      <Snackbar
+      open={open1}
+      autoHideDuration={3000}
+      onClose={handleClose1}
+      anchorOrigin={{ vertical, horizontal }}
+    >
+      {(alertSuccess.open || alertMsg.open) && (
+        <Alert
+          onClose={handleClose1}
+          severity={alertSuccess.open ? "success" : "error"}
+          // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
 
-          <Box sx={{ minWidth: 120, mb: 2 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Mode Of Payment
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                variant="filled"
-                label="TypeOfPayment"
-                value={data.TypeOfPayment}
-                onChange={(e) => {
-                  handleChange(e, "TypeOfPayment");
-                }}
-              >
-                <MenuItem value={"UPI"}>UPI</MenuItem>
-                <MenuItem value={"Cash"}>Cash</MenuItem>
-                <MenuItem value={"Cheque"}>Cheque</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-        </DialogContent>
-        <DialogActions>
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {alertSuccess.open ? alertSuccess.message : alertMsg.message}
+        </Alert>
+      )}
+    </Snackbar>
+    )
+
+  },[open1])
+  
+const ingredients=React.useMemo(()=>{
+console.log('ingredients')
+return(
+  <Grid container spacing={2}>
+  {/* Left Section */}
+  <Grid
+    item
+    xs={3}
+    
+    sx={{
+      display: "flex",
+      justifyContent: "flex-start", // Adjusted for right alignment
+      alignItems: "flex-start",
+      border:'2px solid blue'
+
+
+    }}
+  >
+    <Box sx={{ display: "flex", mt: 1 }}>
+      <div>
+        <Tooltip title="Add Invoice" arrow>
           <Button
+            disabled={parent._id ? false : true}
+            onClick={handleopenclose}
+          >
+            <AddIcon />
+          </Button>
+        </Tooltip>
+      </div>
+      <div>
+        <Tooltip title="Filter" arrow>
+          <Button
+            id="basic-button"
+            aria-controls={openmenu1 ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={openmenu1 ? "true" : undefined}
+            onClick={handleClickmenu1}
+          >
+            <FilterAltIcon sx={{ color: "#0063cc" }} />
+          </Button>
+        </Tooltip>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl1}
+          open={openmenu1}
+          onClose={handleClosemenu1}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          {montharr.map((val, index) => (
+            <MenuItem
+              onClick={() => {
+                console.log('api called')
+                axios
+                  .get(
+                    `http://localhost:5000/invoice/fillterinvocemonth?courseId=${
+                      parent._id ? parent._id : ""
+                    }&month=${montharr[index]}&sort=${order1}&page=${page}&limit=${10}`,
+                    jwttoken()
+                  )
+                  .then((data) => {
+                    console.log("API Response:", data);
+                    setArr(data.data.data);
+                    settotalpages(data.data.totalPages)
+          
+                    setorder1(order1 === 1 ? -1 : 1);
+                  })
+                  .catch((error) => {
+                    console.error("API Request Error:", error);
+                  });
+
+                handleClosemenu1();
+              }}
+            >
+              {monthname[index]}
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
+
+      <div>
+        <Tooltip title="Sort" arrow>
+          <Button
+            id="basic-button"
+            aria-controls={openmenu ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={openmenu ? "true" : undefined}
+            onClick={handleClickmenu}
+          >
+            <SortIcon sx={{ color: "#0063cc" }} />
+          </Button>
+        </Tooltip>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={openmenu}
+          onClose={handleClosemenu}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem
             onClick={() => {
-              handleClose();
+              setParent({});
+              handleClosemenu();
             }}
           >
-            Cancel
-          </Button>
-          <Button
+            All
+          </MenuItem>
+
+          <MenuItem
             onClick={() => {
-              AddorUpdate("data captured");
+              axios
+                .get(
+                  `http://localhost:5000/invoice/filterinvocedate?key=invoiceDate&sortby=${order}&page=${page}&limit=${10}&courseid=${
+                    parent._id ? parent._id : ""
+                  }`,
+                  jwttoken()
+                )
+                .then((data) => {
+                  console.log(data);
+                  setorder(order == 1 ? -1 : 1);
+                  setArr(data.data.data);
+                  settotalpages(data.data.totalpages)
+
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              handleClosemenu();
             }}
           >
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
+            Sort By Date
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              axios
+                .get(
+                  `http://localhost:5000/invoice/filterinvocedate?key=Name&sortby=${order}&page=${page}&limit=${10}&courseid=${
+                    parent._id ? parent._id : ""
+                  }`,
+                  jwttoken()
+                )
+                .then((data) => {
+                  console.log(data);
+                  setorder(order == 1 ? -1 : 1);
+                  setArr(data.data.data);
+                  settotalpages(data.data.totalpages)
+                  
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              handleClosemenu();
+            }}
+          >
+            Sort By Name
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              axios
+                .get(
+                  `http://localhost:5000/invoice/filterinvocedate?key=Rfees&sortby=${order}&page=${page}&limit=${10}&courseid=${
+                    parent._id ? parent._id : ""
+                  }`,
+                  jwttoken()
+                )
+                .then((data) => {
+                  console.log(data);
+                  setorder(order == 1 ? -1 : 1);
+                  setArr(data.data.data);
+                  settotalpages(data.data.totalpages)
+                  
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              handleClosemenu();
+            }}
+          >
+            Sort By RF
+          </MenuItem>
+        </Menu>
+      </div>
+    </Box>
+  </Grid>
+ {pagination}
+  <Grid item xs={2}  sx={{border:'2px solid green'}}>
+    <Box>
+      <FormControl sx={{width:150}}>
+        <InputLabel id="demo-simple-select-label">
+          Select Course
+        </InputLabel>
+        <Select
+          onChange={(e) => {
+            handleparent(e);
+            
+          }}
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          label="Status"
+          renderValue={(data) => {
+            return (parent._id && data.batchName) || "";
+          }}
+          sx={{
+            height: 50,
+            
+            borderRadius: "16px",
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                border: "2px solid #0063cc", // Default border color
+              },
+              "&:hover fieldset": {
+                border: "2px solid #0063cc", // Border color on hover
+              },
+              "&.Mui-focused fieldset": {
+                border: "2px solid #0063cc", // Border color when focused
+              },
+            },
+          }}
+        >
+          {coursearr &&
+            coursearr.map((row) => (
+              <MenuItem key={row.name} value={row}>
+                <TableRow
 
-      <Box sx={{ mt: 3, mx: 2 }}>
+                >
+                  <TableCell align="center">{row.batchName}</TableCell>
+                  
+                </TableRow>
+              </MenuItem>
+            ))}
+        </Select>
+      </FormControl>
+    </Box>
+  </Grid>
+
+  <Grid
+    item
+    xs={4}
+    
+    sx={{
+      display: "flex",
+      justifyContent: "left",
+      alignItems: "center",
+      border:'2px solid red'
+
+      
+    }}
+  >
+    <Box sx={{ width: 400, ml: 3 }}>
+      <TextField
+        value={searchname}
+        id="filled-hidden-label-small"
+        placeholder="Search Students..."
+        variant="filled"
+        size="small"
+        onChange={handlesearchname}
+        sx={{
+          width: "100%",
+          maxWidth: 400,
+          "& .MuiFilledInput-root": {
+            borderRadius: "16px",
+            border: "2px solid #0063cc",
+            backgroundColor: "white",
+            padding: "0 16px", // Ensure background color is consistent
+            "&:hover": {
+              backgroundColor: "white",
+            },
+            "&.Mui-focused": {
+              backgroundColor: "white",
+            },
+            "& input": {
+              padding: "12px 0", // Adjust vertical padding to center text
+              // Center the text horizontally
+            },
+          },
+          "& .MuiFilledInput-underline:before": {
+            borderBottom: "none", // Remove the default underline before focus
+          },
+          "& .MuiFilledInput-underline:after": {
+            borderBottom: "none", // Remove the default underline after focus
+          },
+          "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
+            borderBottom: "none", // Remove underline on hover
+          },
+        }}
+      />
+    </Box>
+
+    <Tooltip title="Search" arrow>
+      <Button sx={{ color: "#0063cc" }}>
+        <SearchIcon
+          onClick={() => {
+            if(searchname.length>0){
+            axios
+              .get(
+                `http://localhost:5000/invoice/searchinstu?name=${searchname}&page=${page}&limit=${10}`,
+                jwttoken()
+              )
+              .then((data) => {
+                console.log(data);
+                setArr(data.data.filterdata);
+                settotalpages(data.data.totalPages)
+                setseearchname("");
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            }
+            else{
+              handleClick1({ vertical: "top", horizontal: "center" });
+              setAlertMsg({
+                open: true,
+                message: 'Please Enter Name First'
+              });
+            }
+          }}
+        />
+      </Button>
+    </Tooltip>
+  </Grid>
+</Grid>
+)
+},[totalpages,open,anchorEl,anchorEl1,searchname,parent,coursearr,order,order1])
+const dialog=React.useMemo(()=>{
+  console.log('dialog')
+return(
+  <Dialog open={open} onClose={handleClose}>
+  <DialogContent>
+    {id ? (
+      <TextField
+        id="outlined-basic"
+        label="Student Name"
+        variant="filled"
+        value={id && data.stuId.Name}
+        disabled={true}
+        fullWidth
+        sx={{ mb: 2 }}
+      />
+    ) : (
+      <Box>
+        <FormControl sx={{ my: 2 }} fullWidth>
+          <InputLabel id="demo-multiple-checkbox-label">
+            Select Students
+          </InputLabel>
+
+          <Select
+            labelId="demo-multiple-checkbox-label"
+            disabled={id ? true : false}
+            // renderValue={() => (id ? selectedStudentName : '')}
+            id="demo-multiple-checkbox"
+            onChange={(e) => {
+              handleChange(e, "stuId");
+            }}
+            sx={{ width: 530 }}
+            fullWidth
+            input={<FilledInput />}
+          >
+            {stuarr &&
+              stuarr.map((row) => (
+                <MenuItem key={row._id} value={row._id}>
+                  <TableCell align="center">{row.Name}</TableCell>
+                  <TableCell align="center">{row.Contact}</TableCell>
+                  <TableCell align="center">{row.Rfees}</TableCell>
+                  <TableCell align="center">{row.Pfees}</TableCell>
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      </Box>
+    )}
+
+    <TextField
+      id="outlined-basic"
+      type="Number"
+      label="Amount"
+      variant="filled"
+      value={data.Amount}
+      onChange={(e) => {
+        handleChange(e, "Amount");
+      }}
+      fullWidth
+      sx={{ mb: 2 }}
+    />
+
+    <Box sx={{ mb: 2 }}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DemoContainer components={["DatePicker"]}>
+          <DatePicker
+            
+            slotProps={{ textField: { variant: "filled" } }}
+            label="Choose Your Date"
+            sx={{ width: 525 }}
+            value={dayjs(data.invoiceDate)}
+            
+            onChange={handleDateChange}
+          
+          />
+        </DemoContainer>
+      </LocalizationProvider>
+    </Box>
+
+    <Box sx={{ minWidth: 120, mb: 2 }}>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">
+          Mode Of Payment
+        </InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          variant="filled"
+          label="TypeOfPayment"
+          value={data.TypeOfPayment}
+          onChange={(e) => {
+            handleChange(e, "TypeOfPayment");
+          }}
+        >
+          <MenuItem value={"UPI"}>UPI</MenuItem>
+          <MenuItem value={"Cash"}>Cash</MenuItem>
+          <MenuItem value={"Cheque"}>Cheque</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+  </DialogContent>
+  <DialogActions>
+    <Button
+      onClick={() => {
+        handleClose();
+      }}
+    >
+      Cancel
+    </Button>
+    <Button
+      onClick={() => {
+        AddorUpdate("data captured");
+      }}
+    >
+      Submit
+    </Button>
+  </DialogActions>
+</Dialog>
+
+)
+},[open,id,data,stuarr])
+const table=React.useMemo(()=>{
+console.log('table')
+return(
+  <Box sx={{ mt: 3, mx: 2 }}>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -1056,6 +1107,33 @@ export default function FormDialog() {
           </Table>
         </TableContainer>
       </Box>
+)
+},[arr,page])
+  return (
+    <React.Fragment>
+    {snack}
+    {/* <Grid item xs={3} sx={{ border: '2px solid yellow' }}>
+          <Box>
+            <CustomPagination
+              count={totalpages}
+              size="large"
+              
+              onChange={(e, p) => {
+                
+                  setpage(p);
+                  doUpdate(!update); // Trigger an update
+                
+              }}
+              
+            />
+          </Box>
+        </Grid>
+     */}
+            
+     {ingredients}
+{dialog}
+{table}
+    
     </React.Fragment>
   );
 }
