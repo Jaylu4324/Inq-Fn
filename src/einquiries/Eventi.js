@@ -9,6 +9,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import jwttoken from '../Token'
+import Pagination from '@mui/material/Pagination';
 
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -39,6 +40,7 @@ import utc from "dayjs/plugin/utc";
 
 import { Grid } from "@mui/material";
 import Box from "@mui/material/Box";
+import { styled } from "@mui/system";
 
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -89,29 +91,39 @@ function a11yProps(index) {
 }
 
 function Eventi() {
+  const CustomPagination = styled(Pagination)(({ theme }) => ({
+    "& .MuiPaginationItem-root": {
+      width: "50px",  // Default width
+      height: "50px", // Default height
+      "&:hover": {
+        width: "30px",  // Adjust width on hover
+        height: "30px", // Keep height consistent on hover
+      },
+      "&.Mui-selected": {
+        width: "30px", // Width for selected item
+        height: "30px", // Height for selected item
+        "&:hover": {
+          width: "30px", // Adjust width on hover when selected
+          height: "30px", // Keep height consistent on hover when selected
+        },
+      },
+    },
+  }));
+  const [totalpages, settotalpages] = React.useState(1);
+  
+  const [page, setpage] = React.useState(1);
+  console.log(page);
+
   const newdate = () => {
     const selectedDate = new Date();
 
-    const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
+    
     selectedDate.setHours(12,0,0,0)
     const formattedDate = selectedDate.toISOString();
 
     return formattedDate;
   };
 
-  function convertToIST(utcDateStr) {
-    const date = new Date(utcDateStr);
-
-    const options = {
-      timeZone: "Asia/Kolkata",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      // hour12: false // 24-hour format
-    };
-
-    return new Intl.DateTimeFormat("en-US", options).format(date);
-  }
 
   const [parent, setParent] = React.useState({});
 
@@ -232,41 +244,59 @@ function Eventi() {
         console.log(data);
       });
 
-    if (parent._id) {
+    if (parent._id ) {
+      if(value==0){
+        
+      
       axios
-        .get(`http://localhost:5000/Eventinquiry/OnGoing?id=${parent._id}`,jwttoken())
+        .get(`http://localhost:5000/Eventinquiry/OnGoing?id=${parent._id}&page=${page}&limit=${10}`,jwttoken())
 
         .then((data) => {
           setong(data.data.data);
-          console.log("ongoing data");
+          console.log(data)
+          settotalpages(data.data.totalPages)
+
         })
         .catch((err) => {
           console.log(err);
         });
+      }
+      else if(value==1){
+
+      
       axios
-        .get(`http://localhost:5000/Eventinquiry/Reject?id=${parent._id}`,jwttoken())
+        .get(`http://localhost:5000/Eventinquiry/Reject?id=${parent._id}&page=${page}&limit=${10}`,jwttoken())
 
         .then((data) => {
           setReject(data.data.data);
           console.log("reject is set");
+          settotalpages(data.data.totalPages)
+          
         })
         .catch((err) => {
           console.log(err);
         });
+      }
+      else{
+
+      
       axios
-        .get(`http://localhost:5000/Eventinquiry/Confirm?id=${parent._id}`,jwttoken())
+        .get(`http://localhost:5000/Eventinquiry/Confirm?id=${parent._id}&page=${page}&limit=${10}`,jwttoken())
 
         .then((data) => {
           setconfirm(data.data.data);
           console.log("confirm is set");
+          settotalpages(data.data.totalPages)
+          
         })
         .catch((err) => {
           console.log(err);
         
 
         });
+      }
     }
-  }, [update, parent._id]);
+  }, [update, parent._id,value,page]);
 
   const handleopen = () => {
     setOpen(!open);
@@ -300,12 +330,18 @@ function Eventi() {
   React.useEffect(() => {
     if (value == 0) {
       settype("onGoing");
+      setpage(1)
+
     } else if (value == 1) {
       settype("Reject");
+      setpage(1)
+      
     } else {
       settype("Confirm");
+      setpage(1)
+      
     }
-  }, [value]);
+  }, [value,totalpages]);
   console.log(type);
 
   const [order, setorder] = React.useState(1);
@@ -325,7 +361,7 @@ function Eventi() {
   const handleClickmenu1 = (event) => {
     setAnchorEl1(event.currentTarget);
   };
-
+console.log(totalpages)
   const handleClosemenu1 = () => {
     setAnchorEl1(null);
   };
@@ -371,6 +407,25 @@ function Eventi() {
     setId()
     setOpen3(false);
   };
+  const handlePageChange = (event, value) => {
+    setpage(value); // This will trigger the useEffect dependent on 'page'
+  };
+  
+  const pagination = React.useMemo(() => {
+    return (
+      <Grid item xs={3}>
+        <Box>
+          <CustomPagination
+            count={totalpages?totalpages:1}
+            page={page}
+            size="large"
+            onChange={handlePageChange} // Using the handler function
+          />
+        </Box>
+      </Grid>
+    );
+  }, [totalpages, page]); // Add 'page' to the dependency array
+  
 const Snack=React.useMemo(()=>{
   console.log('snackbar called')
 return(
@@ -402,8 +457,8 @@ return(
   <Grid container spacing={2}>
   <Grid
       item
-      xs={12}
-      sm={3}
+      xs={3}
+  
       sx={{
         display: "flex",
         justifyContent: "flex-start", // Adjusted for right alignment
@@ -446,22 +501,25 @@ return(
 
                 axios
                   .get(
-                    `http://localhost:5000/Eventinquiry/filterbyMonth?month=${montharr[index]}&sortby=${order1}&type=${type}`,jwttoken())
+                    `http://localhost:5000/Eventinquiry/filterbyMonth?month=${montharr[index]}&sortby=${order1}&page=${page}&limit=${10}&type=${type}`,jwttoken())
                   .then((data) => {
                     console.log(data)
                     if(type=='onGoing')
                       {
-                        setong(data.data)
+                        setong(data.data.filterData)
                         setorder1(order1 === 1 ? -1 : 1);
+                        settotalpages(data.data.totalPages)
                       }
                       else if(type=='Reject')
                       {
-                        setReject(data.data)
+                        setReject(data.data.filterData)
                         setorder1(order1 === 1 ? -1 : 1);
+                        settotalpages(data.data.totalPages)
                       }
                       else{
-                        setconfirm(data.data)
+                        setconfirm(data.data.filterData)
                         setorder1(order1 === 1 ? -1 : 1);
+                        settotalpages(data.data.totalPages)
                       }
                  
 
@@ -503,21 +561,25 @@ return(
         >
           <MenuItem
             onClick={() => {
-          axios.get(`http://localhost:5000/Eventinquiry/alldata?key=${type}`,jwttoken())
+          axios.get(`http://localhost:5000/Eventinquiry/alldata?key=${type}&page=${page}&limit=${10}`,jwttoken())
           .then((data) => {
             console.log(data)
             if(type=='onGoing')
               {
                 setong(data.data.allData)
-               
+               settotalpages(data.data.totalPages)
+
               }
               else if(type=='Reject')
               {
                 setReject(data.data.allData)
-            
+                settotalpages(data.data.totalPages)
+               
               }
               else{
                 setconfirm(data.data.allData)
+                settotalpages(data.data.totalPages)
+               
               
               }
           
@@ -535,22 +597,29 @@ return(
             onClick={() => {
               axios
                 .get(
-                  `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=Date&sortBy=${order}&type=${type}`,jwttoken())
+                  `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=Date&page=${page}&limit=${10}&sortBy=${order}&type=${type}`,jwttoken())
                   .then((data) => {
                     console.log(data)
                     if(type=='onGoing')
                       {
                         setong(data.data.sortData)
                         setorder(order == 1 ? -1 : 1);
+                        settotalpages(data.data.totalPages)
+
+
                       }
                       else if(type=='Reject')
                       {
                         setReject(data.data.sortData)
                         setorder(order == 1 ? -1 : 1);
+                        settotalpages(data.data.totalPages)
+
                       }
                       else{
                         setconfirm(data.data.sortData)
                         setorder(order == 1 ? -1 : 1);
+                        settotalpages(data.data.totalPages)
+
                       }
                   
                   })
@@ -567,22 +636,28 @@ return(
              onClick={() => {
               axios
                 .get(
-                  `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=FullName&sortBy=${order}&type=${type}`,jwttoken())
+                  `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=FullName&page=${page}&limit=${10}&sortBy=${order}&type=${type}`,jwttoken())
                   .then((data) => {
                     console.log(data)
                     if(type=='onGoing')
                       {
                         setong(data.data.sortData)
                         setorder(order == 1 ? -1 : 1);
+                        settotalpages(data.data.totalPages)
+                        
                       }
                       else if(type=='Reject')
                       {
                         setReject(data.data.sortData)
                         setorder(order == 1 ? -1 : 1);
+                        settotalpages(data.data.totalPages)
+                        
                       }
                       else{
                         setconfirm(data.data.sortData)
                         setorder(order == 1 ? -1 : 1);
+                        settotalpages(data.data.totalPages)
+                        
                       }
                   
                   })
@@ -600,10 +675,10 @@ return(
       </div>
       </Box>
     </Grid>
-  
-    <Grid item xs={12} sm={5}>
+  {pagination}
+    <Grid item xs={2}>
       <Box sx={{ mx: 2 }}>
-        <FormControl fullWidth>
+        <FormControl sx={{width:150}}>
           <InputLabel id="demo-simple-select-label">
             {" "}
             Select Event Type
@@ -643,27 +718,6 @@ return(
                   >
                     <TableCell align="center">{row.Course}</TableCell>
 
-                    <TableCell align="center">{row.TypeOfEvent}</TableCell>
-                    <TableCell align="center">
-                      {row.TypeOfPayment}
-                    </TableCell>
-
-                    <TableCell align="center">{row.Amount}</TableCell>
-
-                    <TableCell align="center">
-                      {row.StartDate && row.StartDate.split("T")[0]}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.EndtDate && row.EndtDate.split("T")[0]}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.Days.map((val) => (
-                        <Box>{val}</Box>
-                      ))}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.BatchTime && convertToIST(row.BatchTime)}
-                    </TableCell>
                   </TableRow>
                 </MenuItem>
               ))}
@@ -673,12 +727,13 @@ return(
     </Grid>
     <Grid
       item
-      xs={12}
-      sm={4}
+      xs={4}
+      
       sx={{
         display: "flex",
         justifyContent: "left",
         alignItems: "center",
+        
       }}
     >
       <Box sx={{ width: 400, ml: 3 }}>
@@ -727,23 +782,29 @@ return(
             if(searchname.length>0){
             axios
               .get(
-                `http://localhost:5000/Eventinquiry/search?FullName=${searchname}&type=${type}`,jwttoken()
+                `http://localhost:5000/Eventinquiry/search?FullName=${searchname}&type=${type}&page=${page}&limit=${10}`,jwttoken()
               )
               .then((data) => {
                 console.log(data);
                 if(type=='onGoing')
                 {
                   setong(data.data.filterdata)
+                  settotalpages(data.data.totalPages)
+                        
                   
                 }
                 else if(type=='Reject')
                 {
                   setReject(data.data.filterdata)
+                  settotalpages(data.data.totalPages)
+                        
                 }
                 else{
                   setconfirm(data.data.filterdata)
+                  settotalpages(data.data.totalPages)
+                        
                 }
-                console.log('coorect')
+                
                 setseearchname("");
 
               })
@@ -768,7 +829,7 @@ return(
    
   </Grid>
 )
-},[open,anchorEl,anchorEl1,searchname,parent,arr,order,order1])
+},[totalpages,open,anchorEl,anchorEl1,searchname,parent,arr,order,order1])
 const dialog=React.useMemo(()=>{
   console.log('dilog called')
 return(
@@ -907,7 +968,7 @@ return(
     </Grid>
   </DialogContent>
   <DialogActions></DialogActions>
-</Dialog>
+</Dialog> 
 )
 },[open,data,id])
 const table=React.useMemo(()=>{
@@ -1119,7 +1180,7 @@ return(
         </CustomTabPanel>
       </Box>
 )
-},[ong,reject,confirm,value])
+},[ong,reject,confirm,value,searchname])
 const rejectdialog=React.useMemo(()=>{
   console.log('rejectdialog')
 return(

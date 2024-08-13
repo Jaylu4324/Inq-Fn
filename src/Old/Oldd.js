@@ -29,9 +29,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-import { styled } from "@mui/material/styles";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContentText from "@mui/material/DialogContentText";
+
+import Pagination from "@mui/material/Pagination";
+import { styled } from "@mui/system";
+
 import DialogTitle from "@mui/material/DialogTitle";
 
 function convertToIST(utcDateStr) {
@@ -104,6 +105,25 @@ export default function Old() {
       padding: theme.spacing(1),
     },
   }));
+  const CustomPagination = styled(Pagination)(({ theme }) => ({
+    "& .MuiPaginationItem-root": {
+      width: "50px",  // Default width
+      height: "50px", // Default height
+      "&:hover": {
+        width: "30px",  // Adjust width on hover
+        height: "30px", // Keep height consistent on hover
+      },
+      "&.Mui-selected": {
+        width: "30px", // Width for selected item
+        height: "30px", // Height for selected item
+        "&:hover": {
+          width: "30px", // Adjust width on hover when selected
+          height: "30px", // Keep height consistent on hover when selected
+        },
+      },
+    },
+  }));
+  
   const handleDateChange = (val) => {
     const selectedDate = new Date(val);
     const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
@@ -120,20 +140,26 @@ export default function Old() {
   };
   
   const [arr, setarr] = React.useState([]);
+  const [page, setpage] = React.useState(1);
+  console.log(page);
+
+  
+  const [totalpages, settotalpages] = React.useState("");
 
   const [update, doupdate] = React.useState(false);
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/EventComleted/getAllData",jwttoken())
+      .get(`http://localhost:5000/EventComleted/getAllData?page=${page}&limit={10}`,jwttoken())
       .then((data) => {
         console.log(data)
         setarr(data.data.data);
-        console.log("arr is set");
+        settotalpages(data.data.totalPages)
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [update]);
+  }, [update,page]);
+  console.log(totalpages)
 const snack=React.useMemo(()=>{
 console.log('snack bar called')
 return(
@@ -159,7 +185,25 @@ sx={{ width: "100%" }}
 </Snackbar>
 )
 },[op])
-
+const pagination=React.useMemo(()=>{
+  return(
+    <Grid xs={12} sx={{display:'flex',justifyContent:'center'}}>
+    <Box sx={{ mb: 2 }}>
+                <CustomPagination
+                  count={totalpages?totalpages:1}
+                  page={page}
+                  size="large"
+                  onChange={(e, p) => {
+                    setpage(p);
+                    
+  
+                  }}
+                />
+              </Box>
+              </Grid>
+  )
+    },[totalpages,page])
+    
 const table=React.useMemo(()=>{
   console.log('table called')
 return(
@@ -487,6 +531,7 @@ return(
   return (
     <>
 {snack}
+{pagination}
   {table}
   {boot}
   {dialog}

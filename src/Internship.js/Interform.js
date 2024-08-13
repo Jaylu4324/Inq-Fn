@@ -302,9 +302,9 @@ const add=React.useMemo(()=>{
   console.log('addicon allecd')
   return(
 <Grid container spacing={2} sx={{mb:2}}>
-<Grid  xs={3}>
+<Grid  xs={5}>
           <Tooltip title="Add Events">
-            <Button
+            <Button sx={{mt:1,ml:1}}
               onClick={() => {
                 setopen(true);
               }}
@@ -313,14 +313,15 @@ const add=React.useMemo(()=>{
             </Button>
           </Tooltip>
         </Grid>
-        <Grid xs={9} sx={{display:'flex',justifyContent:'center'}}>
-           <Box sx={{ mt: 2 }}>
+        <Grid xs={7} sx={{display:'flex',justifyContent:'flex-start'}}>
+           <Box>
              <CustomPagination
-               count={totalpages}
+               count={totalpages?totalpages:1}
+               page={page}
                size="large"
                onChange={(e, p) => {
                  setpage(p);
-                 doUpdate(!update);
+                 
                }}
              />
            </Box>
@@ -329,7 +330,7 @@ const add=React.useMemo(()=>{
 
       </Grid>
   )
-},[open,totalpages])
+},[open,totalpages,page])
 const dialog1=React.useMemo(()=>{
   console.log('dialog clalled')
   return(

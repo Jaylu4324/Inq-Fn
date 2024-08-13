@@ -151,20 +151,23 @@ React.useEffect(() => {
   };
   const pagination=React.useMemo(()=>{
 return(
-  <Box sx={{ mt: 2 }}>
+  <Grid xs={12} sx={{display:'flex',justifyContent:'center'}}>
+  <Box sx={{ mb: 2 }}>
               <CustomPagination
-                count={totalpages}
+                count={totalpages?totalpages:1}
+                page={page}
                 size="large"
                 onChange={(e, p) => {
                   setpage(p);
-                  doupdate(!update);
+                  
 
                 }}
               />
             </Box>
-            
+            </Grid>
 )
-  },[totalpages])
+  },[totalpages,page])
+  
   const snack=React.useMemo(()=>{
     console.log('snack bar called')
     return(

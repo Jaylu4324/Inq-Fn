@@ -205,12 +205,21 @@ function Form1() {
   React.useEffect(() => {
     if (value == 0) {
       settype("onGoing");
+      setpage(1)
+
+
     } else if (value == 1) {
       settype("Reject");
+      setpage(1)
+
+      
     } else {
       settype("Confirm");
+      setpage(1)
+
+      
     }
-  }, [value]);
+  }, [value,totalPages]);
 
   const Co = ["React", "Node", "C", "C++", "Python", "Mern Stack", "AWS"];
   const handlecourse = (e) => {

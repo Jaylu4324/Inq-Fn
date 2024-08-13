@@ -18,6 +18,7 @@ import autoTable from "jspdf-autotable";
 import SearchIcon from "@mui/icons-material/Search";
 import jwttoken from "../Token";
 import Pagination from '@mui/material/Pagination';
+
 import { Snackbar, Alert } from "@mui/material";
 
 import Tooltip from "@mui/material/Tooltip";
@@ -318,7 +319,7 @@ export default function FormDialog() {
   
   const pagination = React.useMemo(() => {
     return (
-      <Grid item xs={3} sx={{ border: '2px solid yellow' }}>
+      <Grid item xs={3}>
         <Box>
           <CustomPagination
             count={totalpages}
@@ -372,7 +373,7 @@ return(
       display: "flex",
       justifyContent: "flex-start", // Adjusted for right alignment
       alignItems: "flex-start",
-      border:'2px solid blue'
+      
 
 
     }}
@@ -547,7 +548,7 @@ return(
     </Box>
   </Grid>
  {pagination}
-  <Grid item xs={2}  sx={{border:'2px solid green'}}>
+  <Grid item xs={2}>
     <Box>
       <FormControl sx={{width:150}}>
         <InputLabel id="demo-simple-select-label">
@@ -585,7 +586,9 @@ return(
             coursearr.map((row) => (
               <MenuItem key={row.name} value={row}>
                 <TableRow
-
+    sx={{
+      "&:last-child td, &:last-child th": { border: 0 },
+    }}
                 >
                   <TableCell align="center">{row.batchName}</TableCell>
                   
@@ -605,7 +608,7 @@ return(
       display: "flex",
       justifyContent: "left",
       alignItems: "center",
-      border:'2px solid red'
+   
 
       
     }}
@@ -1112,24 +1115,7 @@ return(
   return (
     <React.Fragment>
     {snack}
-    {/* <Grid item xs={3} sx={{ border: '2px solid yellow' }}>
-          <Box>
-            <CustomPagination
-              count={totalpages}
-              size="large"
-              
-              onChange={(e, p) => {
-                
-                  setpage(p);
-                  doUpdate(!update); // Trigger an update
-                
-              }}
-              
-            />
-          </Box>
-        </Grid>
-     */}
-            
+  
      {ingredients}
 {dialog}
 {table}
