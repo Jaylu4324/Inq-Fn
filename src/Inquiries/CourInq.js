@@ -788,7 +788,7 @@ return(
                   </TableRow>
                 </TableHead>
                 <TableBody sx={{ height: arr && arr.length < 1 ? 220 : 0 }}>
-                  {arr &&
+                  {arr && arr.length>0?
                     arr.map((row) => (
                       <TableRow
                         key={row.name}
@@ -871,7 +871,12 @@ return(
                           </Tooltip>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    ))
+                  :
+                  <TableRow>
+                  <TableCell align="center" colSpan={12}>No Data Available!</TableCell>
+                 </TableRow> 
+                  }
                 </TableBody>
               </Table>
             </TableContainer>
@@ -905,7 +910,7 @@ return(
                 <TableBody
                   sx={{ height: reject && reject.length < 1 ? 220 : 0 }}
                 >
-                  {reject &&
+                  {reject && reject.length>0?
                     reject.map((row) => (
                       <TableRow
                         key={row.name}
@@ -936,7 +941,13 @@ return(
                         </TableCell>
                         <TableCell align="center">{row.Description}</TableCell>
                       </TableRow>
-                    ))}
+                    ))
+                  :
+                  <TableRow>
+                  <TableCell align="center" colSpan={7}>No Data Available!</TableCell>
+                 </TableRow> 
+                  
+                  }
                 </TableBody>
               </Table>
             </TableContainer>
@@ -972,7 +983,7 @@ return(
                     height: confirm && confirm.length < 1 ? 220 : 0,
                   }}
                 >
-                  {confirm &&
+                  {confirm && confirm.length>0?
                     confirm.map((row) => (
                       <TableRow
                         key={row.name}
@@ -1001,7 +1012,11 @@ return(
                         <TableCell align="center">{row.Course}</TableCell>
                         <TableCell align="center">{row.Description}</TableCell>
                       </TableRow>
-                    ))}
+                    ))
+                  :
+                  <TableRow>
+                  <TableCell align="center" colSpan={7}>No Data Available!</TableCell>
+                 </TableRow> }
                 </TableBody>
               </Table>
             </TableContainer>

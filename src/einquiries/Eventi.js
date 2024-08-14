@@ -8,8 +8,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import jwttoken from '../Token'
-import Pagination from '@mui/material/Pagination';
+import jwttoken from "../Token";
+import Pagination from "@mui/material/Pagination";
 
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -49,7 +49,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
 import axios from "axios";
-import { Snackbar, Alert } from '@mui/material';
+import { Snackbar, Alert } from "@mui/material";
 import Paper from "@mui/material/Paper";
 
 import PropTypes from "prop-types";
@@ -93,10 +93,10 @@ function a11yProps(index) {
 function Eventi() {
   const CustomPagination = styled(Pagination)(({ theme }) => ({
     "& .MuiPaginationItem-root": {
-      width: "50px",  // Default width
+      width: "50px", // Default width
       height: "50px", // Default height
       "&:hover": {
-        width: "30px",  // Adjust width on hover
+        width: "30px", // Adjust width on hover
         height: "30px", // Keep height consistent on hover
       },
       "&.Mui-selected": {
@@ -110,20 +110,18 @@ function Eventi() {
     },
   }));
   const [totalpages, settotalpages] = React.useState(1);
-  
+
   const [page, setpage] = React.useState(1);
   console.log(page);
 
   const newdate = () => {
     const selectedDate = new Date();
 
-    
-    selectedDate.setHours(12,0,0,0)
+    selectedDate.setHours(12, 0, 0, 0);
     const formattedDate = selectedDate.toISOString();
 
     return formattedDate;
   };
-
 
   const [parent, setParent] = React.useState({});
 
@@ -138,12 +136,12 @@ function Eventi() {
   const [confirm, setconfirm] = React.useState([]);
   const [update, doUpdate] = React.useState(false);
   const [id, setId] = React.useState(0);
-  const [alertMsg, setAlertMsg] = React.useState({open: false, message: "" });
+  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
   });
-  
+
   const [state, setState] = React.useState({
     op: false,
     vertical: "top",
@@ -158,14 +156,11 @@ function Eventi() {
     setState({ ...state, op: false });
     setAlertSuccess({ ...alertSuccess, open: false });
     setAlertMsg({ ...alertMsg, open: false });
-    
   };
-
 
   const handleClose = () => {
     setOpen(false);
-    setData({Date:newdate()})
-
+    setData({ Date: newdate() });
 
     setId();
   };
@@ -175,7 +170,11 @@ function Eventi() {
   const handlesubmit = () => {
     if (id) {
       axios
-        .post(`http://localhost:5000/Eventinquiry/Update?id=${id}`, data,jwttoken())
+        .post(
+          `http://localhost:5000/Eventinquiry/Update?id=${id}`,
+          data,
+          jwttoken()
+        )
         .then((data) => {
           doUpdate(!update);
           handleClose();
@@ -183,10 +182,7 @@ function Eventi() {
           setAlertSuccess({
             open: true,
             message: " Inquiry Updated Successfully",
-            
           });
-       
-       
         })
         .catch((err) => {
           console.log(err);
@@ -196,15 +192,18 @@ function Eventi() {
               open: true,
               message: err.response.data.error.details[0].message,
             });
-            
           }
         });
     } else {
       axios
-        .post("http://localhost:5000/Eventinquiry/addInquiry", {
-          ...data,
-          eventId: parent._id,
-        },jwttoken())
+        .post(
+          "http://localhost:5000/Eventinquiry/addInquiry",
+          {
+            ...data,
+            eventId: parent._id,
+          },
+          jwttoken()
+        )
         .then((data) => {
           console.log(data);
           doUpdate(!update);
@@ -213,11 +212,7 @@ function Eventi() {
           setAlertSuccess({
             open: true,
             message: " Inquiry Added Successfully",
-        
           });
-      
-
-         
         })
         .catch((err) => {
           console.log(err);
@@ -227,14 +222,13 @@ function Eventi() {
               open: true,
               message: err.response.data.error.details[0].message,
             });
-
           }
         });
     }
   };
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/event/Displayevent",jwttoken())
+      .get("http://localhost:5000/event/Displayevent", jwttoken())
       .then((data) => {
         setArr(data.data.data);
         console.log("arr is set ");
@@ -244,59 +238,61 @@ function Eventi() {
         console.log(data);
       });
 
-    if (parent._id ) {
-      if(value==0){
-        
-      
-      axios
-        .get(`http://localhost:5000/Eventinquiry/OnGoing?id=${parent._id}&page=${page}&limit=${10}`,jwttoken())
+    if (parent._id) {
+      if (value == 0) {
+        axios
+          .get(
+            `http://localhost:5000/Eventinquiry/OnGoing?id=${
+              parent._id
+            }&page=${page}&limit=${10}`,
+            jwttoken()
+          )
 
-        .then((data) => {
-          setong(data.data.data);
-          console.log(data)
-          settotalpages(data.data.totalPages)
+          .then((data) => {
+            setong(data.data.data);
+            console.log(data);
+            settotalpages(data.data.totalPages);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else if (value == 1) {
+        axios
+          .get(
+            `http://localhost:5000/Eventinquiry/Reject?id=${
+              parent._id
+            }&page=${page}&limit=${10}`,
+            jwttoken()
+          )
 
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      }
-      else if(value==1){
+          .then((data) => {
+            setReject(data.data.data);
+            console.log("reject is set");
+            settotalpages(data.data.totalPages);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        axios
+          .get(
+            `http://localhost:5000/Eventinquiry/Confirm?id=${
+              parent._id
+            }&page=${page}&limit=${10}`,
+            jwttoken()
+          )
 
-      
-      axios
-        .get(`http://localhost:5000/Eventinquiry/Reject?id=${parent._id}&page=${page}&limit=${10}`,jwttoken())
-
-        .then((data) => {
-          setReject(data.data.data);
-          console.log("reject is set");
-          settotalpages(data.data.totalPages)
-          
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      }
-      else{
-
-      
-      axios
-        .get(`http://localhost:5000/Eventinquiry/Confirm?id=${parent._id}&page=${page}&limit=${10}`,jwttoken())
-
-        .then((data) => {
-          setconfirm(data.data.data);
-          console.log("confirm is set");
-          settotalpages(data.data.totalPages)
-          
-        })
-        .catch((err) => {
-          console.log(err);
-        
-
-        });
+          .then((data) => {
+            setconfirm(data.data.data);
+            console.log("confirm is set");
+            settotalpages(data.data.totalPages);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     }
-  }, [update, parent._id,value,page]);
+  }, [update, parent._id, value, page]);
 
   const handleopen = () => {
     setOpen(!open);
@@ -309,11 +305,11 @@ function Eventi() {
   const handleparent = (e) => {
     setParent({ ...e.target.value });
   };
-  
+
   dayjs.extend(utc);
   const handleDateChange = (val, type) => {
     const selectedDate = new Date(val);
-    selectedDate.setHours(12,0,0,0)
+    selectedDate.setHours(12, 0, 0, 0);
     const formattedDate = selectedDate.toISOString();
 
     setData({ ...data, Date: formattedDate });
@@ -330,18 +326,15 @@ function Eventi() {
   React.useEffect(() => {
     if (value == 0) {
       settype("onGoing");
-      setpage(1)
-
+      setpage(1);
     } else if (value == 1) {
       settype("Reject");
-      setpage(1)
-      
+      setpage(1);
     } else {
       settype("Confirm");
-      setpage(1)
-      
+      setpage(1);
     }
-  }, [value,totalpages]);
+  }, [value, totalpages]);
   console.log(type);
 
   const [order, setorder] = React.useState(1);
@@ -361,7 +354,7 @@ function Eventi() {
   const handleClickmenu1 = (event) => {
     setAnchorEl1(event.currentTarget);
   };
-console.log(totalpages)
+  console.log(totalpages);
   const handleClosemenu1 = () => {
     setAnchorEl1(null);
   };
@@ -383,40 +376,40 @@ console.log(totalpages)
   ];
 
   const [open2, setOpen2] = React.useState(false);
-  
+
   const [open3, setOpen3] = React.useState(false);
-  
+
   const handleClickOpen2 = () => {
     setOpen2(true);
   };
 
   const handleClose2 = () => {
-    setData({Date:newdate()})
-    
-    setId()
+    setData({ Date: newdate() });
+
+    setId();
     setOpen2(false);
   };
-  
+
   const handleClickOpen3 = () => {
     setOpen3(true);
   };
 
   const handleClose3 = () => {
-    setData({Date:newdate()})
-    
-    setId()
+    setData({ Date: newdate() });
+
+    setId();
     setOpen3(false);
   };
   const handlePageChange = (event, value) => {
     setpage(value); // This will trigger the useEffect dependent on 'page'
   };
-  
+
   const pagination = React.useMemo(() => {
     return (
       <Grid item xs={3}>
         <Box>
           <CustomPagination
-            count={totalpages?totalpages:1}
+            count={totalpages ? totalpages : 1}
             page={page}
             size="large"
             onChange={handlePageChange} // Using the handler function
@@ -425,556 +418,540 @@ console.log(totalpages)
       </Grid>
     );
   }, [totalpages, page]); // Add 'page' to the dependency array
-  
-const Snack=React.useMemo(()=>{
-  console.log('snackbar called')
-return(
-  <Snackbar
-  open={op}
-  autoHideDuration={2000}
-  onClose={handleClose12}
-  anchorOrigin={{ vertical, horizontal }}
-  
->
-    {(alertSuccess.open || alertMsg.open) && (
-<Alert
-onClose={handleClose12}
-severity={alertSuccess.open ? "success" : "error"}
-          // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
 
-variant="filled"
-sx={{ width: "100%" }}
->
-{alertSuccess.open ? alertSuccess.message : alertMsg.message}
-</Alert>
-)}
-</Snackbar>
-)
-},[op])
-const ingredients=React.useMemo(()=>{
-  console.log('ingredients called')
-return(
-  <Grid container spacing={2}>
-  <Grid
-      item
-      xs={3}
-  
-      sx={{
-        display: "flex",
-        justifyContent: "flex-start", // Adjusted for right alignment
-        alignItems: "flex-start",
-      }}
-    >
-      <Box sx={{display:'flex',mt:1}}>
-      <div>
-      <Tooltip title="Add Event Inquiries">
-        <Button onClick={handleopen} disabled={parent._id ? false : true}>
-          <AddIcon />
-        </Button>
-      </Tooltip>
-      </div>
-      <div>
-        <Tooltip title="Filter" arrow>
-          <Button
-            id="basic-button"
-            aria-controls={openmenu1 ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={openmenu1 ? "true" : undefined}
-            onClick={handleClickmenu1}
+  const Snack = React.useMemo(() => {
+    console.log("snackbar called");
+    return (
+      <Snackbar
+        open={op}
+        autoHideDuration={2000}
+        onClose={handleClose12}
+        anchorOrigin={{ vertical, horizontal }}
+      >
+        {(alertSuccess.open || alertMsg.open) && (
+          <Alert
+            onClose={handleClose12}
+            severity={alertSuccess.open ? "success" : "error"}
+            // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
+
+            variant="filled"
+            sx={{ width: "100%" }}
           >
-            <FilterAltIcon sx={{ color: "#0063cc" }} />
-          </Button>
-        </Tooltip>
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl1}
-          open={openmenu1}
-          onClose={handleClosemenu1}
-          MenuListProps={{
-            "aria-labelledby": "basic-button",
+            {alertSuccess.open ? alertSuccess.message : alertMsg.message}
+          </Alert>
+        )}
+      </Snackbar>
+    );
+  }, [op]);
+  const ingredients = React.useMemo(() => {
+    console.log("ingredients called");
+    return (
+      <Grid container spacing={2}>
+        <Grid
+          item
+          xs={3}
+          sx={{
+            display: "flex",
+            justifyContent: "flex-start", // Adjusted for right alignment
+            alignItems: "flex-start",
           }}
         >
-          {montharr.map((val, index) => (
-            <MenuItem
-              onClick={() => {
-                console.log("clicked1");
+          <Box sx={{ display: "flex", mt: 1 }}>
+            <div>
+              <Tooltip title="Add Event Inquiries">
+                <Button
+                  onClick={handleopen}
+                  disabled={parent._id ? false : true}
+                >
+                  <AddIcon />
+                </Button>
+              </Tooltip>
+            </div>
+            <div>
+              <Tooltip title="Filter" arrow>
+                <Button
+                  id="basic-button"
+                  aria-controls={openmenu1 ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openmenu1 ? "true" : undefined}
+                  onClick={handleClickmenu1}
+                >
+                  <FilterAltIcon sx={{ color: "#0063cc" }} />
+                </Button>
+              </Tooltip>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl1}
+                open={openmenu1}
+                onClose={handleClosemenu1}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                {montharr.map((val, index) => (
+                  <MenuItem
+                    onClick={() => {
+                      console.log("clicked1");
 
-                axios
-                  .get(
-                    `http://localhost:5000/Eventinquiry/filterbyMonth?month=${montharr[index]}&sortby=${order1}&page=${page}&limit=${10}&type=${type}`,jwttoken())
-                  .then((data) => {
-                    console.log(data)
-                    if(type=='onGoing')
-                      {
-                        setong(data.data.filterData)
-                        setorder1(order1 === 1 ? -1 : 1);
-                        settotalpages(data.data.totalPages)
-                      }
-                      else if(type=='Reject')
-                      {
-                        setReject(data.data.filterData)
-                        setorder1(order1 === 1 ? -1 : 1);
-                        settotalpages(data.data.totalPages)
-                      }
-                      else{
-                        setconfirm(data.data.filterData)
-                        setorder1(order1 === 1 ? -1 : 1);
-                        settotalpages(data.data.totalPages)
-                      }
-                 
+                      axios
+                        .get(
+                          `http://localhost:5000/Eventinquiry/filterbyMonth?month=${
+                            montharr[index]
+                          }&sortby=${order1}&page=${page}&limit=${10}&type=${type}`,
+                          jwttoken()
+                        )
+                        .then((data) => {
+                          console.log(data);
+                          if (type == "onGoing") {
+                            setong(data.data.filterData);
+                            setorder1(order1 === 1 ? -1 : 1);
+                            settotalpages(data.data.totalPages);
+                          } else if (type == "Reject") {
+                            setReject(data.data.filterData);
+                            setorder1(order1 === 1 ? -1 : 1);
+                            settotalpages(data.data.totalPages);
+                          } else {
+                            setconfirm(data.data.filterData);
+                            setorder1(order1 === 1 ? -1 : 1);
+                            settotalpages(data.data.totalPages);
+                          }
+                        })
+                        .catch((error) => {
+                          console.error("API Request Error:", error);
+                        });
 
-                  
-                  })
-                  .catch((error) => {
-                    console.error("API Request Error:", error);
-                  });
-
-                handleClosemenu1();
-              }}
-            >
-              {monthname[index]}
-            </MenuItem>
-          ))}
-        </Menu>
-      </div>
-
-      <div>
-        <Tooltip title="Sort" arrow>
-          <Button
-            id="basic-button"
-            aria-controls={openmenu ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={openmenu ? "true" : undefined}
-            onClick={handleClickmenu}
-          >
-            <SortIcon sx={{ color: "#0063cc" }} />
-          </Button>
-        </Tooltip>
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={openmenu}
-          onClose={handleClosemenu}
-          MenuListProps={{
-            "aria-labelledby": "basic-button",
-          }}
-        >
-          <MenuItem
-            onClick={() => {
-          axios.get(`http://localhost:5000/Eventinquiry/alldata?key=${type}&page=${page}&limit=${10}`,jwttoken())
-          .then((data) => {
-            console.log(data)
-            if(type=='onGoing')
-              {
-                setong(data.data.allData)
-               settotalpages(data.data.totalPages)
-
-              }
-              else if(type=='Reject')
-              {
-                setReject(data.data.allData)
-                settotalpages(data.data.totalPages)
-               
-              }
-              else{
-                setconfirm(data.data.allData)
-                settotalpages(data.data.totalPages)
-               
-              
-              }
-          
-          })
-          .catch((error) => {
-            console.error("API Request Error:", error);
-          });
-              handleClosemenu();
-            }}
-          >
-            All
-          </MenuItem>
-
-          <MenuItem
-            onClick={() => {
-              axios
-                .get(
-                  `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=Date&page=${page}&limit=${10}&sortBy=${order}&type=${type}`,jwttoken())
-                  .then((data) => {
-                    console.log(data)
-                    if(type=='onGoing')
-                      {
-                        setong(data.data.sortData)
-                        setorder(order == 1 ? -1 : 1);
-                        settotalpages(data.data.totalPages)
-
-
-                      }
-                      else if(type=='Reject')
-                      {
-                        setReject(data.data.sortData)
-                        setorder(order == 1 ? -1 : 1);
-                        settotalpages(data.data.totalPages)
-
-                      }
-                      else{
-                        setconfirm(data.data.sortData)
-                        setorder(order == 1 ? -1 : 1);
-                        settotalpages(data.data.totalPages)
-
-                      }
-                  
-                  })
-                  .catch((error) => {
-                    console.error("API Request Error:", error);
-                  });
-              handleClosemenu();
-              
-            }}
-          >
-            Sort By Date
-          </MenuItem>
-          <MenuItem
-             onClick={() => {
-              axios
-                .get(
-                  `http://localhost:5000/Eventinquiry/sortby?eventId=${parent._id ? parent._id : ""}&key=FullName&page=${page}&limit=${10}&sortBy=${order}&type=${type}`,jwttoken())
-                  .then((data) => {
-                    console.log(data)
-                    if(type=='onGoing')
-                      {
-                        setong(data.data.sortData)
-                        setorder(order == 1 ? -1 : 1);
-                        settotalpages(data.data.totalPages)
-                        
-                      }
-                      else if(type=='Reject')
-                      {
-                        setReject(data.data.sortData)
-                        setorder(order == 1 ? -1 : 1);
-                        settotalpages(data.data.totalPages)
-                        
-                      }
-                      else{
-                        setconfirm(data.data.sortData)
-                        setorder(order == 1 ? -1 : 1);
-                        settotalpages(data.data.totalPages)
-                        
-                      }
-                  
-                  })
-                  .catch((error) => {
-                    console.error("API Request Error:", error);
-                  });
-              handleClosemenu();
-              
-            }}
-          >
-            Sort By Name
-          </MenuItem>
-        
-        </Menu>
-      </div>
-      </Box>
-    </Grid>
-  {pagination}
-    <Grid item xs={2}>
-      <Box sx={{ mx: 2 }}>
-        <FormControl sx={{width:150}}>
-          <InputLabel id="demo-simple-select-label">
-            {" "}
-            Select Event Type
-          </InputLabel>
-          <Select
-            onChange={(e) => {
-              handleparent(e);
-            }}
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Status"
-            renderValue={(data)=>{return (parent._id && data.Course || '')}}
-            sx={{
-              height:50,
-              borderRadius: "16px",
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  border: '2px solid #0063cc', // Default border color
-                },
-                '&:hover fieldset': {
-                  border: '2px solid #0063cc', // Border color on hover
-                },
-                '&.Mui-focused fieldset': {
-                  border: '2px solid #0063cc', // Border color when focused
-                },
-              },
-            }}
-          >
-            {arr &&
-              arr.map((row) => (
-                <MenuItem value={row}>
-                  <TableRow
-                    key={row.name}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
+                      handleClosemenu1();
                     }}
                   >
-                    <TableCell align="center">{row.Course}</TableCell>
+                    {monthname[index]}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </div>
 
-                  </TableRow>
+            <div>
+              <Tooltip title="Sort" arrow>
+                <Button
+                  id="basic-button"
+                  aria-controls={openmenu ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openmenu ? "true" : undefined}
+                  onClick={handleClickmenu}
+                >
+                  <SortIcon sx={{ color: "#0063cc" }} />
+                </Button>
+              </Tooltip>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={openmenu}
+                onClose={handleClosemenu}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    axios
+                      .get(
+                        `http://localhost:5000/Eventinquiry/alldata?key=${type}&page=${page}&limit=${10}`,
+                        jwttoken()
+                      )
+                      .then((data) => {
+                        console.log(data);
+                        if (type == "onGoing") {
+                          setong(data.data.allData);
+                          settotalpages(data.data.totalPages);
+                        } else if (type == "Reject") {
+                          setReject(data.data.allData);
+                          settotalpages(data.data.totalPages);
+                        } else {
+                          setconfirm(data.data.allData);
+                          settotalpages(data.data.totalPages);
+                        }
+                      })
+                      .catch((error) => {
+                        console.error("API Request Error:", error);
+                      });
+                    handleClosemenu();
+                  }}
+                >
+                  All
                 </MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </Box>
-    </Grid>
-    <Grid
-      item
-      xs={4}
-      
-      sx={{
-        display: "flex",
-        justifyContent: "left",
-        alignItems: "center",
-        
-      }}
-    >
-      <Box sx={{ width: 400, ml: 3 }}>
-        <TextField
-          value={searchname}
-          id="filled-hidden-label-small"
-          placeholder="Search Students..."
-          variant="filled"
-          size="small"
-          onChange={handlesearchname}
+
+                <MenuItem
+                  onClick={() => {
+                    axios
+                      .get(
+                        `http://localhost:5000/Eventinquiry/sortby?eventId=${
+                          parent._id ? parent._id : ""
+                        }&key=Date&page=${page}&limit=${10}&sortBy=${order}&type=${type}`,
+                        jwttoken()
+                      )
+                      .then((data) => {
+                        console.log(data);
+                        if (type == "onGoing") {
+                          setong(data.data.sortData);
+                          setorder(order == 1 ? -1 : 1);
+                          settotalpages(data.data.totalPages);
+                        } else if (type == "Reject") {
+                          setReject(data.data.sortData);
+                          setorder(order == 1 ? -1 : 1);
+                          settotalpages(data.data.totalPages);
+                        } else {
+                          setconfirm(data.data.sortData);
+                          setorder(order == 1 ? -1 : 1);
+                          settotalpages(data.data.totalPages);
+                        }
+                      })
+                      .catch((error) => {
+                        console.error("API Request Error:", error);
+                      });
+                    handleClosemenu();
+                  }}
+                >
+                  Sort By Date
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    axios
+                      .get(
+                        `http://localhost:5000/Eventinquiry/sortby?eventId=${
+                          parent._id ? parent._id : ""
+                        }&key=FullName&page=${page}&limit=${10}&sortBy=${order}&type=${type}`,
+                        jwttoken()
+                      )
+                      .then((data) => {
+                        console.log(data);
+                        if (type == "onGoing") {
+                          setong(data.data.sortData);
+                          setorder(order == 1 ? -1 : 1);
+                          settotalpages(data.data.totalPages);
+                        } else if (type == "Reject") {
+                          setReject(data.data.sortData);
+                          setorder(order == 1 ? -1 : 1);
+                          settotalpages(data.data.totalPages);
+                        } else {
+                          setconfirm(data.data.sortData);
+                          setorder(order == 1 ? -1 : 1);
+                          settotalpages(data.data.totalPages);
+                        }
+                      })
+                      .catch((error) => {
+                        console.error("API Request Error:", error);
+                      });
+                    handleClosemenu();
+                  }}
+                >
+                  Sort By Name
+                </MenuItem>
+              </Menu>
+            </div>
+          </Box>
+        </Grid>
+        {pagination}
+        <Grid item xs={2}>
+          <Box sx={{ mx: 2 }}>
+            <FormControl sx={{ width: 150 }}>
+              <InputLabel
+                id="demo-simple-select-label"
+                sx={{
+                  top: "-6px", // Adjust label position slightly upwards
+                  backgroundColor: "white", // Background to avoid overlap with border
+
+                  "&.Mui-focused": {
+                    top: "0px", // Position when focused
+                  },
+                }}
+              >
+                {" "}
+                Select Event
+              </InputLabel>
+              <Select
+                onChange={(e) => {
+                  handleparent(e);
+                }}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Status"
+                renderValue={(data) => {
+                  return (parent._id && data.eventName) || "";
+                }}
+                sx={{
+                  height: 50,
+                  borderRadius: "16px",
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      border: "2px solid #0063cc", // Default border color
+                    },
+                    "&:hover fieldset": {
+                      border: "2px solid #0063cc", // Border color on hover
+                    },
+                    "&.Mui-focused fieldset": {
+                      border: "2px solid #0063cc", // Border color when focused
+                    },
+                  },
+                }}
+              >
+                {arr &&
+                  arr.map((row) => (
+                    <MenuItem value={row}>
+                      <TableRow
+                        key={row.name}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell align="center">{row.eventName}</TableCell>
+                      </TableRow>
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </Grid>
+        <Grid
+          item
+          xs={4}
           sx={{
-            width: "100%",
-            maxWidth: 400,
-            "& .MuiFilledInput-root": {
-              borderRadius: "16px",
-              border: "2px solid #0063cc",
-              backgroundColor: "white",
-              padding: "0 16px", // Ensure background color is consistent
-              "&:hover": {
-                backgroundColor: "white",
-              },
-              "&.Mui-focused": {
-                backgroundColor: "white",
-              },
-              "& input": {
-                padding: "12px 0", // Adjust vertical padding to center text
-                // Center the text horizontally
-              },
-            },
-            "& .MuiFilledInput-underline:before": {
-              borderBottom: "none", // Remove the default underline before focus
-            },
-            "& .MuiFilledInput-underline:after": {
-              borderBottom: "none", // Remove the default underline after focus
-            },
-            "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
-              borderBottom: "none", // Remove underline on hover
-            },
+            display: "flex",
+            justifyContent: "left",
+            alignItems: "center",
           }}
-        />
-      </Box>
-      <Tooltip title="Search" arrow>
-        <Button sx={{ color: "#0063cc" }}>
-          <SearchIcon
-          onClick={() => {
-            if(searchname.length>0){
-            axios
-              .get(
-                `http://localhost:5000/Eventinquiry/search?FullName=${searchname}&type=${type}&page=${page}&limit=${10}`,jwttoken()
-              )
-              .then((data) => {
-                console.log(data);
-                if(type=='onGoing')
-                {
-                  setong(data.data.filterdata)
-                  settotalpages(data.data.totalPages)
-                        
-                  
-                }
-                else if(type=='Reject')
-                {
-                  setReject(data.data.filterdata)
-                  settotalpages(data.data.totalPages)
-                        
-                }
-                else{
-                  setconfirm(data.data.filterdata)
-                  settotalpages(data.data.totalPages)
-                        
-                }
-                
-                setseearchname("");
+        >
+          <Box sx={{ width: 400, ml: 3 }}>
+            <TextField
+              value={searchname}
+              id="filled-hidden-label-small"
+              placeholder="Search Students..."
+              variant="filled"
+              size="small"
+              onChange={handlesearchname}
+              sx={{
+                width: "100%",
+                maxWidth: 400,
+                "& .MuiFilledInput-root": {
+                  borderRadius: "16px",
+                  border: "2px solid #0063cc",
+                  backgroundColor: "white",
+                  padding: "0 16px", // Ensure background color is consistent
+                  "&:hover": {
+                    backgroundColor: "white",
+                  },
+                  "&.Mui-focused": {
+                    backgroundColor: "white",
+                  },
+                  "& input": {
+                    padding: "12px 0", // Adjust vertical padding to center text
+                    // Center the text horizontally
+                  },
+                },
+                "& .MuiFilledInput-underline:before": {
+                  borderBottom: "none", // Remove the default underline before focus
+                },
+                "& .MuiFilledInput-underline:after": {
+                  borderBottom: "none", // Remove the default underline after focus
+                },
+                "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
+                  borderBottom: "none", // Remove underline on hover
+                },
+              }}
+            />
+          </Box>
+          <Tooltip title="Search" arrow>
+            <Button sx={{ color: "#0063cc" }}>
+              <SearchIcon
+                onClick={() => {
+                  if (searchname.length > 0) {
+                    axios
+                      .get(
+                        `http://localhost:5000/Eventinquiry/search?FullName=${searchname}&type=${type}&page=${page}&limit=${10}`,
+                        jwttoken()
+                      )
+                      .then((data) => {
+                        console.log(data);
+                        if (type == "onGoing") {
+                          setong(data.data.filterdata);
+                          settotalpages(data.data.totalPages);
+                        } else if (type == "Reject") {
+                          setReject(data.data.filterdata);
+                          settotalpages(data.data.totalPages);
+                        } else {
+                          setconfirm(data.data.filterdata);
+                          settotalpages(data.data.totalPages);
+                        }
 
-              })
-          .catch((err)=>{
-            console.log(err)
-          })
-        }
-        else{
-          handleClick1({ vertical: "top", horizontal: "center" });
-          setAlertMsg({
-            open: true,
-            message: 'Please Enter Name First'
-          });
-
-        }
-        }}
-
-          />
-        </Button>
-      </Tooltip>
-    </Grid>
-   
-  </Grid>
-)
-},[totalpages,open,anchorEl,anchorEl1,searchname,parent,arr,order,order1])
-const dialog=React.useMemo(()=>{
-  console.log('dilog called')
-return(
-  <Dialog open={open} onClose={handleClose}>
-  <DialogContent>
- 
-
-    <TextField
-      id="outlined-basic"
-      label="Full Name"
-      variant="filled"
-      value={data.FullName}
-      onChange={(e) => {
-        handleChange(e, "FullName");
-      }}
-      fullWidth
-      sx={{ mb: 2 }}
-    />
-    <TextField
-      id="outlined-basic"
-      type="number"
-      label="Contact"
-      variant="filled"
-      value={data.Contact}
-      onChange={(e) => {
-        console.log(e);
-        handleChange(e, "Contact");
-      }}
-      fullWidth
-      sx={{ mb: 2 }}
-    />
-    <TextField
-      id="outlined-basic"
-      label="Email"
-      variant="filled"
-      value={data.Email}
-      onChange={(e) => {
-        handleChange(e, "Email");
-      }}
-      fullWidth
-      sx={{ mb: 1 }}
-    />
-
-    <Box sx={{ mb: 2 }}>
-      <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
-        <DemoContainer components={["DatePicker"]} fullWidth>
-          <DatePicker
-            label="Choose Your Date"
-            sx={{ width: 533 }}  
-          slotProps={{ textField: { variant: "filled" } }}
-          value={dayjs(data.Date)}
-          onChange={handleDateChange}
+                        setseearchname("");
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                  } else {
+                    handleClick1({ vertical: "top", horizontal: "center" });
+                    setAlertMsg({
+                      open: true,
+                      message: "Please Enter Name First",
+                    });
+                  }
+                }}
+              />
+            </Button>
+          </Tooltip>
+        </Grid>
+      </Grid>
+    );
+  }, [
+    totalpages,
+    open,
+    anchorEl,
+    anchorEl1,
+    searchname,
+    parent,
+    arr,
+    order,
+    order1,
+  ]);
+  const dialog = React.useMemo(() => {
+    console.log("dilog called");
+    return (
+      <Dialog open={open} onClose={handleClose}>
+        <DialogContent>
+          <TextField
+            id="outlined-basic"
+            label="Full Name"
+            variant="filled"
+            value={data.FullName}
+            onChange={(e) => {
+              handleChange(e, "FullName");
+            }}
             fullWidth
-          ></DatePicker>
-        </DemoContainer>
-      </LocalizationProvider>
-    </Box>
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            id="outlined-basic"
+            type="number"
+            label="Contact"
+            variant="filled"
+            value={data.Contact}
+            onChange={(e) => {
+              console.log(e);
+              handleChange(e, "Contact");
+            }}
+            fullWidth
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            id="outlined-basic"
+            label="Email"
+            variant="filled"
+            value={data.Email}
+            onChange={(e) => {
+              handleChange(e, "Email");
+            }}
+            fullWidth
+            sx={{ mb: 1 }}
+          />
 
-    <TextField
-      id="outlined-basic"
-      label="College Name"
-      value={data.CollageName}
-      variant="filled"
-      onChange={(e) => {
-        handleChange(e, "CollageName");
-      }}
-      fullWidth
-      sx={{ mb: 2 }}
-    />
+          <Box sx={{ mb: 2 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
+              <DemoContainer components={["DatePicker"]} fullWidth>
+                <DatePicker
+                  label="Choose Your Date"
+                  sx={{ width: 533 }}
+                  slotProps={{ textField: { variant: "filled" } }}
+                  value={dayjs(data.Date)}
+                  onChange={handleDateChange}
+                  fullWidth
+                ></DatePicker>
+              </DemoContainer>
+            </LocalizationProvider>
+          </Box>
 
-    <Box sx={{ minWidth: 120, mb: 2 }}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Follow-Up</InputLabel>
-        <Select
-          value={data.FollowUp}
-          variant="filled"
-          onChange={(e) => {
-            handleChange(e, "FollowUp");
-          }}
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          label="Status"
-        >
-          <MenuItem value={"Yes"}>Yes</MenuItem>
-          <MenuItem value={"No"}>No</MenuItem>
-        </Select>
-      </FormControl>
-    </Box>
-    <Box sx={{ minWidth: 120, mb: 2 }}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Interaction</InputLabel>
-        <Select
-          value={data.Interaction}
-          variant="filled"
-          onChange={(e) => {
-            handleChange(e, "Interaction");
-          }}
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          label="Status"
-        >
-          <MenuItem value={"Office"}>Office</MenuItem>
-          <MenuItem value={"Oncall"}>On-Call</MenuItem>
-        </Select>
-      </FormControl>
-    </Box>
+          <TextField
+            id="outlined-basic"
+            label="College Name"
+            value={data.CollageName}
+            variant="filled"
+            onChange={(e) => {
+              handleChange(e, "CollageName");
+            }}
+            fullWidth
+            sx={{ mb: 2 }}
+          />
 
-    <TextField
-      fullWidth
-      label="Description"
-      value={data.Description}
-      variant="filled"
-      id="fullWidth"
-      sx={{ mb: 2 }}
-      onChange={(e) => {
-        handleChange(e, "Description");
-      }}
-    />
-    <Grid container spacing={2} justifyContent="right" sx={{ mt: 0.5 }}>
-    <Button
-      onClick={() => {
-        handleClose();
-      }}
-      
-    >
-      Cancel
-    </Button>
-    <Button
-    
-      onClick={() => {
-        handlesubmit();
-      }}
-    >
-      Submit
-    </Button>
-    </Grid>
-  </DialogContent>
-  <DialogActions></DialogActions>
-</Dialog> 
-)
-},[open,data,id])
-const table=React.useMemo(()=>{
-  console.log('table czlled')
-return(
-<Box>
+          <Box sx={{ minWidth: 120, mb: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Follow-Up</InputLabel>
+              <Select
+                value={data.FollowUp}
+                variant="filled"
+                onChange={(e) => {
+                  handleChange(e, "FollowUp");
+                }}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Status"
+              >
+                <MenuItem value={"Yes"}>Yes</MenuItem>
+                <MenuItem value={"No"}>No</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          <Box sx={{ minWidth: 120, mb: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Interaction</InputLabel>
+              <Select
+                value={data.Interaction}
+                variant="filled"
+                onChange={(e) => {
+                  handleChange(e, "Interaction");
+                }}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Status"
+              >
+                <MenuItem value={"Office"}>Office</MenuItem>
+                <MenuItem value={"Oncall"}>On-Call</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          <TextField
+            fullWidth
+            label="Description"
+            value={data.Description}
+            variant="filled"
+            id="fullWidth"
+            sx={{ mb: 2 }}
+            onChange={(e) => {
+              handleChange(e, "Description");
+            }}
+          />
+          <Grid container spacing={2} justifyContent="right" sx={{ mt: 0.5 }}>
+            <Button
+              onClick={() => {
+                handleClose();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                handlesubmit();
+              }}
+            >
+              Submit
+            </Button>
+          </Grid>
+        </DialogContent>
+        <DialogActions></DialogActions>
+      </Dialog>
+    );
+  }, [open, data, id]);
+  const table = React.useMemo(() => {
+    console.log("table czlled");
+    return (
+      <Box>
         <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
           <Tabs
             value={value}
@@ -1016,7 +993,7 @@ return(
                 </TableRow>
               </TableHead>
               <TableBody sx={{ height: ong && ong.length < 1 ? 220 : 0 }}>
-                {ong &&
+                {ong && ong.length > 0 ? (
                   ong.map((row) => (
                     <TableRow
                       key={row._id}
@@ -1039,19 +1016,20 @@ return(
                         {row.Date && row.Date.split("T")[0]}
                       </TableCell>
                       <TableCell align="center">{row.CollageName}</TableCell>
-                      <TableCell align="center"
-                       style={{
-                        color: row.FollowUp == "Yes" ? "green" : "red",
-                        fontWeight: "bold",
-                      }}>
-                      
-                      {row.FollowUp}</TableCell>
+                      <TableCell
+                        align="center"
+                        style={{
+                          color: row.FollowUp == "Yes" ? "green" : "red",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {row.FollowUp}
+                      </TableCell>
                       <TableCell align="center">{row.Interaction}</TableCell>
                       <TableCell align="center">{row.Description}</TableCell>
                       <TableCell align="center">
                         <Tooltip title="Edit" arrow>
                           <Button
-                   
                             onClick={() => {
                               setOpen(true);
                               setData(row);
@@ -1062,13 +1040,15 @@ return(
                           </Button>
                         </Tooltip>
                       </TableCell>
-     
+
                       <TableCell>
                         <Tooltip title="Reject" arrow>
                           <Button
-                           
                             color="error"
-                            onClick={()=>{setId(row._id);handleClickOpen2()}}
+                            onClick={() => {
+                              setId(row._id);
+                              handleClickOpen2();
+                            }}
                           >
                             <CloseIcon />
                           </Button>
@@ -1078,20 +1058,30 @@ return(
                       <TableCell>
                         <Tooltip title="Confirm" arrow>
                           <Button
-                         color="success"
-                         onClick={()=>{setId(row._id);handleClickOpen3()}}
+                            color="success"
+                            onClick={() => {
+                              setId(row._id);
+                              handleClickOpen3();
+                            }}
                           >
                             <DoneIcon />
                           </Button>
                         </Tooltip>
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell align="center" colSpan={11}>
+                      No Data Available
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
         </CustomTabPanel>
-        
+
         <CustomTabPanel value={value} index={1}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -1105,11 +1095,10 @@ return(
                   <TableCell align="center">FollowUp</TableCell>
                   <TableCell align="center">Interaction</TableCell>
                   <TableCell align="center">Description</TableCell>
-              
                 </TableRow>
               </TableHead>
               <TableBody sx={{ height: reject && reject.length < 1 ? 220 : 0 }}>
-                {reject &&
+                {reject && reject.length > 0 ? (
                   reject.map((row) => (
                     <TableRow
                       key={row._id}
@@ -1122,17 +1111,27 @@ return(
                         {row.Date && row.Date.split("T")[0]}
                       </TableCell>
                       <TableCell align="center">{row.CollageName}</TableCell>
-                      <TableCell align="center"
+                      <TableCell
+                        align="center"
                         style={{
                           color: row.FollowUp == "Yes" ? "green" : "red",
                           fontWeight: "bold",
-                        }}>{row.FollowUp}</TableCell>
+                        }}
+                      >
+                        {row.FollowUp}
+                      </TableCell>
 
                       <TableCell align="center">{row.Interaction}</TableCell>
                       <TableCell align="center">{row.Description}</TableCell>
-                   
                     </TableRow>
-                  ))}
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell align="center" colSpan={8}>
+                      No Data Available
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -1156,7 +1155,7 @@ return(
               <TableBody
                 sx={{ height: confirm && confirm.length < 1 ? 220 : 0 }}
               >
-                {confirm &&
+                {confirm && confirm.length > 0 ? (
                   confirm.map((row) => (
                     <TableRow
                       key={row._id}
@@ -1173,127 +1172,133 @@ return(
                       <TableCell align="center">{row.Interaction}</TableCell>
                       <TableCell align="center">{row.Description}</TableCell>
                     </TableRow>
-                  ))}
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell align="center" colSpan={8}>
+                      No Data Available
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
         </CustomTabPanel>
       </Box>
-)
-},[ong,reject,confirm,value,searchname])
-const rejectdialog=React.useMemo(()=>{
-  console.log('rejectdialog')
-return(
-  <Dialog
-  open={open2}
-  onClose={handleClose2}
-  aria-labelledby="alert-dialog-title"
-  aria-describedby="alert-dialog-description"
->
-  <DialogTitle id="alert-dialog-title">{"Reject Student"}</DialogTitle>
-  <DialogContent>
-    <DialogContentText id="alert-dialog-description">
-     Do You Want To Reject?
-    </DialogContentText>
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={handleClose2}>Cancel</Button>
-    <Button
-      onClick={() => {
-        axios
-          .post(
-            `http://localhost:5000/Eventinquiry/RejectedInquiry?id=${id}`,{},jwttoken()
-          )
-
-          .then((data) => {
-            console.log(data);
-            doUpdate(!update);
-            setData({Date:newdate()})
-    
-            handleClick1({ vertical: "top", horizontal: "center" });
-            setAlertSuccess({
-              open: true,
-              message: " Inquiry Rejected Successfully",
-              
-            });
-        
-            handleClose2()
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-       
-      }}
-    >
-      Confirm
-    </Button>
-  </DialogActions>
-</Dialog>
-)
-},[open2])
-const confirmdialog=React.useMemo(()=>{
-console.log('cofnrim dialog')
-  return(
-    <Dialog
-    open={open3}
-    onClose={handleClose3}
-    aria-labelledby="alert-dialog-title"
-    aria-describedby="alert-dialog-description"
-  >
-    <DialogTitle id="alert-dialog-title">{"Confirm Student"}</DialogTitle>
-    <DialogContent>
-      <DialogContentText id="alert-dialog-description">
-       Do You Want To Confirm?
-      </DialogContentText>
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={handleClose3}>Cancel</Button>
-      <Button
-         onClick={() => {
-          axios
-            .post(
-              `http://localhost:5000/Eventinquiry/ConfimInquiry?id=${id}`,{},jwttoken()
-            )
-            .then((data) => {
-              console.log(data);
-              doUpdate(!update);
-              setData({Date:newdate()})
-    
-              handleClick1({ vertical: "top", horizontal: "center" });
-              setAlertSuccess({
-                open: true,
-                message: " Inquiry Confirmed Successfully",
-            
-              });
-            
-              handleClose2();
-              
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-            handleClose3()
-        }}
+    );
+  }, [ong, reject, confirm, value, searchname]);
+  const rejectdialog = React.useMemo(() => {
+    console.log("rejectdialog");
+    return (
+      <Dialog
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
       >
-        Confirm
-      </Button>
-    </DialogActions>
-  </Dialog>
-)
-},[open3])
+        <DialogTitle id="alert-dialog-title">{"Reject Student"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do You Want To Reject?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose2}>Cancel</Button>
+          <Button
+            onClick={() => {
+              axios
+                .post(
+                  `http://localhost:5000/Eventinquiry/RejectedInquiry?id=${id}`,
+                  {},
+                  jwttoken()
+                )
+
+                .then((data) => {
+                  console.log(data);
+                  doUpdate(!update);
+                  setData({ Date: newdate() });
+
+                  handleClick1({ vertical: "top", horizontal: "center" });
+                  setAlertSuccess({
+                    open: true,
+                    message: " Inquiry Rejected Successfully",
+                  });
+
+                  handleClose2();
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }, [open2]);
+  const confirmdialog = React.useMemo(() => {
+    console.log("cofnrim dialog");
+    return (
+      <Dialog
+        open={open3}
+        onClose={handleClose3}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Student"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do You Want To Confirm?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose3}>Cancel</Button>
+          <Button
+            onClick={() => {
+              axios
+                .post(
+                  `http://localhost:5000/Eventinquiry/ConfimInquiry?id=${id}`,
+                  {},
+                  jwttoken()
+                )
+                .then((data) => {
+                  console.log(data);
+                  doUpdate(!update);
+                  setData({ Date: newdate() });
+
+                  handleClick1({ vertical: "top", horizontal: "center" });
+                  setAlertSuccess({
+                    open: true,
+                    message: " Inquiry Confirmed Successfully",
+                  });
+
+                  handleClose2();
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              handleClose3();
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }, [open3]);
   return (
     <React.Fragment>
-   {Snack}
-    
-{ingredients}
-     
-{dialog}
-      
-{table}
+      {Snack}
 
-  {rejectdialog}
-        {confirmdialog}
-   
+      {ingredients}
+
+      {dialog}
+
+      {table}
+
+      {rejectdialog}
+      {confirmdialog}
     </React.Fragment>
   );
 }

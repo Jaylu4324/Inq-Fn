@@ -20,6 +20,7 @@ import {
   ListItemText,
   FilledInput,
   TableBody,
+  Paper,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
@@ -272,7 +273,16 @@ return(
     <Grid xs={5}>
       <Box sx={{ mt: 2,mr:2}}>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">
+          <InputLabel id="demo-simple-select-label"
+           sx={{
+            top: "-6px", // Adjust label position slightly upwards
+            backgroundColor: "white", // Background to avoid overlap with border
+
+            "&.Mui-focused": {
+              top: "0px", // Position when focused
+            },
+          }}
+          >
             {" "}
             Select Course
           </InputLabel>
@@ -496,8 +506,8 @@ const table=React.useMemo(()=>{
   console.log('table called')
 return(
   <Box>
-  <Box sx={{ mt: 5 }}>
-<TableContainer>
+  <Box sx={{ mt: 5,mx:2 }}>
+<TableContainer component={Paper}>
 <Table sx={{ minWidth: 650 }} aria-label="simple table">
 <TableHead>
   <TableRow>
@@ -522,7 +532,7 @@ return(
   
 </TableHead>
 <TableBody sx={{height:map && map.length<1?300:0}}>              
-{map &&
+{map && map.length>0?
   map.map((row) => (
     <TableRow
       key={row.name}
@@ -598,7 +608,12 @@ return(
       </TableCell>
 
     </TableRow>
-  ))}
+  ))
+:
+<TableRow>
+<TableCell align="center" colSpan={6}>No Data Available!</TableCell>
+</TableRow> 
+}
   </TableBody>
 
 </Table>

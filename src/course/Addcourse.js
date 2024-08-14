@@ -40,6 +40,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import jwttoken from "../Token";
 import { Snackbar, Alert } from "@mui/material";
+
 import { styled } from "@mui/system";
 
 
@@ -88,6 +89,7 @@ function Addcourse() {
   const [id, setid] = React.useState("");
   console.log(id);
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
+  
   const [alertbatchMsg, setalertbatchMsg] = React.useState({
     open: false,
     message: "",
@@ -211,6 +213,7 @@ function Addcourse() {
             open: true,
             message: err.response.data.error.details[0].message,
           });
+
         }
       });
   };
@@ -264,7 +267,7 @@ function Addcourse() {
           <Grid xs={7} sx={{display:'flex',justifyContent:'flex-start'}}>
             <Box sx={{ mt: 2 }}>
               <CustomPagination
-                count={totalpages}
+                count={totalpages?totalpages:1}
                 page={page}
                 size="large"
                 onChange={(e, p) => {
@@ -432,11 +435,13 @@ function Addcourse() {
               : alertbatchMsg.open
               ? alertbatchMsg.message
               : null}
+              
           </Alert>
         )}
       </Snackbar>
     );
   }, [open1]);
+
   const table = React.useMemo(() => {
     console.log("table called");
     return (
@@ -464,9 +469,11 @@ function Addcourse() {
               </TableRow>
             </TableHead>
 
-            {arr &&
+            
+                <TableBody sx={{ height: arr && arr.length < 1 ? 250 : 0 }}>
+                {arr && arr.length>0?
               arr.map((row) => (
-                <TableBody sx={{ height: arr && arr.length < 1 ? 200 : 0 }}>
+              
                   <TableRow
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -525,8 +532,18 @@ function Addcourse() {
                       </Tooltip>
                     </TableCell>
                   </TableRow>
+
+
+)):
+
+             
+             <TableRow>
+              <TableCell align="center" colSpan={7}>No Data Available!</TableCell>
+             </TableRow> 
+  }
+
                 </TableBody>
-              ))}
+              
           </Table>
         </TableContainer>
       </Box>

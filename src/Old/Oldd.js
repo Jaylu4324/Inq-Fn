@@ -224,6 +224,8 @@ return(
           Course
         </TableCell>
         <TableCell align="center">Type Of Event</TableCell>
+        <TableCell align="center">Event Name</TableCell>
+        
         <TableCell align="center">Type Of Payment</TableCell>
 
         <TableCell align="center">Amount</TableCell>
@@ -239,8 +241,8 @@ return(
         </TableCell>
       </TableRow>
     </TableHead>
-
-    {arr &&
+<TableBody sx={{height:arr && arr.length<1?220:0}}>
+    {arr && arr.length>0?
       arr.map((row,idx) => (
         <TableRow
           key={row.name}
@@ -258,6 +260,8 @@ return(
             {row.CourseId&&row.CourseId.Course}
           </TableCell>
           <TableCell align="center">{row.CourseId&&row.CourseId.TypeOfEvent}</TableCell>
+          <TableCell align="center">{row.CourseId&&row.CourseId.eventName}</TableCell>
+          
           <TableCell align="center">{row.CourseId&&row.CourseId.TypeOfPayment}</TableCell>
 
           <TableCell align="center">{row.CourseId&&row.CourseId.Amount}</TableCell>
@@ -315,8 +319,14 @@ return(
 
 
         </TableRow>
-      ))}
-      
+      ))
+    :
+    <TableRow>
+
+      <TableCell align="center" colSpan={11}> No Data Available!</TableCell>
+    </TableRow>
+    }
+      </TableBody>
   </Table>
 </TableContainer>
 )

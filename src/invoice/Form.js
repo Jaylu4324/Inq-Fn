@@ -322,7 +322,7 @@ export default function FormDialog() {
       <Grid item xs={3}>
         <Box>
           <CustomPagination
-            count={totalpages}
+            count={totalpages?totalpages:1}
             page={page}
             size="large"
             onChange={handlePageChange} // Using the handler function
@@ -551,7 +551,16 @@ return(
   <Grid item xs={2}>
     <Box>
       <FormControl sx={{width:150}}>
-        <InputLabel id="demo-simple-select-label">
+        <InputLabel id="demo-simple-select-label"
+         sx={{
+          top: "-6px", // Adjust label position slightly upwards
+          backgroundColor: "white", // Background to avoid overlap with border
+
+          "&.Mui-focused": {
+            top: "0px", // Position when focused
+          },
+        }}
+        >
           Select Course
         </InputLabel>
         <Select

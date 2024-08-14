@@ -588,7 +588,16 @@ function SD() {
         <Grid item xs={2}>
           <Box sx={{ mx: 2 }}>
             <FormControl sx={{ width: 140 }}>
-              <InputLabel id="demo-simple-select-label">
+              <InputLabel id="demo-simple-select-label"
+               sx={{
+                top: "-6px", // Adjust label position slightly upwards
+                backgroundColor: "white", // Background to avoid overlap with border
+    
+                "&.Mui-focused": {
+                  top: "0px", // Position when focused
+                },
+              }}
+              >
                 {" "}
                 Select Course
               </InputLabel>

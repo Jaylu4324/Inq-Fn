@@ -14,6 +14,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
 import Dialog from "@mui/material/Dialog";
+import { Snackbar, Alert } from "@mui/material";
 
 import DialogContent from "@mui/material/DialogContent";
 import Grid from "@mui/material/Grid";
@@ -74,10 +75,11 @@ const MyCalendar = () => {
     return date.toLocaleDateString("en-US", { weekday: "long" });
   }
   console.log(eventdata);
-
+  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
+  
   useEffect(() => {
-    localStorage.setItem("displayname","Dashboard")
- 
+    localStorage.setItem("displayname", "Dashboard");
+
     if (open) {
       setLoading(() => true);
       const dayName = getDayName(date);
@@ -117,8 +119,45 @@ const MyCalendar = () => {
     setDay(() => dayName);
   }, []);
 
-  
-  
+  const [state, setState] = React.useState({
+    open1: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+  const { vertical, horizontal, op } = state;
+
+  const handleClick1 = (newState) => {
+    setState({ ...state, op: true });
+  };
+
+  const handleClose12 = () => {
+    setState({ ...state, op: false });
+    setAlertMsg({ ...alertMsg, open: false });
+  };
+  console.log(alertMsg)
+  const Snack = React.useMemo(() => {
+    console.log("snack bar called");
+    return (
+      <Snackbar
+        open={op}
+        autoHideDuration={2000}
+        onClose={handleClose12}
+        anchorOrigin={{ vertical, horizontal }}
+      >
+        {alertMsg.open && (
+          <Alert
+            onClose={handleClose12}
+            severity="error"
+            variant="filled"
+            sx={{ width: "100%" }}>
+            {alertMsg.open&&alertMsg.message}
+            
+              
+          </Alert>
+        )}
+      </Snackbar>
+    );
+  }, [op]);
 
   const cal = React.useMemo(
     () => (
@@ -147,22 +186,26 @@ const MyCalendar = () => {
         }}
       >
         <Box>
-        <Grid container>
-  <Grid item xs={9}>
-    <DialogTitle>Courses</DialogTitle>
-  </Grid>
-  <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-    <IconButton
-      aria-label="close"
-      onClick={handleClose}
-      sx={{
-        color: (theme) => theme.palette.grey[500],
-      }}
-    >
-      <CloseIcon />
-    </IconButton>
-  </Grid>
-</Grid>
+          <Grid container>
+            <Grid item xs={9}>
+              <DialogTitle>Courses</DialogTitle>
+            </Grid>
+            <Grid
+              item
+              xs={3}
+              sx={{ display: "flex", justifyContent: "flex-end" }}
+            >
+              <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={{
+                  color: (theme) => theme.palette.grey[500],
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
 
           <Box>
             <DialogContent
@@ -171,7 +214,6 @@ const MyCalendar = () => {
                 padding: 0,
               }}
             >
-
               <Box>
                 <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -246,29 +288,36 @@ const MyCalendar = () => {
                                 sx={{ color: "black" }}
                                 onClick={() => {
                                   axios
-                                  .get(
-                                    `http://localhost:5000/Dashboard/StudentDetails?courseId=${row._id}`,
-                                    jwttoken()
-                                  )
+                                    .get(
+                                      `http://localhost:5000/Dashboard/StudentDetails?courseId=${row._id}`,
+                                      jwttoken()
+                                    )
 
-                                  .then((data) => {
-                                    console.log(data);
-                                    if (data.data.data.length > 0) {
-                                      console.log(data.data.data);
+                                    .then((data) => {
+                                      console.log(data);
+                                      if (data.data.data.length > 0) {
+                                        console.log(data.data.data);
 
-                                      data.data.data.map((val) => {
-                                        setstu(val.StuName);
+                                        data.data.data.map((val) => {
+                                          setstu(val.StuName);
+                                        });
+                                        setOpen1(() => true);
+                                      } else {
+                                        handleClick1({
+                                          vertical: "top",
+                                          horizontal: "center",
+                                        });
+
+                                        setAlertMsg({
+                                          open: true,
+                                          message:'No Students In This Batch .First Assign Students'
+                                        });
                                         
-                                      });
-                                      setOpen1(() => true);
-                                      
-                                    } else {
-                                      console.log("no students");
-                                    }
-                                  })
-                                  .catch((err) => {
-                                    console.log(err);
-                                  });
+                                      }
+                                    })
+                                    .catch((err) => {
+                                      console.log(err);
+                                    });
                                 }}
                               >
                                 <RemoveRedEyeIcon />
@@ -376,19 +425,25 @@ const MyCalendar = () => {
                                     )
                                     .then((data) => {
                                       console.log(data);
-                                      if(data.data.data.length>0)
-                                      {
-                                      data.data.data.map((val)=>(
-                                        setstu(val.StuName)
-                                      ))
-                                      setOpen1(true)
-                                    }
-                                    else
-                                    {
-                                      console.log('no students')
-                                    }
+                                      if (data.data.data.length > 0) {
+                                        data.data.data.map((val) =>
+                                          setstu(val.StuName)
+                                        );
+                                        setOpen1(true);
+                                      } else {
+                                        handleClick1({
+                                          vertical: "top",
+                                          horizontal: "center",
+                                        });
+
+                                        setAlertMsg({
+                                          open: true,
+                                          message:'No Students In This Event Batch .First Assign Students'
+                                        });
+
+                                      }
                                     })
-                                  
+
                                     .catch((err) => {
                                       console.log(err);
                                     });
@@ -409,7 +464,7 @@ const MyCalendar = () => {
         </Box>
       </BootstrapDialog>
     ),
-    [arr, open,eventdata]
+    [arr, open, eventdata]
   );
   const dialog2 = React.useMemo(
     () => (
@@ -471,6 +526,7 @@ const MyCalendar = () => {
   );
   return (
     <div>
+      {Snack}
       {cal}
       {dialog1}
       {dialog2}

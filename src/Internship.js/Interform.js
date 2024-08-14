@@ -549,6 +549,8 @@ const table=React.useMemo(()=>{
                   Course
                 </TableCell>
                 <TableCell align="center">Type Of Event</TableCell>
+                <TableCell align="center">Event Name</TableCell>
+                
                 <TableCell align="center">Type Of Payment</TableCell>
 
                 <TableCell align="center">Amount</TableCell>
@@ -565,7 +567,7 @@ const table=React.useMemo(()=>{
               </TableRow>
             </TableHead>
             <TableBody sx={{ height: arr && arr.length < 1 ? 300 : 0 }}>
-              {arr &&
+              {arr && arr.length>0?
                 arr.map((row) => (
                   <TableRow
                     key={row.name}
@@ -583,6 +585,8 @@ const table=React.useMemo(()=>{
                       {row.Course}
                     </TableCell>
                     <TableCell align="center">{row.TypeOfEvent}</TableCell>
+                    <TableCell align="center">{row.eventName}</TableCell>
+                    
                     <TableCell align="center">{row.TypeOfPayment}</TableCell>
 
                     <TableCell align="center">{row.Amount}</TableCell>
@@ -631,7 +635,15 @@ const table=React.useMemo(()=>{
                       </Tooltip>
                     </TableCell>
                   </TableRow>
-                ))}
+
+
+                ))
+              :
+
+              <TableRow>
+                <TableCell align="center" colSpan={11}>No Data Available</TableCell>
+              </TableRow>
+              }
             </TableBody>
           </Table>
         </TableContainer>

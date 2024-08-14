@@ -8,7 +8,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
-import { Snackbar, Alert } from '@mui/material';
+import { Snackbar, Alert,Paper } from '@mui/material';
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import EditIcon from "@mui/icons-material/Edit";
 import Tooltip from "@mui/material/Tooltip";
@@ -197,7 +197,9 @@ return(
 const table=React.useMemo(()=>{
   console.log('table called')
   return(
-    <TableContainer>
+    <Box sx={{mx:2}}>
+
+    <TableContainer component={Paper}>
     <Table sx={{ minWidth: 650 }} aria-label="simple table">
       <TableHead>
         <TableRow>
@@ -222,7 +224,7 @@ const table=React.useMemo(()=>{
           </TableCell>
         </TableRow>
       </TableHead>
-
+<TableBody sx={{height:arr && arr.length<1?220:0}}>
       {arr &&
         arr.map((row, idx) => (
           <TableRow
@@ -292,8 +294,11 @@ const table=React.useMemo(()=>{
 
           </TableRow>
         ))}
+
+</TableBody>
     </Table>
   </TableContainer>
+  </Box>
   )
 
 },[arr,id,student,open])

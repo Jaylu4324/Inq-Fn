@@ -17,7 +17,7 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from '@mui/icons-material/Edit';
 import Tooltip from "@mui/material/Tooltip";
 
-import { Grid } from "@mui/material";
+import { Grid,Paper } from "@mui/material";
 
 
 
@@ -112,8 +112,7 @@ const handleClose1 = () => {
       .get("http://localhost:5000/event/Displayevent",jwttoken())
       .then((data) => {
         seteventarr(data.data.data);
-         console.log('first api')
-        console.log("arr is set ", arr);
+        console.log(data)
       })
       .catch((err) => {
         console.log(err);
@@ -391,8 +390,8 @@ const table=React.useMemo(()=>{
 console.log('tabel called')
 return(
   <Box>
-  <Box sx={{ mt: 4 }}>
-    <TableContainer>
+  <Box sx={{ mt: 4,mx:2 }}>
+    <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -402,6 +401,8 @@ return(
             
             >Student Name</TableCell>
             <TableCell align="center">Contact</TableCell>
+            <TableCell align="center">Event Batch</TableCell>
+            
             <TableCell align="center">Days</TableCell>
             <TableCell align="center">Date</TableCell>
             <TableCell align="center">Batch Time</TableCell>
@@ -413,7 +414,7 @@ return(
           </TableRow>
         </TableHead>
 <TableBody sx={{height:map && map.length<1?220:0}}>
-        {map &&
+        {map && map.length>0?
           map.map((row) => (
             <TableRow
               key={row.name}
@@ -437,6 +438,14 @@ return(
                 ))}
               </TableCell>
               <TableCell align="center">
+              <Box align="center">
+                  <TableCell align="center">
+                    {row.EventId.eventName}
+                  </TableCell>
+                  </Box>
+              </TableCell>
+              
+              <TableCell align="center">
                 {row.EventId.Days &&
                   row.EventId.Days.map((data) => (
                     <Box align="center">
@@ -444,6 +453,7 @@ return(
                       </Box>
                   ))}
               </TableCell>
+
               <TableCell align="center">
               <Box align="center">
                   <TableCell align="center">
@@ -451,12 +461,11 @@ return(
                   </TableCell>
                   </Box>
               </TableCell>
+              
               <TableCell align="center">
               <Box align="center">
                   <TableCell align="center">
-                    {row.EventId.BatchTime.split("T")[1]
-                      .split(".")[0]
-                      .slice(0, 5)}
+                    {row.EventId.BatchTime && convertToIST(row.EventId.BatchTime)}
                   </TableCell>
                   </Box>
               </TableCell>
@@ -489,7 +498,14 @@ return(
             
               </Box>
             </TableRow>
-          ))}
+          ))
+          
+          :
+          <TableRow>
+
+          <TableCell align="center" colSpan={7}> No Data Available!</TableCell>
+        </TableRow>
+          }
 </TableBody>
       </Table>
     </TableContainer>
@@ -528,7 +544,16 @@ return(
       
   <Box sx={{ mr: 3 }}>
        <FormControl fullWidth>
-         <InputLabel id="demo-simple-select-label">
+         <InputLabel id="demo-simple-select-label"
+          sx={{
+            top: "-6px", // Adjust label position slightly upwards
+            backgroundColor: "white", // Background to avoid overlap with border
+
+            "&.Mui-focused": {
+              top: "0px", // Position when focused
+            },
+          }}
+         >
            {" "}
            Select Event Type
          </InputLabel>
@@ -566,6 +591,8 @@ return(
                    }}
                  >
                    <TableCell align="center">{row.Course}</TableCell>
+                   <TableCell align="center">{row.eventName}</TableCell>
+
 
                    <TableCell align="center">{row.TypeOfEvent}</TableCell>
                    <TableCell align="center">{row.TypeOfPayment}</TableCell>
