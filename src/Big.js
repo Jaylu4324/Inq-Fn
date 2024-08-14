@@ -76,6 +76,8 @@ const MyCalendar = () => {
   console.log(eventdata);
 
   useEffect(() => {
+    localStorage.setItem("displayname","Dashboard")
+ 
     if (open) {
       setLoading(() => true);
       const dayName = getDayName(date);

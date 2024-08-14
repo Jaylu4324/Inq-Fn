@@ -493,6 +493,20 @@ const dialog1=React.useMemo(()=>{
         </DemoContainer>
       </LocalizationProvider>
     </Box>
+    <TextField
+        id="outlined-basic"
+        type="text"
+   
+        label="Event Name"
+        variant="filled"
+        value={data.eventName}
+        onChange={(e) => {
+          handleChange(e, "eventName");
+        }}
+        fullWidth
+        sx={{ mb: 2,mt:2 }}
+      />
+
 
     <DialogActions>
       <Button
