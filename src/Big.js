@@ -41,9 +41,13 @@ const MyCalendar = () => {
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [eventdata, seteventdata] = React.useState([]);
+  const[bye,setbye]=React.useState(false)
+
   const [day, setDay] = React.useState("");
   const [arr, setArr] = React.useState([]);
   const [loading, setLoading] = useState(false);
+
+  
   const [stu, setstu] = React.useState([]);
   const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
@@ -53,12 +57,13 @@ const MyCalendar = () => {
       padding: theme.spacing(1),
     },
   }));
-  console.log(stu);
+  
   const handleClose = () => {
     setOpen(() => false);
     setDate(() => "");
     setDay(() => "");
     setArr(() => []);
+    setbye(false)
   };
   const handleClose1 = () => {
     setOpen1(() => false);
@@ -74,26 +79,30 @@ const MyCalendar = () => {
 
     return date.toLocaleDateString("en-US", { weekday: "long" });
   }
-  console.log(eventdata);
-  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   
+  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
+
   useEffect(() => {
     localStorage.setItem("displayname", "Dashboard");
-
-    if (open) {
-      setLoading(() => true);
-      const dayName = getDayName(date);
-      setDay(() => dayName);
-      if (day) {
+      
+      if (date) {
+        const dayName = getDayName(date);
+        // setDay(dayName);
+console.log(dayName)
+        if(dayName){
+          setLoading(true)
+          setbye(false)
+        }
         axios
           .get(
-            `http://localhost:5000/Dashboard/CourseData?day=${day}`,
+            `http://localhost:5000/Dashboard/CourseData?day=${dayName}`,
             jwttoken()
           )
           .then((data) => {
             setLoading(() => false);
-            setArr(() => data.data.data);
+            setArr(data.data.data)
             seteventdata(data.data.eventdata);
+            setbye(true)
             console.log(data);
           })
           .catch((err) => {
@@ -101,24 +110,31 @@ const MyCalendar = () => {
             console.log(err);
           });
       }
-    }
+    
   }, [date]);
+useEffect(()=>{
+if(bye){
+  setOpen(true)
+}
+},[bye])
 
-  const handleSelectSlot = React.useCallback((slotInfo) => {
+  const handleSelectSlot =((slotInfo) => {
     const selectedDate = new Date(slotInfo.start);
     const timezoneOffset = 5.5 * 60;
     const adjustedDate = new Date(
       selectedDate.getTime() + timezoneOffset * 60 * 1000
     );
     const formattedDate = adjustedDate.toISOString();
-    const dayName = getDayName(formattedDate);
-    setArr(() => []);
-    setOpen(() => true);
+    
+setDate(formattedDate)
+setOpen(false)
+setbye(false)
 
-    setDate(() => formattedDate);
-    setDay(() => dayName);
-  }, []);
-
+  })
+  console.log(date)
+  console.log(day)
+  console.log(open)
+  console.log(bye)
   const [state, setState] = React.useState({
     open1: false,
     vertical: "top",
@@ -134,7 +150,7 @@ const MyCalendar = () => {
     setState({ ...state, op: false });
     setAlertMsg({ ...alertMsg, open: false });
   };
-  console.log(alertMsg)
+  
   const Snack = React.useMemo(() => {
     console.log("snack bar called");
     return (
@@ -149,18 +165,18 @@ const MyCalendar = () => {
             onClose={handleClose12}
             severity="error"
             variant="filled"
-            sx={{ width: "100%" }}>
-            {alertMsg.open&&alertMsg.message}
-            
-              
+            sx={{ width: "100%" }}
+          >
+            {alertMsg.open && alertMsg.message}
           </Alert>
         )}
       </Snackbar>
     );
   }, [op]);
 
-  const cal = React.useMemo(
-    () => (
+  const cal = React.useMemo(() => {
+    console.log("calendar called");
+    return (
       <Calendar
         localizer={localizer}
         selectable
@@ -169,11 +185,11 @@ const MyCalendar = () => {
         onSelectSlot={handleSelectSlot}
         views={["month"]}
       />
-    ),
-    []
-  );
-  const dialog1 = React.useMemo(
-    () => (
+    );
+  }, []);
+  const dialog1 = React.useMemo(() => {
+    console.log('batches and event called')
+    return (
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
@@ -310,9 +326,9 @@ const MyCalendar = () => {
 
                                         setAlertMsg({
                                           open: true,
-                                          message:'No Students In This Batch .First Assign Students'
+                                          message:
+                                            "No Students In This Batch .First Assign Students",
                                         });
-                                        
                                       }
                                     })
                                     .catch((err) => {
@@ -438,9 +454,9 @@ const MyCalendar = () => {
 
                                         setAlertMsg({
                                           open: true,
-                                          message:'No Students In This Event Batch .First Assign Students'
+                                          message:
+                                            "No Students In This Event Batch .First Assign Students",
                                         });
-
                                       }
                                     })
 
@@ -463,12 +479,14 @@ const MyCalendar = () => {
           </Box>
         </Box>
       </BootstrapDialog>
-    ),
-    [arr, open, eventdata]
-  );
-  const dialog2 = React.useMemo(
-    () => (
-      <BootstrapDialog
+    );
+  }, [open,arr,eventdata]);
+
+  const dialog2 = React.useMemo( () => {
+    console.log('stuents dialog called')
+   
+      return(
+        <BootstrapDialog
         onClose={handleClose1}
         aria-labelledby="customized-dialog-title"
         open={open1}
@@ -520,7 +538,9 @@ const MyCalendar = () => {
           </Box>
         </Box>
       </BootstrapDialog>
-    ),
+      )
+    
+},
 
     [open1, stu]
   );
