@@ -205,21 +205,15 @@ function Form1() {
   React.useEffect(() => {
     if (value == 0) {
       settype("onGoing");
-      setpage(1)
-
-
+      setpage(1);
     } else if (value == 1) {
       settype("Reject");
-      setpage(1)
-
-      
+      setpage(1);
     } else {
       settype("Confirm");
-      setpage(1)
-
-      
+      setpage(1);
     }
-  }, [value,totalPages]);
+  }, [value, totalPages]);
 
   const Co = ["React", "Node", "C", "C++", "Python", "Mern Stack", "AWS"];
   const handlecourse = (e) => {
@@ -230,7 +224,6 @@ function Form1() {
   console.log("value:", value);
   React.useEffect(() => {
     if (value == 0) {
-      
       axios
         .get(
           `http://localhost:5000/inquiry/OnGoing?page=${page}&limit=${10}`,
@@ -240,13 +233,11 @@ function Form1() {
           console.log(data);
           setArr(data.data.data);
           settotalpages(data.data.totalPages);
-
         })
         .catch((err) => {
           console.log(err);
         });
     } else if (value == 1) {
-      
       axios
         .get(
           `http://localhost:5000/inquiry/Reject?page=${page}&limit=${10}`,
@@ -261,7 +252,6 @@ function Form1() {
           console.log(err);
         });
     } else {
-      
       axios
         .get(
           `http://localhost:5000/inquiry/Confirm?page=${page}&limit=${10}`,
@@ -276,7 +266,7 @@ function Form1() {
           console.log(err);
         });
     }
-  }, [update, value,page]);
+  }, [update, value, page]);
 
   const handlesubmit = () => {
     if (id) {
@@ -392,7 +382,7 @@ function Form1() {
     "November",
     "December",
   ];
-  
+
   const snack = React.useMemo(() => {
     console.log("snaclbar");
     return (
@@ -417,43 +407,44 @@ function Form1() {
       </Snackbar>
     );
   }, [op]);
-const pagination=React.useMemo(()=>{
-return(
-<Grid
-          xs={5}
-          sm={5}
-          sx={{
+  const pagination = React.useMemo(() => {
+    return (
+      <Grid
+        xs={6}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          
+        }}
+      >
+        <Box>
+          <CustomPagination
+            count={totalPages?totalPages:1}
             
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-          <Box>
-            <CustomPagination
-              count={totalPages?totalPages:1}
-              size="large"
-              page={page}
-              onChange={(e,p)=>{
-                    setpage(p);
-                    
-              }}
-            />
-          </Box>
-        </Grid>
-)
-},[totalPages,page])
+            page={page}
+            size="small"
+            siblingCount={1} 
+            boundaryCount={1}
+            onChange={(e, p) => {
+              setpage(p);
+            }}
+            showFirstButton={false}
+            showLastButton={false}
+          />
+        </Box>
+      </Grid>
+    );
+  }, [totalPages, page]);
   const ingredients = React.useMemo(() => {
     console.log("ingredients");
     return (
       <Grid container spacing={2}>
         <Grid
           xs={2}
-          sm={2}
           sx={{
             display: "flex",
             justifyContent: "flex-start", // Adjusted to 'flex-end' for right alignment
             alignItems: "flex-start",
-            
           }}
         >
           <Box
@@ -628,17 +619,14 @@ return(
             </div>
           </Box>
         </Grid>
-{pagination}
-        
+        {pagination}
 
         <Grid
-          xs={5}
-          sm={5}
+          xs={4}
           sx={{
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            
           }}
         >
           <Box sx={{ width: 400, ml: 2 }}>
@@ -692,19 +680,16 @@ return(
                           jwttoken()
                         )
                         .then((data) => {
-                          console.log(data)
+                          console.log(data);
                           if (type == "onGoing") {
                             setArr(data.data.filterdata);
                             settotalpages(data.data.totalPages);
-          
                           } else if (type == "Reject") {
                             setReject(data.data.filterdata);
                             settotalpages(data.data.totalPages);
-          
                           } else {
                             setconfirm(data.data.filterdata);
                             settotalpages(data.data.totalPages);
-          
                           }
 
                           setseearchname("");
@@ -726,12 +711,11 @@ return(
           </Box>
         </Grid>
       </Grid>
-
     );
   }, [
     totalPages,
     value,
-    
+
     open,
     arr,
     reject,
@@ -741,7 +725,6 @@ return(
     anchorEl,
     anchorEl1,
     searchname,
-    
   ]);
   const table = React.useMemo(() => {
     return (
@@ -788,7 +771,7 @@ return(
                   </TableRow>
                 </TableHead>
                 <TableBody sx={{ height: arr && arr.length < 1 ? 220 : 0 }}>
-                  {arr && arr.length>0?
+                  {arr && arr.length > 0 ? (
                     arr.map((row) => (
                       <TableRow
                         key={row.name}
@@ -872,11 +855,13 @@ return(
                         </TableCell>
                       </TableRow>
                     ))
-                  :
-                  <TableRow>
-                  <TableCell align="center" colSpan={12}>No Data Available!</TableCell>
-                 </TableRow> 
-                  }
+                  ) : (
+                    <TableRow>
+                      <TableCell align="center" colSpan={12}>
+                        No Data Available!
+                      </TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -910,7 +895,7 @@ return(
                 <TableBody
                   sx={{ height: reject && reject.length < 1 ? 220 : 0 }}
                 >
-                  {reject && reject.length>0?
+                  {reject && reject.length > 0 ? (
                     reject.map((row) => (
                       <TableRow
                         key={row.name}
@@ -942,12 +927,13 @@ return(
                         <TableCell align="center">{row.Description}</TableCell>
                       </TableRow>
                     ))
-                  :
-                  <TableRow>
-                  <TableCell align="center" colSpan={7}>No Data Available!</TableCell>
-                 </TableRow> 
-                  
-                  }
+                  ) : (
+                    <TableRow>
+                      <TableCell align="center" colSpan={7}>
+                        No Data Available!
+                      </TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -983,7 +969,7 @@ return(
                     height: confirm && confirm.length < 1 ? 220 : 0,
                   }}
                 >
-                  {confirm && confirm.length>0?
+                  {confirm && confirm.length > 0 ? (
                     confirm.map((row) => (
                       <TableRow
                         key={row.name}
@@ -1013,10 +999,13 @@ return(
                         <TableCell align="center">{row.Description}</TableCell>
                       </TableRow>
                     ))
-                  :
-                  <TableRow>
-                  <TableCell align="center" colSpan={7}>No Data Available!</TableCell>
-                 </TableRow> }
+                  ) : (
+                    <TableRow>
+                      <TableCell align="center" colSpan={7}>
+                        No Data Available!
+                      </TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -1024,7 +1013,7 @@ return(
         </CustomTabPanel>
       </Box>
     );
-  }, [value, arr, reject, confirm,page]);
+  }, [value, arr, reject, confirm, page]);
   const dialog = React.useMemo(() => {
     console.log("datad ialog");
     return (

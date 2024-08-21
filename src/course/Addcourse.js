@@ -43,7 +43,6 @@ import { Snackbar, Alert } from "@mui/material";
 
 import { styled } from "@mui/system";
 
-
 import Paper from "@mui/material/Paper";
 import { Grid } from "@mui/material";
 import axios from "axios";
@@ -52,10 +51,10 @@ import Pagination from "@mui/material/Pagination";
 function Addcourse() {
   const CustomPagination = styled(Pagination)(({ theme }) => ({
     "& .MuiPaginationItem-root": {
-      width: "50px",  // Default width
+      width: "50px", // Default width
       height: "50px", // Default height
       "&:hover": {
-        width: "30px",  // Adjust width on hover
+        width: "30px", // Adjust width on hover
         height: "30px", // Keep height consistent on hover
       },
       "&.Mui-selected": {
@@ -68,7 +67,7 @@ function Addcourse() {
       },
     },
   }));
-  
+
   const [data, setdata] = React.useState({
     StartDate: dayjs(""),
     BatchTime: dayjs(""),
@@ -83,13 +82,12 @@ function Addcourse() {
   const [arr, setarr] = React.useState([]);
   const [totalpages, settotalpages] = React.useState("");
 
-  
   const [open2, setOpen2] = React.useState(false);
 
   const [id, setid] = React.useState("");
   console.log(id);
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
-  
+
   const [alertbatchMsg, setalertbatchMsg] = React.useState({
     open: false,
     message: "",
@@ -178,7 +176,7 @@ function Addcourse() {
 
     return new Intl.DateTimeFormat("en-US", options).format(date);
   }
-  
+
   const handlesubmit = () => {
     const url = id
       ? `http://localhost:5000/batchEvent/UpdateBevent?id=${id}`
@@ -213,7 +211,6 @@ function Addcourse() {
             open: true,
             message: err.response.data.error.details[0].message,
           });
-
         }
       });
   };
@@ -249,13 +246,20 @@ function Addcourse() {
     setalertbatchMsg({ ...alertbatchMsg, open: false });
   };
   const grid = React.useMemo(() => {
+    const renderEllipses = (page, count) => {
+      if (count <= 3) return null;
+      if (page <= 3) return <span>...</span>;
+      if (page > 3 && page < count - 2) return <span>...</span>;
+      return null;
+    };
+
     console.log("main grid called");
     return (
-      <Grid container spacing={2} sx={{mb:2}}>
- <Grid  xs={5}>
- <Tooltip title="Add Batch" arrow>
+      <Grid container spacing={2} sx={{ mb: 2 }}>
+        <Grid xs={5}>
+          <Tooltip title="Add Batch" arrow>
             <Button
-            sx={{ml:1,mt:2}}
+              sx={{ ml: 1, mt: 2 }}
               onClick={() => {
                 setopen(true);
               }}
@@ -263,26 +267,24 @@ function Addcourse() {
               <AddIcon />
             </Button>
           </Tooltip>
-          </Grid>
-          <Grid xs={7} sx={{display:'flex',justifyContent:'flex-start'}}>
-            <Box sx={{ mt: 2 }}>
-              <CustomPagination
-                count={totalpages?totalpages:1}
-                page={page}
-                size="large"
-                onChange={(e, p) => {
-                  setpage(p);
-                  
-                }}
-              />
-            </Box>
-            
-            </Grid>
-
-         
+        </Grid>
+        <Grid xs={7} sx={{ display: "flex", justifyContent: "flex-start" }}>
+          <Box sx={{ mt: 2 }}>
+            <CustomPagination
+              count={totalpages?totalpages:1}
+              page={page}
+              size="small"
+              siblingCount={1} // Show one sibling page on each side of the current page
+              boundaryCount={1} // Show only the first and last page initiall0
+              onChange={(e, p) => setpage(p)}
+              showFirstButton={false}
+              showLastButton={false}
+            />
+         </Box>
+        </Grid>
       </Grid>
     );
-  }, [open,totalpages,page]);
+  }, [open, totalpages, page]);
   const dialog1 = React.useMemo(() => {
     console.log("dialog rendered");
     return (
@@ -435,7 +437,6 @@ function Addcourse() {
               : alertbatchMsg.open
               ? alertbatchMsg.message
               : null}
-              
           </Alert>
         )}
       </Snackbar>
@@ -469,11 +470,9 @@ function Addcourse() {
               </TableRow>
             </TableHead>
 
-            
-                <TableBody sx={{ height: arr && arr.length < 1 ? 250 : 0 }}>
-                {arr && arr.length>0?
-              arr.map((row) => (
-              
+            <TableBody sx={{ height: arr && arr.length < 1 ? 250 : 0 }}>
+              {arr && arr.length > 0 ? (
+                arr.map((row) => (
                   <TableRow
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -532,24 +531,21 @@ function Addcourse() {
                       </Tooltip>
                     </TableCell>
                   </TableRow>
-
-
-)):
-
-             
-             <TableRow>
-              <TableCell align="center" colSpan={7}>No Data Available!</TableCell>
-             </TableRow> 
-  }
-
-                </TableBody>
-              
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell align="center" colSpan={7}>
+                    No Data Available!
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
           </Table>
         </TableContainer>
       </Box>
     );
   }, [arr, page]);
-  
+
   const completed = React.useMemo(() => {
     console.log("completed dialog called");
     return (
@@ -615,7 +611,7 @@ function Addcourse() {
       {dialog1}
 
       {table}
-      
+
       {completed}
     </>
   );

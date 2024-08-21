@@ -318,11 +318,16 @@ const add=React.useMemo(()=>{
              <CustomPagination
                count={totalpages?totalpages:1}
                page={page}
-               size="large"
+          
+               size="small"
+               siblingCount={1} 
+               boundaryCount={1}
                onChange={(e, p) => {
                  setpage(p);
                  
                }}
+               showFirstButton={false}
+               showLastButton={false}
              />
            </Box>
            

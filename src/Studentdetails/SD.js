@@ -7,7 +7,7 @@ import { styled } from "@mui/system";
 import jwttoken from "../Token";
 import Snackbar from "@mui/material/Snackbar";
 import Dialog from "@mui/material/Dialog";
-import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Box, FormControl, InputLabel, Select, MenuItem,Paper, Typography } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import EditIcon from "@mui/icons-material/Edit";
 import utc from "dayjs/plugin/utc";
@@ -362,16 +362,21 @@ function SD() {
   const [student, setstudent] = React.useState([]);
   const pagination = React.useMemo(() => {
     return (
-      <Grid xs={4}>
+      <Grid xs={5} sx={{display:'flex',justifyContent:'center'}}>
         <Box sx={{ mt: 2 }}>
           <CustomPagination
             count={totalpages?totalpages:1}
             page={page}
-            size="large"
+         
+            size="small"
+            siblingCount={1} 
+            boundaryCount={1}
             onChange={(e, p) => {
               setpage(p);
               
             }}
+            showFirstButton={false}
+            showLastButton={false}
           />
         </Box>
       </Grid>
@@ -413,7 +418,7 @@ function SD() {
             display: "flex",
             justifyContent: "flex-start",
             alignItems: "flex-start",
-            
+           
           }}
         >
           <Box sx={{ display: "flex", mt: 1 }}>
@@ -632,7 +637,7 @@ function SD() {
                   coursearr.map((row) => (
                     <MenuItem key={row._id} value={row}>
                       <TableRow>
-                        <TableCell align="center">{row.batchName}</TableCell>
+                        <Typography align="center">{row.batchName}</Typography>
                       </TableRow>
                     </MenuItem>
                   ))}
@@ -642,13 +647,13 @@ function SD() {
         </Grid>
 
         <Grid
-          xs={4}
+          xs={3}
       
           sx={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            
+        
           }}
         >
           <Box sx={{ width: 400, ml: 3, mt: 2 }}>
@@ -932,8 +937,8 @@ function SD() {
   const table = React.useMemo(() => {
     console.log("table callwd");
     return (
-      <Box sx={{ mx: 2, my: 2 }}>
-        <TableContainer>
+      <Box sx={{ mx: 2,mt:3 }}>
+        <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650, mx: 3 }} aria-label="simple table">
             <TableHead>
               <TableRow>

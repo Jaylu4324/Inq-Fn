@@ -19,7 +19,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import jwttoken from "../Token";
 import Pagination from '@mui/material/Pagination';
 
-import { Snackbar, Alert } from "@mui/material";
+import { Snackbar, Alert, Typography } from "@mui/material";
 
 import Tooltip from "@mui/material/Tooltip";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -314,23 +314,29 @@ export default function FormDialog() {
   ];
   
   const handlePageChange = (event, value) => {
-    setpage(value); // This will trigger the useEffect dependent on 'page'
+    setpage(value); 
   };
   
   const pagination = React.useMemo(() => {
     return (
-      <Grid item xs={3}>
+      <Grid item xs={5} sx={{ display: "flex",
+        justifyContent: "center", 
+        }}>
         <Box>
           <CustomPagination
             count={totalpages?totalpages:1}
             page={page}
-            size="large"
-            onChange={handlePageChange} // Using the handler function
+            size="small"
+            siblingCount={1}
+            boundaryCount={1}
+            onChange={handlePageChange} 
+            showFirstButton={false}
+            showLastButton={false}
           />
         </Box>
       </Grid>
     );
-  }, [totalpages, page]); // Add 'page' to the dependency array
+  }, [totalpages, page]); 
   
     
 
@@ -367,13 +373,12 @@ return(
   {/* Left Section */}
   <Grid
     item
-    xs={3}
+    xs={2}
     
     sx={{
       display: "flex",
-      justifyContent: "flex-start", // Adjusted for right alignment
-      alignItems: "flex-start",
-      
+      justifyContent: "center", // Adjusted for right alignment
+   
 
 
     }}
@@ -599,7 +604,7 @@ return(
       "&:last-child td, &:last-child th": { border: 0 },
     }}
                 >
-                  <TableCell align="center">{row.batchName}</TableCell>
+                  <Typography align="center">{row.batchName}</Typography>
                   
                 </TableRow>
               </MenuItem>
@@ -611,13 +616,13 @@ return(
 
   <Grid
     item
-    xs={4}
+    xs={3}
     
     sx={{
       display: "flex",
       justifyContent: "left",
       alignItems: "center",
-   
+
 
       
     }}
@@ -734,10 +739,14 @@ return(
             {stuarr &&
               stuarr.map((row) => (
                 <MenuItem key={row._id} value={row._id}>
-                  <TableCell align="center">{row.Name}</TableCell>
-                  <TableCell align="center">{row.Contact}</TableCell>
-                  <TableCell align="center">{row.Rfees}</TableCell>
-                  <TableCell align="center">{row.Pfees}</TableCell>
+                  <TableRow sx={{display:'flex', gap: 2 }}>
+                    
+                  <Typography align="center">{row.Name}</Typography>
+                  <Typography align="center">{row.Contact}</Typography>
+                   <Typography align="center">{row.Rfees}</Typography>
+                  <Typography align="center">{row.Pfees}</Typography>
+                  
+                  </TableRow>
                 </MenuItem>
               ))}
           </Select>

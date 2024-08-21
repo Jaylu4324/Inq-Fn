@@ -56,6 +56,7 @@ import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
+import { blue } from "@mui/material/colors";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -406,13 +407,26 @@ function Eventi() {
 
   const pagination = React.useMemo(() => {
     return (
-      <Grid item xs={3}>
+      <Grid
+        item
+        xs={5}
+        sx={{
+       
+          display: "flex",
+          justifyContent: "center", 
+          alignItems: "center",
+        }}
+      >
         <Box>
           <CustomPagination
-            count={totalpages ? totalpages : 1}
+            count={totalpages?totalpages:1}
             page={page}
-            size="large"
-            onChange={handlePageChange} // Using the handler function
+            size="small"
+            siblingCount={1}
+            boundaryCount={1}
+            onChange={handlePageChange}
+            showFirstButton={false}
+            showLastButton={false} // Using the handler function
           />
         </Box>
       </Grid>
@@ -449,7 +463,7 @@ function Eventi() {
       <Grid container spacing={2}>
         <Grid
           item
-          xs={3}
+          xs={2}
           sx={{
             display: "flex",
             justifyContent: "flex-start", // Adjusted for right alignment
@@ -471,12 +485,17 @@ function Eventi() {
               <Tooltip title="Filter" arrow>
                 <Button
                   id="basic-button"
+                  disabled={parent._id ? false : true}
                   aria-controls={openmenu1 ? "basic-menu" : undefined}
                   aria-haspopup="true"
                   aria-expanded={openmenu1 ? "true" : undefined}
                   onClick={handleClickmenu1}
                 >
-                  <FilterAltIcon sx={{ color: "#0063cc" }} />
+                  <FilterAltIcon
+                    sx={{
+                      color: parent._id ? blue : "rgba(0, 0, 0, 0.26)",
+                    }}
+                  />
                 </Button>
               </Tooltip>
               <Menu
@@ -533,12 +552,15 @@ function Eventi() {
               <Tooltip title="Sort" arrow>
                 <Button
                   id="basic-button"
+                  disabled={parent._id ? false : true}
                   aria-controls={openmenu ? "basic-menu" : undefined}
                   aria-haspopup="true"
                   aria-expanded={openmenu ? "true" : undefined}
                   onClick={handleClickmenu}
                 >
-                  <SortIcon sx={{ color: "#0063cc" }} />
+                  <SortIcon
+                    sx={{ color: parent._id ? blue : "rgba(0, 0, 0, 0.26)" }}
+                  />
                 </Button>
               </Tooltip>
               <Menu
@@ -712,7 +734,7 @@ function Eventi() {
         </Grid>
         <Grid
           item
-          xs={4}
+          xs={3}
           sx={{
             display: "flex",
             justifyContent: "left",

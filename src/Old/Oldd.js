@@ -10,17 +10,17 @@ import TableRow from "@mui/material/TableRow";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import TableBody from "@mui/material/TableBody";
 
-import { Snackbar, Alert } from '@mui/material';
+import { Snackbar, Alert } from "@mui/material";
 
 import Tooltip from "@mui/material/Tooltip";
-import { Box } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
-import jwttoken from '../Token'
+import jwttoken from "../Token";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import dayjs from "dayjs";
 import EditIcon from "@mui/icons-material/Edit";
-import {  MenuItem, FormControl, InputLabel, Select } from "@mui/material";
+import { MenuItem, FormControl, InputLabel, Select } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -28,7 +28,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
 
 import Pagination from "@mui/material/Pagination";
 import { styled } from "@mui/system";
@@ -50,15 +49,13 @@ function convertToIST(utcDateStr) {
 }
 
 export default function Old() {
-  
   const [open, setOpen] = React.useState(false);
   const [count, setcount] = React.useState(0);
   const [count1, setcount1] = React.useState(0);
   const [data, setData] = React.useState({ Date: dayjs("") });
   const [student, setstudent] = React.useState([]);
-  
- 
-  const [alertMsg, setAlertMsg] = React.useState({open: false, message: "" });
+
+  const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
     message: "",
@@ -78,14 +75,13 @@ export default function Old() {
     setState({ ...state, op: false });
     setAlertSuccess({ ...alertSuccess, open: false });
     setAlertMsg({ ...alertMsg, open: false });
-    
   };
 
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose2 = () => {
-    setid('')
+    setid("");
 
     setOpen(false);
   };
@@ -94,9 +90,8 @@ export default function Old() {
   };
   const [view, setview] = React.useState(false);
 
+  const [id, setid] = React.useState("");
 
-  const [id, setid] = React.useState('');
-  
   const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
       padding: theme.spacing(2),
@@ -107,10 +102,10 @@ export default function Old() {
   }));
   const CustomPagination = styled(Pagination)(({ theme }) => ({
     "& .MuiPaginationItem-root": {
-      width: "50px",  // Default width
+      width: "50px", // Default width
       height: "50px", // Default height
       "&:hover": {
-        width: "30px",  // Adjust width on hover
+        width: "30px", // Adjust width on hover
         height: "30px", // Keep height consistent on hover
       },
       "&.Mui-selected": {
@@ -123,7 +118,7 @@ export default function Old() {
       },
     },
   }));
-  
+
   const handleDateChange = (val) => {
     const selectedDate = new Date(val);
     const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
@@ -138,413 +133,407 @@ export default function Old() {
   const handlechange = (e, type) => {
     setData({ ...data, [type]: e.target.value });
   };
-  
+
   const [arr, setarr] = React.useState([]);
   const [page, setpage] = React.useState(1);
   console.log(page);
 
-  
   const [totalpages, settotalpages] = React.useState("");
 
   const [update, doupdate] = React.useState(false);
   React.useEffect(() => {
     axios
-      .get(`http://localhost:5000/EventComleted/getAllData?page=${page}&limit={10}`,jwttoken())
+      .get(
+        `http://localhost:5000/EventComleted/getAllData?page=${page}&limit={1}`,
+        jwttoken()
+      )
       .then((data) => {
-        console.log(data)
+        console.log(data);
         setarr(data.data.data);
-        settotalpages(data.data.totalPages)
+        settotalpages(data.data.totalPages);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [update,page]);
-  console.log(totalpages)
-const snack=React.useMemo(()=>{
-console.log('snack bar called')
-return(
-  <Snackbar
-  open={op}
-  autoHideDuration={3000}
-  onClose={handleClose12}
-  anchorOrigin={{ vertical, horizontal }}
-  
->
-    {(alertSuccess.open || alertMsg.open) && (
-<Alert
-onClose={handleClose12}
-severity={alertSuccess.open ? "success" : "error"}
-          // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
-
-variant="filled"
-sx={{ width: "100%" }}
->
-{alertSuccess.open ? alertSuccess.message : alertMsg.message}
-</Alert>
-)}
-</Snackbar>
-)
-},[op])
-const pagination=React.useMemo(()=>{
-  return(
-    <Grid xs={12} sx={{display:'flex',justifyContent:'center'}}>
-    <Box sx={{ mb: 2 }}>
-                <CustomPagination
-                  count={totalpages?totalpages:1}
-                  page={page}
-                  size="large"
-                  onChange={(e, p) => {
-                    setpage(p);
-                    
-  
-                  }}
-                />
-              </Box>
-              </Grid>
-  )
-    },[totalpages,page])
-    
-const table=React.useMemo(()=>{
-  console.log('table called')
-return(
-
-  <TableContainer>
-  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-    <TableHead>
-      <TableRow>
-        <TableCell
-          align="center"
-          sx={{
-            position: "sticky",
-            left: 0,
-            backgroundColor: "white",
-            zIndex: 1,
-          }}
-        >
-          Course
-        </TableCell>
-        <TableCell align="center">Type Of Event</TableCell>
-        <TableCell align="center">Event Name</TableCell>
-        
-        <TableCell align="center">Type Of Payment</TableCell>
-
-        <TableCell align="center">Amount</TableCell>
-
-        <TableCell align="center">Start Date</TableCell>
-        <TableCell align="center">End Date</TableCell>
-
-        <TableCell align="center">Days</TableCell>
-        <TableCell align="center">Batch Time</TableCell>
-
-        <TableCell align="center" colSpan={2}>
-          Actions
-        </TableCell>
-      </TableRow>
-    </TableHead>
-<TableBody sx={{height:arr && arr.length<1?220:0}}>
-    {arr && arr.length>0?
-      arr.map((row,idx) => (
-        <TableRow
-          key={row.name}
-          sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-        >
-          <TableCell
-            align="center"
-            sx={{
-              position: "sticky",
-              left: 0,
-              backgroundColor: "white",
-              zIndex: 1,
-            }}
-          >
-            {row.CourseId&&row.CourseId.Course}
-          </TableCell>
-          <TableCell align="center">{row.CourseId&&row.CourseId.TypeOfEvent}</TableCell>
-          <TableCell align="center">{row.CourseId&&row.CourseId.eventName}</TableCell>
-          
-          <TableCell align="center">{row.CourseId&&row.CourseId.TypeOfPayment}</TableCell>
-
-          <TableCell align="center">{row.CourseId&&row.CourseId.Amount}</TableCell>
-
-          <TableCell align="center">
-            {row.CourseId&&row.CourseId.StartDate.split('T')[0]}
-          </TableCell>
-          <TableCell align="center">
-            {row.CourseId&&row.CourseId.EndtDate.split('T')[0]}
-          </TableCell>
-          <TableCell align="center">
-            {row.CourseId&&row.CourseId.Days.map((val) => (
-              <Box>{val}</Box>
-            ))}
-          </TableCell>
-          <TableCell align="center">
-            {row.CourseId&&convertToIST(row.CourseId.BatchTime)}
-          </TableCell>
-
-          <TableCell align="center">
-            <Tooltip title="Edit Students" arrow>
-              <Button
-                color="error"
-                onClick={() => {
-                  handleClickOpen();
-                  
-                  setstudent(row.StudentArray);
-                  setid(row._id)
-                }}
-              >
-                <EditIcon />
-              </Button>
-            </Tooltip>
-          </TableCell>
-
-          <TableCell align="center">
-            <Tooltip title="View Batch Students" arrow>
-              <Button
-                color="primary"
-                onClick={() => {
-                  console.log(idx)
-                  setview(!view);
-                  setcount(idx);
-
-
-                  setstudent(row.StudentArray);
-                  
-                  setcount1(row.StudentArray && row.StudentArray.length);
-                }}
-              >
-                <RemoveRedEyeIcon />
-              </Button>
-            </Tooltip>
-          </TableCell>
-
-
-        </TableRow>
-      ))
-    :
-    <TableRow>
-
-      <TableCell align="center" colSpan={11}> No Data Available!</TableCell>
-    </TableRow>
-    }
-      </TableBody>
-  </Table>
-</TableContainer>
-)
-},[arr,open,id,student])
-
-const boot=React.useMemo(()=>{
-  console.log('dialog bootstarp called')
-return(
-  <BootstrapDialog
-  onClose={handleClose}
-  aria-labelledby="customized-dialog-title"
-  open={count!==null && view}
->
-  <Box sx={{ width: "500px" }}>
-    <Grid container>
-      <Grid>
-        <DialogTitle id="customized-dialog-title">
-          Total Batch Students:{count1}
-        </DialogTitle>
-      </Grid>
-
-      <Grid xs={5}></Grid>
-      <IconButton
-        aria-label="close"
-        onClick={handleClose}
-        sx={{
-          color: (theme) => theme.palette.grey[500],
-        }}
+  }, [update, page]);
+  console.log(totalpages);
+  const snack = React.useMemo(() => {
+    console.log("snack bar called");
+    return (
+      <Snackbar
+        open={op}
+        autoHideDuration={3000}
+        onClose={handleClose12}
+        anchorOrigin={{ vertical, horizontal }}
       >
-        <CloseIcon />
-      </IconButton>
-    </Grid>
+        {(alertSuccess.open || alertMsg.open) && (
+          <Alert
+            onClose={handleClose12}
+            severity={alertSuccess.open ? "success" : "error"}
+            // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
 
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        fontSize: 20,
-        
-      }}
-    >
-      <DialogContent>
-        <TableContainer>
-          <Table sx={{ width: 300 }} aria-label="simple table">
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {alertSuccess.open ? alertSuccess.message : alertMsg.message}
+          </Alert>
+        )}
+      </Snackbar>
+    );
+  }, [op]);
+  const pagination = React.useMemo(() => {
+    return (
+      <Grid xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+        <Box sx={{ mb: 2 }}>
+          <CustomPagination
+            count={totalpages?totalpages:1}
+            page={page}
+            size="small"
+            siblingCount={1}
+            boundaryCount={1}
+            onChange={(e, p) => {
+              setpage(p);
+            }}
+            showFirstButton={false}
+            showLastButton={false}
+          />
+        </Box>
+      </Grid>
+    );
+  }, [totalpages, page]);
+
+  const table = React.useMemo(() => {
+    console.log("table called");
+    return (
+      <Box sx={{ mx: 2 }}>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center">
-                  Student Name
+                <TableCell
+                  align="center"
+                  sx={{
+                    position: "sticky",
+                    left: 0,
+                    backgroundColor: "white",
+                    zIndex: 1,
+                  }}
+                >
+                  Course
                 </TableCell>
-                <TableCell align="center">Issue Date</TableCell>
-                <TableCell align="center">
-                  Certificate
+                <TableCell align="center">Type Of Event</TableCell>
+                <TableCell align="center">Event Name</TableCell>
+
+                <TableCell align="center">Type Of Payment</TableCell>
+
+                <TableCell align="center">Amount</TableCell>
+
+                <TableCell align="center">Start Date</TableCell>
+                <TableCell align="center">End Date</TableCell>
+
+                <TableCell align="center">Days</TableCell>
+                <TableCell align="center">Batch Time</TableCell>
+
+                <TableCell align="center" colSpan={2}>
+                  Actions
                 </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {student &&
-                student.map((val) => (
+            <TableBody sx={{ height: arr && arr.length < 1 ? 220 : 0 }}>
+              {arr && arr.length > 0 ? (
+                arr.map((row, idx) => (
                   <TableRow
-                    key={val.name}
-                    sx={{
-                      "&:last-child td, &:last-child th": {
-                        border: 0,
-                      },
-                    }}
+                    key={row.name}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
+                    <TableCell
+                      align="center"
+                      sx={{
+                        position: "sticky",
+                        left: 0,
+                        backgroundColor: "white",
+                        zIndex: 1,
+                      }}
+                    >
+                      {row.CourseId && row.CourseId.Course}
+                    </TableCell>
                     <TableCell align="center">
-                      <Box>{val.FullName}</Box>
+                      {row.CourseId && row.CourseId.TypeOfEvent}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.CourseId && row.CourseId.eventName}
                     </TableCell>
 
                     <TableCell align="center">
-                      <Box>{val.Date.split('T')[0]}</Box>
+                      {row.CourseId && row.CourseId.TypeOfPayment}
+                    </TableCell>
+
+                    <TableCell align="center">
+                      {row.CourseId && row.CourseId.Amount}
+                    </TableCell>
+
+                    <TableCell align="center">
+                      {row.CourseId && row.CourseId.StartDate.split("T")[0]}
                     </TableCell>
                     <TableCell align="center">
-                      <Box>{val.Cetificate}</Box>
+                      {row.CourseId && row.CourseId.EndtDate.split("T")[0]}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.CourseId &&
+                        row.CourseId.Days.map((val) => <Box>{val}</Box>)}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.CourseId && convertToIST(row.CourseId.BatchTime)}
+                    </TableCell>
+
+                    <TableCell align="center">
+                      <Tooltip title="Edit Students" arrow>
+                        <Button
+                          color="error"
+                          onClick={() => {
+                            handleClickOpen();
+
+                            setstudent(row.StudentArray);
+                            setid(row._id);
+                          }}
+                        >
+                          <EditIcon />
+                        </Button>
+                      </Tooltip>
+                    </TableCell>
+
+                    <TableCell align="center">
+                      <Tooltip title="View Batch Students" arrow>
+                        <Button
+                          color="primary"
+                          onClick={() => {
+                            console.log(idx);
+                            setview(!view);
+                            setcount(idx);
+
+                            setstudent(row.StudentArray);
+
+                            setcount1(
+                              row.StudentArray && row.StudentArray.length
+                            );
+                          }}
+                        >
+                          <RemoveRedEyeIcon />
+                        </Button>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
-                ))}
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell align="center" colSpan={11}>
+                    {" "}
+                    No Data Available!
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
-      </DialogContent>
-    </Box>
-  </Box>
-</BootstrapDialog>
-)
-},[view])
+      </Box>
+    );
+  }, [arr, open, id, student]);
 
-const dialog=React.useMemo(()=>{
-  console.log('dialog select student cLLED')
-return(
-  
-  <Dialog open={open} onClose={handleClose2}>
-  <DialogContent>
-    <Box sx={{ minWidth: 120, mb: 2 }}>
-      <FormControl variant="filled" fullWidth>
-        <InputLabel id="demo-simple-select-label">
-          Select Student Name
-        </InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          label="Course"
-          onChange={(e) => {
-            handlechange(e, "Studentid");
-          }}
-        >
-          {student &&
-            student.map((val) => (
-              <MenuItem value={val._id} key={val._id}>
-                <Box>{val.FullName}</Box>
-              </MenuItem>
-            ))}
-        </Select>
-      </FormControl>
-    </Box>
-
-    <Box sx={{ width: 300, mb: 1 }}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">
-          Certificate
-        </InputLabel>
-        <Select
-          variant="filled"
-          onChange={(e) => {
-            handlechange(e, "Cetificate");
-          }}
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          label="Status"
-        >
-          <MenuItem value={"Yes"}>Yes</MenuItem>
-          <MenuItem value={"no"}>No</MenuItem>
-        </Select>
-      </FormControl>
-    </Box>
-    <Box sx={{ mb: 2 }}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={["DatePicker"]}>
-          <DatePicker
-            slotProps={{ textField: { variant: "filled" } }}
-            label="Choose Your Date"
-            onChange={handleDateChange}
-            sx={{ width: 300 }}
-          />
-        </DemoContainer>
-      </LocalizationProvider>
-    </Box>
-
-    <Grid
-      container
-      spacing={2}
-      justifyContent="right"
-      sx={{ mt: 0.5 }}
-    >
-      <Button
-        onClick={() => {
-          handleClose2();
-          setData({});
-        }}
+  const boot = React.useMemo(() => {
+    console.log("dialog bootstarp called");
+    return (
+      <BootstrapDialog
+        onClose={handleClose}
+        aria-labelledby="customized-dialog-title"
+        open={count !== null && view}
       >
-        Cancel
-      </Button>
-      <Button
-        onClick={() => {
-          console.log(data);
-          axios
-            .post(
-              `http://localhost:5000/EventComleted/UpdateISC?UpdateId=${id}`,
-              data,jwttoken()
-            )
-            .then((res) => {
-              console.log(res);
-              doupdate(!update);
-              handleClose2();
-              setData({})
-              handleClick1({ vertical: "top", horizontal: "center" });
+        <Box sx={{ width: "500px" }}>
+          <Grid container>
+            <Grid>
+              <DialogTitle id="customized-dialog-title">
+                Total Batch Students:{count1}
+              </DialogTitle>
+            </Grid>
 
-              setAlertSuccess({
-                open: true,
-                message: "Updated Successfully",
-               
-              });
-      
-            })
-            .catch((err) => {
-              console.log(err);
-              if(err.response.data){
+            <Grid xs={5}></Grid>
+            <IconButton
+              aria-label="close"
+              onClick={handleClose}
+              sx={{
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Grid>
 
-              
-              handleClick1({ vertical: "top", horizontal: "center" });
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: 20,
+            }}
+          >
+            <DialogContent>
+              <TableContainer>
+                <Table sx={{ width: 300 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center">Student Name</TableCell>
+                      <TableCell align="center">Issue Date</TableCell>
+                      <TableCell align="center">Certificate</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {student &&
+                      student.map((val) => (
+                        <TableRow
+                          key={val.name}
+                          sx={{
+                            "&:last-child td, &:last-child th": {
+                              border: 0,
+                            },
+                          }}
+                        >
+                          <TableCell align="center">
+                            <Box>{val.FullName}</Box>
+                          </TableCell>
 
-              setAlertMsg({
-                open: true,
-                message: err.response.data.error.details[0].message,
-              });
-            }
-            });
-       
-          
-        }}
-      >
-        Submit
-      </Button>
-    </Grid>
-  </DialogContent>
-</Dialog>
-)
-},[open,data,student])
+                          <TableCell align="center">
+                            <Box>{val.Date.split("T")[0]}</Box>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Box>{val.Cetificate}</Box>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </DialogContent>
+          </Box>
+        </Box>
+      </BootstrapDialog>
+    );
+  }, [view]);
+
+  const dialog = React.useMemo(() => {
+    console.log("dialog select student cLLED");
+    return (
+      <Dialog open={open} onClose={handleClose2}>
+        <DialogContent>
+          <Box sx={{ minWidth: 120, mb: 2 }}>
+            <FormControl variant="filled" fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                Select Student Name
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Course"
+                onChange={(e) => {
+                  handlechange(e, "Studentid");
+                }}
+              >
+                {student &&
+                  student.map((val) => (
+                    <MenuItem value={val._id} key={val._id}>
+                      <Box>{val.FullName}</Box>
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ width: 300, mb: 1 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Certificate</InputLabel>
+              <Select
+                variant="filled"
+                onChange={(e) => {
+                  handlechange(e, "Cetificate");
+                }}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Status"
+              >
+                <MenuItem value={"Yes"}>Yes</MenuItem>
+                <MenuItem value={"no"}>No</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          <Box sx={{ mb: 2 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  slotProps={{ textField: { variant: "filled" } }}
+                  label="Choose Your Date"
+                  onChange={handleDateChange}
+                  sx={{ width: 300 }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </Box>
+
+          <Grid container spacing={2} justifyContent="right" sx={{ mt: 0.5 }}>
+            <Button
+              onClick={() => {
+                handleClose2();
+                setData({});
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                console.log(data);
+                axios
+                  .post(
+                    `http://localhost:5000/EventComleted/UpdateISC?UpdateId=${id}`,
+                    data,
+                    jwttoken()
+                  )
+                  .then((res) => {
+                    console.log(res);
+                    doupdate(!update);
+                    handleClose2();
+                    setData({});
+                    handleClick1({ vertical: "top", horizontal: "center" });
+
+                    setAlertSuccess({
+                      open: true,
+                      message: "Updated Successfully",
+                    });
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    if (err.response.data) {
+                      handleClick1({ vertical: "top", horizontal: "center" });
+
+                      setAlertMsg({
+                        open: true,
+                        message: err.response.data.error.details[0].message,
+                      });
+                    }
+                  });
+              }}
+            >
+              Submit
+            </Button>
+          </Grid>
+        </DialogContent>
+      </Dialog>
+    );
+  }, [open, data, student]);
   return (
     <>
-{snack}
-{pagination}
-  {table}
-  {boot}
-  {dialog}
+      {snack}
+      {pagination}
+      {table}
+      {boot}
+      {dialog}
       {/* <Dialog
         open={open1}
         onClose={handleClose1}
@@ -577,7 +566,6 @@ return(
           </Button>
         </DialogActions>
       </Dialog> */}
-
     </>
   );
 }

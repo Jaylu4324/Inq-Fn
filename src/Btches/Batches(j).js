@@ -404,7 +404,9 @@ return(
             <TableCell align="center">Event Batch</TableCell>
             
             <TableCell align="center">Days</TableCell>
-            <TableCell align="center">Date</TableCell>
+            <TableCell align="center">Start Date</TableCell>
+            <TableCell align="center">End Date</TableCell>
+            
             <TableCell align="center">Batch Time</TableCell>
 
             <TableCell align="center">
@@ -424,52 +426,55 @@ return(
                               }}
             >
                 {row.StuName.map((data, index) => (
-               <Box align="center">
-                    <TableCell align="center"> {data.FullName}</TableCell>
+               <Box>
+              {data.FullName}
                     </Box>
                 ))}
               </TableCell>
 
               <TableCell align="center">
                 {row.StuName.map((data) => (
-            <Box align="center">
-                    <TableCell align="center">{data.Contact}</TableCell>
+            <Box>
+                    {data.Contact}
                     </Box>
                 ))}
               </TableCell>
               <TableCell align="center">
-              <Box align="center">
-                  <TableCell align="center">
+              <Box>
+                  
                     {row.EventId.eventName}
-                  </TableCell>
                   </Box>
               </TableCell>
               
               <TableCell align="center">
                 {row.EventId.Days &&
                   row.EventId.Days.map((data) => (
-                    <Box align="center">
+                    <Box>
                       {data}
                       </Box>
                   ))}
               </TableCell>
 
               <TableCell align="center">
-              <Box align="center">
-                  <TableCell align="center">
+              <Box>
                     {row.EventId.StartDate.split("T")[0]}
-                  </TableCell>
+                  
+                  </Box>
+              </TableCell>
+              <TableCell align="center">
+              <Box>
+                    {row.EventId.EndtDate.split("T")[0]}
+                  
                   </Box>
               </TableCell>
               
               <TableCell align="center">
-              <Box align="center">
-                  <TableCell align="center">
+              <Box>
                     {row.EventId.BatchTime && convertToIST(row.EventId.BatchTime)}
-                  </TableCell>
+                  
                   </Box>
               </TableCell>
-<Box sx={{display:'flex',justifyContent:'center',mt:2}}>
+
               <TableCell align="center">
               <Tooltip title="Edit" arrow>
                 
@@ -496,7 +501,7 @@ return(
               
 
             
-              </Box>
+          
             </TableRow>
           ))
           
@@ -524,7 +529,7 @@ return(
   <Box sx={{mt:1}}>
  <Tooltip title="Add Batches" arrow>
          <Button
-      disabled={parent._id?false:true}
+      disabled={!parent._id || map.length>=1?true:false}
            onClick={() => {
              setarr([...arr])
              console.log(arr)
@@ -564,7 +569,7 @@ return(
            labelId="demo-simple-select-label"
            id="demo-simple-select"
            label="Status"
-           renderValue={(data)=>{return(parent._id && data.Course || '')}}
+           renderValue={(data)=>{return(parent._id && data.eventName || '')}}
            sx={{
              height:50,
              borderRadius: "16px",
@@ -599,20 +604,6 @@ return(
 
                    <TableCell align="center">{row.Amount}</TableCell>
 
-                   <TableCell align="center">
-                     {row.StartDate && row.StartDate.split("T")[0]}
-                   </TableCell>
-                   <TableCell align="center">
-                     {row.EndtDate && row.EndtDate.split("T")[0]}
-                   </TableCell>
-                   <TableCell align="center">
-                     {row.Days.map((val) => (
-                       <Box>{val}</Box>
-                     ))}
-                   </TableCell>
-                   <TableCell align="center">
-                     {row.BatchTime && convertToIST(row.BatchTime)}
-                   </TableCell>
                  </TableRow>
                </MenuItem>
              ))}
@@ -626,7 +617,7 @@ return(
 
 </Grid>
 )
-},[open,parent,arr1,arr])
+},[open,parent,arr1,arr,map])
 
   return (
     <>

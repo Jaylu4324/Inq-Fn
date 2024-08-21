@@ -244,6 +244,7 @@ return(
       </Snackbar>
 )
 },[open1])
+console.log('map :',map.length)
 const addbutton=React.useMemo(()=>{
   console.log('select course called')
 return(
@@ -253,7 +254,7 @@ return(
       <Tooltip title="Add Batches" arrow>
       <Button
       sx={{ml:2}}
-       disabled={!parent._id || map.length>1?true:false}
+       disabled={!parent._id || map.length>=1?true:false}
 
         onClick={() => {
           setarr([...arr]);
@@ -288,6 +289,9 @@ return(
           </InputLabel>
           <Select
             onChange={(e) => {
+              setUpdate(!update)
+              setAdds("noes")
+              setAdd("trues data")
               handleparent(e);
             }}
             labelId="demo-simple-select-label"
@@ -344,7 +348,7 @@ return(
    
 </Grid>
 )
-},[open,parent,course,arr])
+},[open,parent,course,arr,map])
 
 const dialogstudents=React.useMemo(()=>{
   console.log('student dialog ckllled')
@@ -521,6 +525,8 @@ return(
 
     >Student Name</TableCell>
     <TableCell align="center">Contact</TableCell>
+    <TableCell align="center">Batch Name</TableCell>
+    
     <TableCell align="center">Days</TableCell>
     <TableCell align="center">Date</TableCell>
     <TableCell align="center">Batch Time</TableCell>
@@ -558,6 +564,15 @@ return(
             <Box>{data.Contact}</Box>
         ))}
       </TableCell>
+
+      <TableCell align="center">
+        
+        <Box>
+          {row.EventId.batchName && row.EventId.batchName}
+        </Box>
+    
+    </TableCell>
+    
       <TableCell align="center">
         {row.EventId.Days &&
           row.EventId.Days.map((data) => (
@@ -573,6 +588,7 @@ return(
           </Box>
       
       </TableCell>
+
       <TableCell align="center">
         <Box>
             {row.EventId.BatchTime && convertToIST(row.EventId.BatchTime)}

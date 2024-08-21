@@ -77,7 +77,7 @@ export default function ButtonAppBar() {
  
   const Nav=useNavigate("")
 let dasharr=['/dashBoard/dashBoard']
-    let arr=["/course/AddCourse","/course/CourInq",'/course/Batch-For-Course',"/course/Invoice","/course/Studentdetails","/course/Completedcourse"]
+    let arr=["/course/AddCourse","/course/CourInq",'/course/Batch-For-Course',"/course/Studentdetails","/course/Invoice","/course/Completedcourse"]
   let arr1=["/events/Events","/events/einquiries","/events/Batches","/events/Old"]
 
   const toggleDrawer = (newOpen) => () => {
@@ -114,7 +114,7 @@ let dasharr=['/dashBoard/dashBoard']
        </List>
         <TreeItem itemId="grid" label="Course">
         <List>
-         {['Add Batches','Course-Inquiries','Assign-Students to Batch', 'Invoice', 'Student Details','Completed-courses'].map(
+         {['Add Batches','Course-Inquiries','Assign-Students to Batch', 'Student Details','Invoice','Completed-courses'].map(
            (text, index) => (
              <ListItem key={text} disablePadding onClick={()=>{localStorage.setItem('displayname',text); setname(text); ;Nav(`${arr[index]}`);
             

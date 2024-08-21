@@ -156,12 +156,15 @@ return(
               <CustomPagination
                 count={totalpages?totalpages:1}
                 page={page}
-                size="large"
+             
+                size="small"
+                siblingCount={1} 
+                boundaryCount={1}
                 onChange={(e, p) => {
                   setpage(p);
-                  
-
                 }}
+                showFirstButton={false}
+                showLastButton={false}
               />
             </Box>
             </Grid>
@@ -225,7 +228,7 @@ const table=React.useMemo(()=>{
         </TableRow>
       </TableHead>
 <TableBody sx={{height:arr && arr.length<1?220:0}}>
-      {arr &&
+      {arr && arr.length>0?
         arr.map((row, idx) => (
           <TableRow
             key={row.name}
@@ -293,7 +296,12 @@ const table=React.useMemo(()=>{
             </TableCell>
 
           </TableRow>
-        ))}
+        ))
+      :
+      <TableRow>
+        <TableCell colSpan={7} align="center"> No Date Available</TableCell>
+      </TableRow>
+      }
 
 </TableBody>
     </Table>
