@@ -53,12 +53,9 @@ export default function FormDialog() {
   const [coursearr, setcoursearr] = React.useState([]);
   const CustomPagination = styled(Pagination)(({ theme }) => ({
     "& .MuiPaginationItem-root": {
-      width: "50px",  // Default width
-      height: "50px", // Default height
-      "&:hover": {
-        width: "30px",  // Adjust width on hover
-        height: "30px", // Keep height consistent on hover
-      },
+      width: "30px",  // Default width
+      height: "30px", // Default height
+    
       "&.Mui-selected": {
         width: "30px", // Width for selected item
         height: "30px", // Height for selected item
@@ -671,7 +668,7 @@ return(
       <Button sx={{ color: "#0063cc" }}>
         <SearchIcon
           onClick={() => {
-            if(searchname.length>0){
+            if(searchname.trim().length>0){
             axios
               .get(
                 `http://localhost:5000/invoice/searchinstu?name=${searchname}&page=${page}&limit=${10}`,
@@ -693,6 +690,7 @@ return(
                 open: true,
                 message: 'Please Enter Name First'
               });
+              setseearchname("")
             }
           }}
         />

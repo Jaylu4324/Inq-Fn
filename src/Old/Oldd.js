@@ -102,12 +102,9 @@ export default function Old() {
   }));
   const CustomPagination = styled(Pagination)(({ theme }) => ({
     "& .MuiPaginationItem-root": {
-      width: "50px", // Default width
-      height: "50px", // Default height
-      "&:hover": {
-        width: "30px", // Adjust width on hover
-        height: "30px", // Keep height consistent on hover
-      },
+      width: "30px", // Default width
+      height: "30px", // Default height
+    
       "&.Mui-selected": {
         width: "30px", // Width for selected item
         height: "30px", // Height for selected item
