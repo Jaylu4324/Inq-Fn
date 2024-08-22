@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -243,12 +243,6 @@ function Addcourse() {
     setalertbatchMsg({ ...alertbatchMsg, open: false });
   };
   const grid = React.useMemo(() => {
-    const renderEllipses = (page, count) => {
-      if (count <= 3) return null;
-      if (page <= 3) return <span>...</span>;
-      if (page > 3 && page < count - 2) return <span>...</span>;
-      return null;
-    };
 
     console.log("main grid called");
     return (
@@ -401,6 +395,9 @@ function Addcourse() {
       </Dialog>
     );
   }, [open, data, id]);
+
+
+  
   const Snack = React.useMemo(() => {
     console.log("snack bar called");
     return (
@@ -602,16 +599,11 @@ function Addcourse() {
   }, [open2]);
   return (
     <>
-      {Snack}
-      {grid}
-
-      {dialog1}
-
-      {table}
-
-      {completed}
-    </>
-  );
-}
-
-export default Addcourse;
+{Snack}
+{grid}
+{table}
+{completed}
+{dialog1}
+      </>
+  )}
+  export default Addcourse
