@@ -29,7 +29,7 @@ import { Dialog, dialogClasses, Grid } from '@mui/material';
 import MailIcon from '@mui/icons-material/Mail';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Button from "@mui/material/Button";
-export default function ButtonAppBar() {
+function ButtonAppBar() {
   
   const [open1, setOpen1] = React.useState(false);
  
@@ -280,7 +280,7 @@ let dasharr=['/dashBoard/dashBoard']
       </>
   );
 }
-
+export default React.memo(ButtonAppBar)
 
 
 
