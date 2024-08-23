@@ -407,20 +407,20 @@ function Form1() {
   const pagination = React.useMemo(() => {
     return (
       <Grid
-        xs={6}
+        xs={12}
+        sm={6}
         sx={{
           display: "flex",
           justifyContent: "center",
-          
+          mt: { xs: 2, sm: 0 }, // Add margin on top for small screens
         }}
       >
         <Box>
           <CustomPagination
-            count={totalPages?totalPages:1}
-            
+            count={totalPages ? totalPages : 1}
             page={page}
             size="small"
-            siblingCount={1} 
+            siblingCount={1}
             boundaryCount={1}
             onChange={(e, p) => {
               setpage(p);
@@ -432,15 +432,17 @@ function Form1() {
       </Grid>
     );
   }, [totalPages, page]);
+  
   const ingredients = React.useMemo(() => {
     console.log("ingredients");
     return (
       <Grid container spacing={2}>
         <Grid
-          xs={2}
+          xs={12}
+          sm={2}
           sx={{
             display: "flex",
-            justifyContent: "flex-start", // Adjusted to 'flex-end' for right alignment
+            justifyContent: { xs: "center", sm: "flex-start" }, // Center on small screens
             alignItems: "flex-start",
           }}
         >
@@ -449,9 +451,8 @@ function Form1() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-
-              mt: 1,
-              ml: 2,
+              mt: { xs: 0, sm: 1 },
+              ml: { xs: 0, sm: 2 },
             }}
           >
             <div>
@@ -484,6 +485,7 @@ function Form1() {
               >
                 {montharr.map((val, index) => (
                   <MenuItem
+                    key={index}
                     onClick={() => {
                       axios
                         .get(
@@ -491,10 +493,10 @@ function Form1() {
                           jwttoken()
                         )
                         .then((data) => {
-                          if (type == "onGoing") {
+                          if (type === "onGoing") {
                             setArr(data.data);
                             setorder1(order1 === 1 ? -1 : 1);
-                          } else if (type == "Reject") {
+                          } else if (type === "Reject") {
                             setReject(data.data);
                             setorder1(order1 === 1 ? -1 : 1);
                           } else {
@@ -505,7 +507,7 @@ function Form1() {
                         .catch((error) => {
                           console.error("API Request Error:", error);
                         });
-
+  
                       handleClosemenu1();
                     }}
                   >
@@ -514,7 +516,6 @@ function Form1() {
                 ))}
               </Menu>
             </div>
-
             <div>
               <Tooltip title="Sort" arrow>
                 <Button
@@ -544,9 +545,9 @@ function Form1() {
                         jwttoken()
                       )
                       .then((data) => {
-                        if (type == "onGoing") {
+                        if (type === "onGoing") {
                           setArr(data.data.allData);
-                        } else if (type == "Reject") {
+                        } else if (type === "Reject") {
                           setReject(data.data.allData);
                         } else {
                           setconfirm(data.data.allData);
@@ -557,7 +558,6 @@ function Form1() {
                 >
                   All
                 </MenuItem>
-
                 <MenuItem
                   onClick={() => {
                     axios
@@ -566,10 +566,10 @@ function Form1() {
                         jwttoken()
                       )
                       .then((data) => {
-                        if (type == "onGoing") {
+                        if (type === "onGoing") {
                           setArr(data.data.data);
                           setorder(order === 1 ? -1 : 1);
-                        } else if (type == "Reject") {
+                        } else if (type === "Reject") {
                           setReject(data.data.data);
                           setorder(order === 1 ? -1 : 1);
                         } else {
@@ -593,10 +593,10 @@ function Form1() {
                         jwttoken()
                       )
                       .then((data) => {
-                        if (type == "onGoing") {
+                        if (type === "onGoing") {
                           setArr(data.data.data);
                           setorder(order === 1 ? -1 : 1);
-                        } else if (type == "Reject") {
+                        } else if (type === "Reject") {
                           setReject(data.data.data);
                           setorder(order === 1 ? -1 : 1);
                         } else {
@@ -617,16 +617,17 @@ function Form1() {
           </Box>
         </Grid>
         {pagination}
-
         <Grid
-          xs={4}
+          xs={12}
+          sm={4}
           sx={{
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: { xs: "center", sm: "flex-end" }, // Centered on small screens
             alignItems: "center",
+            mt: { xs: 2, sm: 0 }, // Add margin on top for small screens
           }}
         >
-          <Box sx={{ width: 400, ml: 2 }}>
+          <Box sx={{ width: { xs: "100%", sm: 400 }, ml: 2 }}>
             <TextField
               value={searchname}
               id="filled-hidden-label-small"
@@ -641,7 +642,7 @@ function Form1() {
                   borderRadius: "16px",
                   border: "2px solid #0063cc",
                   backgroundColor: "white",
-                  padding: "0 16px", // Ensure background color is consistent
+                  padding: "0 16px",
                   "&:hover": {
                     backgroundColor: "white",
                   },
@@ -649,18 +650,17 @@ function Form1() {
                     backgroundColor: "white",
                   },
                   "& input": {
-                    padding: "12px 0", // Adjust vertical padding to center text
-                    // Center the text horizontally
+                    padding: "12px 0",
                   },
                 },
                 "& .MuiFilledInput-underline:before": {
-                  borderBottom: "none", // Remove the default underline before focus
+                  borderBottom: "none",
                 },
                 "& .MuiFilledInput-underline:after": {
-                  borderBottom: "none", // Remove the default underline after focus
+                  borderBottom: "none",
                 },
                 "& .MuiFilledInput-underline:hover:not(.Mui-disabled):before": {
-                  borderBottom: "none", // Remove underline on hover
+                  borderBottom: "none",
                 },
               }}
             />
@@ -670,8 +670,8 @@ function Form1() {
               <Button sx={{ color: "#0063cc" }}>
                 <SearchIcon
                   onClick={() => {
-                    console.log("trimewd",searchname.trim().length)
-                    if (searchname.trim().length > 0  ) {
+                    console.log("trimmed", searchname.trim().length);
+                    if (searchname.trim().length > 0) {
                       axios
                         .get(
                           `http://localhost:5000/inquiry/commansearchstu?FullName=${searchname}&type=${type}&page=${page}&limit=${10}`,
@@ -679,17 +679,16 @@ function Form1() {
                         )
                         .then((data) => {
                           console.log(data);
-                          if (type == "onGoing") {
+                          if (type === "onGoing") {
                             setArr(data.data.filterdata);
                             settotalpages(data.data.totalPages);
-                          } else if (type == "Reject") {
+                          } else if (type === "Reject") {
                             setReject(data.data.filterdata);
                             settotalpages(data.data.totalPages);
                           } else {
                             setconfirm(data.data.filterdata);
                             settotalpages(data.data.totalPages);
                           }
-
                           setseearchname("");
                         })
                         .catch((err) => {
@@ -701,7 +700,7 @@ function Form1() {
                         open: true,
                         message: "Please Enter Name First",
                       });
-                      setseearchname("")
+                      setseearchname("");
                     }
                   }}
                 />
@@ -714,7 +713,6 @@ function Form1() {
   }, [
     totalPages,
     value,
-
     open,
     arr,
     reject,

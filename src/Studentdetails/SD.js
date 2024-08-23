@@ -359,7 +359,7 @@ function SD() {
   const [student, setstudent] = React.useState([]);
   const pagination = React.useMemo(() => {
     return (
-      <Grid xs={5} sx={{display:'flex',justifyContent:'center'}}>
+      <Grid xs={5} sm={5} sx={{display:'flex',justifyContent:'center'}}>
         <Box sx={{ mt: 2 }}>
           <CustomPagination
             count={totalpages?totalpages:1}
@@ -379,43 +379,19 @@ function SD() {
       </Grid>
     );
   }, [totalpages,page]);
-  const snack = React.useMemo(() => {
-    console.log("snackbar called");
-    return (
-      <Snackbar
-        open={op}
-        autoHideDuration={3000}
-        onClose={handleClose12}
-        anchorOrigin={{ vertical, horizontal }}
-      >
-        {(alertSuccess.open || alertMsg.open) && (
-          <Alert
-            onClose={handleClose12}
-            severity={alertSuccess.open ? "success" : "error"}
-            // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
-
-            variant="filled"
-            sx={{ width: "100%" }}
-          >
-            {alertSuccess.open ? alertSuccess.message : alertMsg.message}
-          </Alert>
-        )}
-      </Snackbar>
-    );
-  }, [op]);
+  
   const ingredients = React.useMemo(() => {
     console.log("ingredients called");
     return (
       <Grid container spacing={2}>
         <Grid
           item
-          xs={2}
-          
+          xs={12}
+          sm={2}
           sx={{
             display: "flex",
-            justifyContent: "flex-start",
+            justifyContent: { xs: "center", sm: "flex-start" },
             alignItems: "flex-start",
-           
           }}
         >
           <Box sx={{ display: "flex", mt: 1 }}>
@@ -587,7 +563,7 @@ function SD() {
           </Box>
         </Grid>
 {pagination}
-        <Grid item xs={2}>
+        <Grid item xs={2}  sm={2}>
           <Box sx={{ mx: 2 }}>
             <FormControl sx={{ width: 140 }}>
               <InputLabel id="demo-simple-select-label"
@@ -644,14 +620,13 @@ function SD() {
         </Grid>
 
         <Grid
-          xs={3}
-      
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-        
-          }}
+        xs={12}
+        sm={3}
+        sx={{
+          display: "flex",
+          justifyContent: { xs: "center", sm: "center" },
+          alignItems: "center",
+        }}
         >
           <Box sx={{ width: 400, ml: 3, mt: 2 }}>
             <TextField
@@ -738,6 +713,32 @@ function SD() {
     parent,
     coursearr,
   ]);
+
+  const snack = React.useMemo(() => {
+    console.log("snackbar called");
+    return (
+      <Snackbar
+        open={op}
+        autoHideDuration={3000}
+        onClose={handleClose12}
+        anchorOrigin={{ vertical, horizontal }}
+      >
+        {(alertSuccess.open || alertMsg.open) && (
+          <Alert
+            onClose={handleClose12}
+            severity={alertSuccess.open ? "success" : "error"}
+            // alertSuccess.open? "success": alertMsg.open? "error": alertInfo.open? "info": "info"\
+
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {alertSuccess.open ? alertSuccess.message : alertMsg.message}
+          </Alert>
+        )}
+      </Snackbar>
+    );
+  }, [op]);
+  
   const dialogdata = React.useMemo(() => {
     console.log("dialog called");
     return (

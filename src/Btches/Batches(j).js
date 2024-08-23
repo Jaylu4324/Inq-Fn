@@ -595,14 +595,7 @@ return(
                      "&:last-child td, &:last-child th": { border: 0 },
                    }}
                  >
-                   <TableCell align="center">{row.Course}</TableCell>
-                   <TableCell align="center">{row.eventName}</TableCell>
-
-
-                   <TableCell align="center">{row.TypeOfEvent}</TableCell>
-                   <TableCell align="center">{row.TypeOfPayment}</TableCell>
-
-                   <TableCell align="center">{row.Amount}</TableCell>
+                   <Typography align="center">{row.eventName}</Typography>
 
                  </TableRow>
                </MenuItem>

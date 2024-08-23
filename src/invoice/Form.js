@@ -313,30 +313,6 @@ export default function FormDialog() {
   const handlePageChange = (event, value) => {
     setpage(value); 
   };
-  
-  const pagination = React.useMemo(() => {
-    return (
-      <Grid item xs={5} sx={{ display: "flex",
-        justifyContent: "center", 
-        }}>
-        <Box>
-          <CustomPagination
-            count={totalpages?totalpages:1}
-            page={page}
-            size="small"
-            siblingCount={1}
-            boundaryCount={1}
-            onChange={handlePageChange} 
-            showFirstButton={false}
-            showLastButton={false}
-          />
-        </Box>
-      </Grid>
-    );
-  }, [totalpages, page]); 
-  
-    
-
   const snack=React.useMemo(()=>{
     console.log('snackbar called')
     return(
@@ -363,6 +339,32 @@ export default function FormDialog() {
 
   },[open1])
   
+  const pagination = React.useMemo(() => {
+    return (
+      <Grid
+      
+    item  xs={12} sm={6} md={5} sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'center' } }}  
+
+        >
+        <Box>
+          <CustomPagination
+            count={totalpages?totalpages:1}
+            page={page}
+            size="small"
+            siblingCount={1}
+            boundaryCount={1}
+            onChange={handlePageChange} 
+            showFirstButton={false}
+            showLastButton={false}
+          />
+        </Box>
+      </Grid>
+    );
+  }, [totalpages, page]); 
+  
+    
+
+
 const ingredients=React.useMemo(()=>{
 console.log('ingredients')
 return(
@@ -370,15 +372,7 @@ return(
   {/* Left Section */}
   <Grid
     item
-    xs={2}
-    
-    sx={{
-      display: "flex",
-      justifyContent: "center", // Adjusted for right alignment
-   
-
-
-    }}
+   xs={12} sm={4} md={2} sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'flex-start' } }}
   >
     <Box sx={{ display: "flex", mt: 1 }}>
       <div>
@@ -550,7 +544,7 @@ return(
     </Box>
   </Grid>
  {pagination}
-  <Grid item xs={2}>
+  <Grid item  xs={12} sm={4} md={2}>
     <Box>
       <FormControl sx={{width:150}}>
         <InputLabel id="demo-simple-select-label"
@@ -613,16 +607,8 @@ return(
 
   <Grid
     item
-    xs={3}
-    
-    sx={{
-      display: "flex",
-      justifyContent: "left",
-      alignItems: "center",
-
-
-      
-    }}
+     xs={12} sm={4} md={3} sx={{ display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', sm: 'flex-end' } }}
+     
   >
     <Box sx={{ width: 400, ml: 3 }}>
       <TextField
@@ -700,6 +686,7 @@ return(
 </Grid>
 )
 },[totalpages,open,anchorEl,anchorEl1,searchname,parent,coursearr,order,order1])
+
 const dialog=React.useMemo(()=>{
   console.log('dialog')
 return(

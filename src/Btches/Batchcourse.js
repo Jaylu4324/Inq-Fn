@@ -323,20 +323,11 @@ return(
                       "&:last-child td, &:last-child th": { border: 0 },
                     }}
                   >
-                    <TableCell align="center">{row.batchName}</TableCell>
+                    <Typography align="center">{row.batchName}</Typography>
 
 
 
-                    <TableCell align="center">
-                      {row.StartDate && row.StartDate.split("T")[0]}
-                    </TableCell>
-                    <TableCell align="center">
-                    {row.Days&&row.Days}
-                    </TableCell>
-                  
-                    <TableCell align="center">
-                      {row.BatchTime && convertToIST(row.BatchTime)}
-                    </TableCell>
+                    
                   </TableRow>
                 </MenuItem>
               ))}

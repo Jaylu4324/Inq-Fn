@@ -405,14 +405,9 @@ function Eventi() {
   const pagination = React.useMemo(() => {
     return (
       <Grid
-        item
-        xs={5}
-        sx={{
-       
-          display: "flex",
-          justifyContent: "center", 
-          alignItems: "center",
-        }}
+        
+        item  xs={12} sm={6} md={5} sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'center' } }}  
+    
       >
         <Box>
           <CustomPagination
@@ -460,12 +455,7 @@ function Eventi() {
       <Grid container spacing={2}>
         <Grid
           item
-          xs={2}
-          sx={{
-            display: "flex",
-            justifyContent: "flex-start", // Adjusted for right alignment
-            alignItems: "flex-start",
-          }}
+          xs={12} sm={4} md={2} sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'flex-start' } }}
         >
           <Box sx={{ display: "flex", mt: 1 }}>
             <div>
@@ -669,7 +659,7 @@ function Eventi() {
           </Box>
         </Grid>
         {pagination}
-        <Grid item xs={2}>
+        <Grid item  xs={12} sm={4} md={2}>
           <Box sx={{ mx: 2 }}>
             <FormControl sx={{ width: 150 }}>
               <InputLabel
@@ -730,13 +720,8 @@ function Eventi() {
           </Box>
         </Grid>
         <Grid
-          item
-          xs={3}
-          sx={{
-            display: "flex",
-            justifyContent: "left",
-            alignItems: "center",
-          }}
+     item     xs={12} sm={4} md={3} sx={{ display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', sm: 'flex-end' } }}
+     
         >
           <Box sx={{ width: 400, ml: 3 }}>
             <TextField
