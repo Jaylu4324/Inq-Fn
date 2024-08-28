@@ -415,7 +415,7 @@ function Form1() {
           mt: { xs: 2, sm: 0 }, // Add margin on top for small screens
         }}
       >
-        <Box>
+        <Box sx={{mt:1}}>
           <CustomPagination
             count={totalPages ? totalPages : 1}
             page={page}
@@ -837,6 +837,7 @@ function Form1() {
                             </Button>
                           </Tooltip>
                         </TableCell>
+
                         <TableCell align="center">
                           <Tooltip title="Confirm" arrow>
                             <Button
@@ -959,6 +960,8 @@ function Form1() {
                     <TableCell align="center">College Name</TableCell>
                     <TableCell align="center">Interested Course</TableCell>
                     <TableCell align="center">Description</TableCell>
+                    <TableCell align="center">Actions</TableCell>
+                    
                   </TableRow>
                 </TableHead>
                 <TableBody
@@ -994,6 +997,14 @@ function Form1() {
                         <TableCell align="center">{row.CollageName}</TableCell>
                         <TableCell align="center">{row.Course}</TableCell>
                         <TableCell align="center">{row.Description}</TableCell>
+                        <TableCell align="center">
+                          <Tooltip title="Update Student" arrow>
+                            <Button>
+                              < EditIcon/>
+                            </Button>
+                          </Tooltip>
+                        </TableCell>
+                        
                       </TableRow>
                     ))
                   ) : (
