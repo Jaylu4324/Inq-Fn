@@ -423,7 +423,7 @@ function Eventi() {
         </Box>
       </Grid>
     );
-  }, [totalpages, page]); // Add 'page' to the dependency array
+  }, [totalpages, page]); 
 
   const Snack = React.useMemo(() => {
     console.log("snackbar called");

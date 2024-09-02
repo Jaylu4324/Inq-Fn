@@ -122,10 +122,19 @@ function Form1() {
   const [arr, setArr] = React.useState([]);
   const [reject, setReject] = React.useState([]);
   const [confirm, setconfirm] = React.useState([]);
+  const[coursedata,setcoursedata]=React.useState([])
+  
+  const handlecourse = (e) => {
+    let value = e.target.value;
+    
+    setData({ ...data, Course: value });
+  };
+  
   const [update, doUpdate] = React.useState(false);
   const [id, setId] = React.useState();
+  console.log(id)
   const [page, setpage] = React.useState(1);
-
+const[open3,setopen3]=React.useState(false)
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
@@ -177,6 +186,15 @@ function Form1() {
 
     setOpen2(false);
   };
+  const handleClose3 = () => {
+    setOpen(false);
+    setData({ Date: newdate() });
+setcoursestring('')
+setchangearr('')
+    setId("");
+
+    setopen3(false);
+  };
 
   const [searchname, setseearchname] = React.useState("");
   const handlesearchname = (e) => {
@@ -213,12 +231,10 @@ function Form1() {
   }, [value, totalPages]);
 
   const Co = ["React", "Node", "C", "C++", "Python", "Mern Stack", "AWS"];
-  const handlecourse = (e) => {
-    let value = e.target.value;
-    setData({ ...data, Course: value });
-  };
-  console.log("page:", page);
-  console.log("value:", value);
+const[coursestring,setcoursestring]=React.useState('')
+
+const[changearr,setchangearr]=React.useState([])
+console.log(changearr)
   React.useEffect(() => {
     if (value == 0) {
       axios
@@ -264,7 +280,12 @@ function Form1() {
         });
     }
   }, [update, value, page]);
+  const handlecourse12=(e)=>{
+setcoursestring(e.target.value)
 
+
+  }
+  console.log(coursestring)
   const handlesubmit = () => {
     if (id) {
       axios
@@ -999,7 +1020,26 @@ function Form1() {
                         <TableCell align="center">{row.Description}</TableCell>
                         <TableCell align="center">
                           <Tooltip title="Update Student" arrow>
-                            <Button>
+                            <Button 
+                            onClick={()=>{
+                              setId(row._id)
+                              const Co = ["React", "Node", "C", "C++", "Python", "Mern Stack", "AWS"];
+                              setopen3(true)
+                                let news=[]
+                              
+                              for(let i=0;i<Co.length;i++){
+                                if(!row.Course.includes(Co[i])){
+                                news.push(Co[i])
+                                }
+                                  
+                                  }
+                                  setchangearr(news)
+                                  
+                                
+                                  
+                                  
+                              
+                            }}>
                               < EditIcon/>
                             </Button>
                           </Tooltip>
@@ -1236,6 +1276,7 @@ function Form1() {
       </Dialog>
     );
   }, [open1]);
+
   const dialogconfirm = React.useMemo(() => {
     console.log("confirm");
     return (
@@ -1282,7 +1323,76 @@ function Form1() {
       </Dialog>
     );
   }, [open2]);
+const updatestudent=React.useMemo(()=>{
+console.log('update student')
+return (
+  <Dialog
+    open={open3}
+    onClose={handleClose3}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+  >
+    <DialogTitle id="alert-dialog-title">{"Adding Course"}</DialogTitle>
+    <DialogContent>
+      <DialogContentText id="alert-dialog-description">
+        Do you want To Add Course In Confirm Student ?
+      </DialogContentText>
+      <DialogContent>
+          
+      <Box sx={{ mt: 1 }}>
+            <FormControl variant="filled" fullWidth>
+              <InputLabel id="demo-multiple-checkbox-label">
+                Interested Course
+              </InputLabel>
+              <Select
+                labelId="demo-multiple-checkbox-label"
+                id="demo-multiple-checkbox"
+                fullWidth
+              
+                // value={data.Course || []}
 
+                onChange={handlecourse12}
+              
+              >
+                {changearr &&
+                  changearr.map((row) => (
+                    <MenuItem key={row} value={row}>
+                         <TableRow
+                        key={row}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <Typography align="center">{row}</Typography>
+                      </TableRow>
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </DialogContent>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={handleClose3}>Cancel</Button>
+      <Button
+      onClick={()=>{
+        axios.post(`http://localhost:5000/inquiry/updatedConfirmCourse?id=${id}`,{arr:coursestring},jwttoken())
+
+        .then((data)=>{
+          console.log(data)
+        })
+.catch((err)=>{
+  console.log(err)
+})
+      }}
+      
+      >
+        Confirm
+      </Button>
+    </DialogActions>
+  </Dialog>
+);
+},[open3,coursestring])
   return (
     <>
       {snack}
@@ -1294,6 +1404,7 @@ function Form1() {
       </React.Fragment>
       {dialogreject}
       {dialogconfirm}
+      {updatestudent}
     </>
   );
 }
