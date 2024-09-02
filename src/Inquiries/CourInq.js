@@ -104,7 +104,7 @@ function Form1() {
     "& .MuiPaginationItem-root": {
       width: "30px", // Default width
       height: "30px", // Default height
-   
+
       "&.Mui-selected": {
         width: "30px", // Width for selected item
         height: "30px", // Height for selected item
@@ -122,19 +122,18 @@ function Form1() {
   const [arr, setArr] = React.useState([]);
   const [reject, setReject] = React.useState([]);
   const [confirm, setconfirm] = React.useState([]);
-  const[coursedata,setcoursedata]=React.useState([])
-  
+
   const handlecourse = (e) => {
     let value = e.target.value;
-    
+
     setData({ ...data, Course: value });
   };
-  
+
   const [update, doUpdate] = React.useState(false);
   const [id, setId] = React.useState();
-  console.log(id)
+  console.log(id);
   const [page, setpage] = React.useState(1);
-const[open3,setopen3]=React.useState(false)
+  const [open3, setopen3] = React.useState(false);
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
   const [alertSuccess, setAlertSuccess] = React.useState({
     open: false,
@@ -189,8 +188,8 @@ const[open3,setopen3]=React.useState(false)
   const handleClose3 = () => {
     setOpen(false);
     setData({ Date: newdate() });
-setcoursestring('')
-setchangearr('')
+    setcoursestring([]);
+    setchangearr([]);
     setId("");
 
     setopen3(false);
@@ -231,11 +230,12 @@ setchangearr('')
   }, [value, totalPages]);
 
   const Co = ["React", "Node", "C", "C++", "Python", "Mern Stack", "AWS"];
-const[coursestring,setcoursestring]=React.useState('')
+  const [coursestring, setcoursestring] = React.useState([]);
 
-const[changearr,setchangearr]=React.useState([])
-console.log(changearr)
+  const [changearr, setchangearr] = React.useState([]);
+  console.log(changearr);
   React.useEffect(() => {
+    console.log('main useffect called')
     if (value == 0) {
       axios
         .get(
@@ -280,12 +280,11 @@ console.log(changearr)
         });
     }
   }, [update, value, page]);
-  const handlecourse12=(e)=>{
-setcoursestring(e.target.value)
-
-
-  }
-  console.log(coursestring)
+  const handlecourse12 = (e) => {
+    console.log(e);
+    setcoursestring(e.target.value);
+  };
+  console.log(coursestring);
   const handlesubmit = () => {
     if (id) {
       axios
@@ -436,7 +435,7 @@ setcoursestring(e.target.value)
           mt: { xs: 2, sm: 0 }, // Add margin on top for small screens
         }}
       >
-        <Box sx={{mt:1}}>
+        <Box sx={{ mt: 1 }}>
           <CustomPagination
             count={totalPages ? totalPages : 1}
             page={page}
@@ -453,7 +452,7 @@ setcoursestring(e.target.value)
       </Grid>
     );
   }, [totalPages, page]);
-  
+
   const ingredients = React.useMemo(() => {
     console.log("ingredients");
     return (
@@ -528,7 +527,7 @@ setcoursestring(e.target.value)
                         .catch((error) => {
                           console.error("API Request Error:", error);
                         });
-  
+
                       handleClosemenu1();
                     }}
                   >
@@ -745,6 +744,7 @@ setcoursestring(e.target.value)
     searchname,
   ]);
   const table = React.useMemo(() => {
+    console.log("table called");
     return (
       <Box>
         <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
@@ -982,7 +982,6 @@ setcoursestring(e.target.value)
                     <TableCell align="center">Interested Course</TableCell>
                     <TableCell align="center">Description</TableCell>
                     <TableCell align="center">Actions</TableCell>
-                    
                   </TableRow>
                 </TableHead>
                 <TableBody
@@ -1020,31 +1019,33 @@ setcoursestring(e.target.value)
                         <TableCell align="center">{row.Description}</TableCell>
                         <TableCell align="center">
                           <Tooltip title="Update Student" arrow>
-                            <Button 
-                            onClick={()=>{
-                              setId(row._id)
-                              const Co = ["React", "Node", "C", "C++", "Python", "Mern Stack", "AWS"];
-                              setopen3(true)
-                                let news=[]
-                              
-                              for(let i=0;i<Co.length;i++){
-                                if(!row.Course.includes(Co[i])){
-                                news.push(Co[i])
-                                }
-                                  
+                            <Button
+                              onClick={() => {
+                                setId(row._id);
+                                const Co = [
+                                  "React",
+                                  "Node",
+                                  "C",
+                                  "C++",
+                                  "Python",
+                                  "Mern Stack",
+                                  "AWS",
+                                ];
+                                setopen3(true);
+                                let news = [];
+
+                                for (let i = 0; i < Co.length; i++) {
+                                  if (!row.Course.includes(Co[i])) {
+                                    news.push(Co[i]);
                                   }
-                                  setchangearr(news)
-                                  
-                                
-                                  
-                                  
-                              
-                            }}>
-                              < EditIcon/>
+                                }
+                                setchangearr(news);
+                              }}
+                            >
+                              <EditIcon />
                             </Button>
                           </Tooltip>
                         </TableCell>
-                        
                       </TableRow>
                     ))
                   ) : (
@@ -1061,7 +1062,7 @@ setcoursestring(e.target.value)
         </CustomTabPanel>
       </Box>
     );
-  }, [value, arr, reject, confirm, page]);
+  }, [coursestring, value, arr, reject, confirm, page]);
   const dialog = React.useMemo(() => {
     console.log("datad ialog");
     return (
@@ -1323,76 +1324,86 @@ setcoursestring(e.target.value)
       </Dialog>
     );
   }, [open2]);
-const updatestudent=React.useMemo(()=>{
-console.log('update student')
-return (
-  <Dialog
-    open={open3}
-    onClose={handleClose3}
-    aria-labelledby="alert-dialog-title"
-    aria-describedby="alert-dialog-description"
-  >
-    <DialogTitle id="alert-dialog-title">{"Adding Course"}</DialogTitle>
-    <DialogContent>
-      <DialogContentText id="alert-dialog-description">
-        Do you want To Add Course In Confirm Student ?
-      </DialogContentText>
-      <DialogContent>
-          
-      <Box sx={{ mt: 1 }}>
-            <FormControl variant="filled" fullWidth>
-              <InputLabel id="demo-multiple-checkbox-label">
-                Interested Course
-              </InputLabel>
-              <Select
-                labelId="demo-multiple-checkbox-label"
-                id="demo-multiple-checkbox"
-                fullWidth
-              
-                // value={data.Course || []}
-
-                onChange={handlecourse12}
-              
-              >
-                {changearr &&
-                  changearr.map((row) => (
-                    <MenuItem key={row} value={row}>
-                         <TableRow
-                        key={row}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <Typography align="center">{row}</Typography>
-                      </TableRow>
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </DialogContent>
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={handleClose3}>Cancel</Button>
-      <Button
-      onClick={()=>{
-        axios.post(`http://localhost:5000/inquiry/updatedConfirmCourse?id=${id}`,{arr:coursestring},jwttoken())
-
-        .then((data)=>{
-          console.log(data)
-        })
-.catch((err)=>{
-  console.log(err)
-})
-      }}
-      
+  const updatestudent = React.useMemo(() => {
+    console.log("update student");
+    return (
+      <Dialog
+        open={open3}
+        onClose={handleClose3}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
       >
-        Confirm
-      </Button>
-    </DialogActions>
-  </Dialog>
-);
-},[open3,coursestring])
+        <DialogTitle id="alert-dialog-title">{"Adding Course"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do you want To Add Course In Confirm Student ?
+          </DialogContentText>
+          <DialogContent>
+            <Box sx={{ mt: 1 }}>
+              <FormControl variant="filled" fullWidth>
+                <InputLabel id="demo-multiple-checkbox-label">
+                  Interested Course
+                </InputLabel>
+                <Select
+                  labelId="demo-multiple-checkbox-label"
+                  id="demo-multiple-checkbox"
+                  fullWidth
+                  // value={data.Course || []}
+
+                  onChange={handlecourse12}
+                >
+                  {changearr &&
+                    changearr.map((row) => (
+                      <MenuItem key={row} value={row}>
+                        <TableRow
+                          key={row}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <Typography align="center">{row}</Typography>
+                        </TableRow>
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+            </Box>
+          </DialogContent>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose3}>Cancel</Button>
+          <Button
+            onClick={() => {
+              console.log("before api:", coursestring);
+
+              axios
+                .post(
+                  `http://localhost:5000/inquiry/updatedConfirmCourse?id=${id}`,
+                  { arr: [coursestring] },
+                  jwttoken()
+                )
+
+                .then((data) => {
+                  console.log(data);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+                  doUpdate(!update)
+              setData({ Date: newdate() });
+              setcoursestring([]);
+              setchangearr([]);
+              setId("");
+
+              setopen3(false);
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }, [open3, coursestring]);
   return (
     <>
       {snack}
