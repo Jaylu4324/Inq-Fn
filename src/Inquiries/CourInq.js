@@ -1030,6 +1030,7 @@ function Form1() {
                                   "Python",
                                   "Mern Stack",
                                   "AWS",
+                                  "kalpd"
                                 ];
                                 setopen3(true);
                                 let news = [];
@@ -1062,7 +1063,7 @@ function Form1() {
         </CustomTabPanel>
       </Box>
     );
-  }, [coursestring, value, arr, reject, confirm, page]);
+  }, [update,coursestring, value, arr, reject, confirm, page]);
   const dialog = React.useMemo(() => {
     console.log("datad ialog");
     return (
@@ -1388,6 +1389,14 @@ function Form1() {
                 })
                 .catch((err) => {
                   console.log(err);
+                  if (err.response.data) {
+                    handleClick1({ vertical: "top", horizontal: "center" });
+        
+                    setAlertMsg({
+                      open: true,
+                      message: err.response.data.error.details[0].message,
+                    });
+                  }
                 });
                   doUpdate(!update)
               setData({ Date: newdate() });
