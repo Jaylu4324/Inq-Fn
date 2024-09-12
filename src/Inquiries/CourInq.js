@@ -230,7 +230,7 @@ function Form1() {
   }, [value, totalPages]);
 
   const Co = ["React", "Node", "C", "C++", "Python", "Mern Stack", "AWS"];
-  const [coursestring, setcoursestring] = React.useState([]);
+  const [coursestring, setcoursestring] = React.useState('');
 
   const [changearr, setchangearr] = React.useState([]);
   console.log(changearr);
@@ -379,7 +379,7 @@ function Form1() {
   const handleClickmenu1 = (event) => {
     setAnchorEl1(event.currentTarget);
   };
-
+console.log('coursestring:',coursestring)
   const handleClosemenu1 = () => {
     setAnchorEl1(null);
   };
@@ -1030,7 +1030,7 @@ function Form1() {
                                   "Python",
                                   "Mern Stack",
                                   "AWS",
-                                  "kalpd"
+                             
                                 ];
                                 setopen3(true);
                                 let news = [];
@@ -1349,8 +1349,7 @@ function Form1() {
                   labelId="demo-multiple-checkbox-label"
                   id="demo-multiple-checkbox"
                   fullWidth
-                  // value={data.Course || []}
-
+value={coursestring}
                   onChange={handlecourse12}
                 >
                   {changearr &&
@@ -1380,12 +1379,26 @@ function Form1() {
               axios
                 .post(
                   `http://localhost:5000/inquiry/updatedConfirmCourse?id=${id}`,
-                  { arr: [coursestring] },
+                  { arr:  coursestring?[coursestring]:[] },
                   jwttoken()
                 )
 
                 .then((data) => {
                   console.log(data);
+                  handleClick1({ vertical: "top", horizontal: "center" });
+
+                  setAlertSuccess({
+                    open: true,
+                    message: " Confirm Inquiry Course  Updated Successfully",
+                  });
+                  doUpdate(!update)
+                  setData({ Date: newdate() });
+                  setcoursestring('');
+                  setchangearr([]);
+                  setId("");
+    
+                  setopen3(false);
+                
                 })
                 .catch((err) => {
                   console.log(err);
@@ -1398,13 +1411,6 @@ function Form1() {
                     });
                   }
                 });
-                  doUpdate(!update)
-              setData({ Date: newdate() });
-              setcoursestring([]);
-              setchangearr([]);
-              setId("");
-
-              setopen3(false);
             }}
           >
             Confirm
