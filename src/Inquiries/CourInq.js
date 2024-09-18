@@ -1376,6 +1376,7 @@ value={coursestring}
             onClick={() => {
               console.log("before api:", coursestring);
 
+              
               axios
                 .post(
                   `http://localhost:5000/inquiry/updatedConfirmCourse?id=${id}`,

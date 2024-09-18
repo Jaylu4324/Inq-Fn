@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import Loder from './Loder'
 import { Navigate } from "react-router-dom";
 const Courseadd = lazy(() => import('./course/Addcourse'));
 const Loginmam = lazy(() => import('./Login/Login'));
@@ -33,7 +33,7 @@ function App() {
         <Route
           path="/"
           element={
-            <Suspense fallback={<div>loading.....</div>}>
+            <Suspense fallback={<div><Loder/>..</div>}>
               <Loginmam />
             </Suspense>
           }
@@ -41,7 +41,7 @@ function App() {
         <Route
           path="/dashBoard"
           element={
-            <Suspense fallback={<div>loading....</div>}>
+            <Suspense fallback={<div><Loder/>.</div>}>
               <Privateroute>
                 <Nav />
               </Privateroute>
@@ -70,7 +70,7 @@ function App() {
           <Route
             path="/course/Invoice"
             element={
-              <Suspense fallback={<div>loading.....</div>}>
+              <Suspense fallback={<div><Loder/>..</div>}>
                 <Privateroute>
                   <Inv />
                 </Privateroute>
@@ -80,7 +80,7 @@ function App() {
           <Route
             path="/course/CourInq"
             element={
-              <Suspense fallback={<div>loading...</div>}>
+              <Suspense fallback={<div><Loder/></div>}>
                 <Privateroute>
                   <CourInq />
                 </Privateroute>
@@ -91,7 +91,7 @@ function App() {
           <Route
             path="/course/Studentdetails"
             element={
-              <Suspense fallback={<div>loading....</div>}>
+              <Suspense fallback={<div><Loder/>.</div>}>
                 <Privateroute>
                   <Sd />
                 </Privateroute>
@@ -102,7 +102,7 @@ function App() {
           <Route
             path="/course/AddCourse"
             element={
-              <Suspense fallback={<div>loading....</div>}>
+              <Suspense fallback={<div><Loder/>.</div>}>
                 <Privateroute>
                   <Courseadd />
                 </Privateroute>
@@ -113,7 +113,7 @@ function App() {
           <Route
             path="/course/Batch-For-Course"
             element={
-              <Suspense fallback={<div>loading...</div>}>
+              <Suspense fallback={<div><Loder/></div>}>
                 <Privateroute>
                   <Batchcourse />
                 </Privateroute>
@@ -124,7 +124,7 @@ function App() {
           <Route
             path="/course/Completedcourse"
             element={
-              <Suspense fallback={<div>loading...</div>}>
+              <Suspense fallback={<div><Loder/></div>}>
                 <Privateroute>
                   <Completedcourse />
                 </Privateroute>
@@ -143,7 +143,7 @@ function App() {
           <Route
             path="/events/Events"
             element={
-              <Suspense fallback={<div>loading...</div>}>
+              <Suspense fallback={<div><Loder/></div>}>
                 <Privateroute>
                   <Inter />
                 </Privateroute>
@@ -154,7 +154,7 @@ function App() {
           <Route
             path="/events/einquiries"
             element={
-              <Suspense fallback={<div>loading...</div>}>
+              <Suspense fallback={<div><Loder/></div>}>
                 <Privateroute>
                   <Eventi />
                 </Privateroute>
@@ -165,7 +165,7 @@ function App() {
           <Route
             path="/events/Old"
             element={
-              <Suspense fallback={<div>loading...</div>}>
+              <Suspense fallback={<div><Loder/></div>}>
                 <Privateroute>
                   <Old />
                 </Privateroute>
