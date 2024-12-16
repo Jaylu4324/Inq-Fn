@@ -6,15 +6,16 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-
+import DownloadIcon from "@mui/icons-material/Download";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import TableBody from "@mui/material/TableBody";
-
+import { jsPDF } from "jspdf";
 import { Snackbar, Alert } from "@mui/material";
-
+import html2canvas from "html2canvas";
 import Tooltip from "@mui/material/Tooltip";
 import { Box, Paper } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
+import '../certificate.css'
 import DialogContent from "@mui/material/DialogContent";
 import jwttoken from "../Token";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
@@ -49,6 +50,7 @@ function convertToIST(utcDateStr) {
 }
 
 export default function Old() {
+  const [cerstring, setcerstring] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [count, setcount] = React.useState(0);
   const [count1, setcount1] = React.useState(0);
@@ -104,7 +106,7 @@ export default function Old() {
     "& .MuiPaginationItem-root": {
       width: "30px", // Default width
       height: "30px", // Default height
-    
+
       "&.Mui-selected": {
         width: "30px", // Width for selected item
         height: "30px", // Height for selected item
@@ -115,7 +117,58 @@ export default function Old() {
       },
     },
   }));
+const handledowloadpdf=async ()=>{
+  const element = document.createElement('div');
+  element.innerHTML = `
+  <div id="first">
+    <div class="second">
+      <div class="innerfirst">Top main design</div>
+      <div class="certificate">CERTIFICATE</div>
+      <div class="completion">OF COMPLETION</div>
+      <div class="thiscertificate">
+        THIS CERTIFICATE IS PROUDLY PRESENTED TO
+      </div>
+      <div class="name">Krunal Mistry</div>
+      <div class="thinborder"></div>
+      <div class="text">
+        Congratulations on the successful completion of
+      </div>
+      <div class="text1">
+        ReactJS. The complete Front-end training.
+      </div>
+      <div class="text2">
+        <b>Date of issue: 20th December, 2023</b>
+      </div>
+      <div class="sign">Ekta</div>
+      <div class="ownername">
+        <b>Ekta Shah</b>
+      </div>
+      <div class="founder">
+        <b>Founder</b>
+      </div>
+    </div>
+  </div>
+`;
+document.body.appendChild(element); 
+try {
+  // Generate the canvas and PDF
+  const canvas = await html2canvas(element);
+  const imgData = canvas.toDataURL("image/png");
 
+  const doc = new jsPDF({
+    orientation: "portrait",
+    unit: "in",
+    format: [12, 12]
+  });
+
+  doc.addImage(imgData, "PNG", 0, 0, 12, 12);
+  doc.save("Certificate_of_Completion.pdf");
+  document.body.removeChild(element);
+
+} catch (error) {
+  console.error("Error generating PDF:", error);
+}
+}
   const handleDateChange = (val) => {
     const selectedDate = new Date(val);
     const timezoneOffset = 5.5 * 60; // 5.5 hours in minutes
@@ -183,7 +236,7 @@ export default function Old() {
       <Grid xs={12} sx={{ display: "flex", justifyContent: "center" }}>
         <Box sx={{ mb: 2 }}>
           <CustomPagination
-            count={totalpages?totalpages:1}
+            count={totalpages ? totalpages : 1}
             page={page}
             size="small"
             siblingCount={1}
@@ -231,7 +284,7 @@ export default function Old() {
                 <TableCell align="center">Days</TableCell>
                 <TableCell align="center">Batch Time</TableCell>
 
-                <TableCell align="center" colSpan={2}>
+                <TableCell align="center" colSpan={3}>
                   Actions
                 </TableCell>
               </TableRow>
@@ -316,6 +369,49 @@ export default function Old() {
                           }}
                         >
                           <RemoveRedEyeIcon />
+                        </Button>
+                      </Tooltip>
+                    </TableCell>
+                    <TableCell align="center">
+                      {/* {cerstring && (
+                        <div id="first">
+                          <div class="second">
+                            for rounded borders
+                            <div class="innerfirst">Top main design</div>
+                            <div class="certificate">CERTIFICATE</div>
+                            <div class="completion">OF COMPLETION</div>
+                            <div class="thiscertificate">
+                              THIS CERTIFICATE IS PROUDLY PRESENTED TO
+                            </div>
+                            <div class="name">Krunal Mistry</div>
+                            <div class="thinborder"></div>
+                            <div class="text">
+                              Congratulations on the sucessful completion of
+                            </div>
+                            <div class="text1">
+                              ReactJS.The complete Front-end training.
+                            </div>
+                            <div class="text2">
+                              <b>Date of issue:20th December,2023</b>
+                            </div>
+                            <div class="sign">ekta</div>
+                            <div class="ownername">
+                              <b>Ekta Shah</b>
+                            </div>
+                            <div class="founder">
+                              <b>Founder</b>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                       */}
+                      <Tooltip title="Download All Certificate" arrow>
+                        <Button
+                          sx={{ color: "black" }}
+                          onClick={()=>{handledowloadpdf()}}
+
+                        >
+                          <DownloadIcon />
                         </Button>
                       </Tooltip>
                     </TableCell>
@@ -531,38 +627,6 @@ export default function Old() {
       {table}
       {boot}
       {dialog}
-      {/* <Dialog
-        open={open1}
-        onClose={handleClose1}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Delete Event"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Do You Want To delete?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose1}>Cancel</Button>
-          <Button
-            onClick={() => {
-              axios
-                .delete(`http://localhost:5000/event/Deleteevent?id=${id}`,jwttoken())
-                .then((data) => {
-                  doupdate(!update);
-                  console.log("data delted", data);
-                })
-                .catch((err) => {
-                  console.log("error", err);
-                });
-              handleClose1();
-            }}
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog> */}
     </>
   );
 }

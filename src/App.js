@@ -51,7 +51,7 @@ function App() {
           <Route
             path="/dashBoard/dashBoard"
             element={
-              <Suspense fallback={<div>loading..</div>}>
+              <Suspense fallback={<div><Loder/></div>}>
                 <Privateroute>
                   <Dashboard />
                 </Privateroute>
@@ -176,7 +176,7 @@ function App() {
           <Route
             path="/events/Batches"
             element={
-              <Suspense fallback={<div>loading..</div>}>
+              <Suspense fallback={<div><Loder/></div>}>
                 <Privateroute>
                   <Batches />
                 </Privateroute>

@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import Img from "./Tnlogo.png";
+
 import dayjs from "dayjs";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -1048,7 +1049,6 @@ return(
                               { align: "center" }
                             );
 
-                            // Copyright notice
                             doc.setTextColor(100);
                             doc.setFontSize(8);
                             doc.text(

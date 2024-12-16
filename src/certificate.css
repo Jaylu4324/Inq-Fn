@@ -1,0 +1,126 @@
+#first {
+  border: 2px solid black;
+  height: 1100px;
+  width: 800px;
+
+
+}
+.second {
+  border: 2px solid green;
+  height: 800px;
+  margin: 5%;
+}
+.innerfirst {
+  border: 2px solid yellow;
+  height: 150px;
+  margin: 2%;
+}
+.certificate {
+  border: 2px solid blue;
+  margin-top: 4%;
+  width: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 8%;
+  height: auto;
+  font-size: 95px;
+  margin-bottom: 0%;
+}
+.completion {
+  border: 2px solid red;
+
+  width: 600px;
+  display: flex;
+  justify-content: center;
+
+  margin-left: 8%;
+  height: auto;
+  font-size: 48px;
+}
+.thiscertificate {
+  border: 2px solid purple;
+  margin-left: 8%;
+  margin-top: 10%;
+  font-size: 27px;
+  width: 600px;
+  display: flex;
+  justify-content: center;
+}
+.name {
+  border: 2px solid blue;
+  margin-top: 5%;
+  width: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 8%;
+  height: auto;
+  font-size: 100px;
+  margin-bottom: 0%;
+  font-family: "Tangerine";
+}
+.thinborder {
+  border: 1.5px solid black;
+  margin-top: 1%;
+  width: 600px;
+  display: flex;
+
+
+  justify-content: center;
+  align-items: center;
+  margin-left: 8%;
+  height: auto;
+}
+.text {
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+
+  font-weight: 500;
+  margin-top: 5%;
+}
+.text1 {
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+  
+    font-weight: 500;
+    
+  }
+  .text2 {
+    font-size: 22px;
+    display: flex;
+    justify-content: center;
+    font-weight: 500;
+   
+  }
+  .sign{
+    border: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 50px;
+    margin-left: 38%;
+    margin-top: 2%;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    font-family: "Tangerine", serif;
+    font-size: 40px;
+  }
+  .ownername{
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    font-weight: 500;
+    margin-top: 1%;
+  }
+  .founder{
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    font-weight: 500;
+    margin-top: 1%;
+  }

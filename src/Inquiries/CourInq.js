@@ -131,7 +131,7 @@ function Form1() {
 
   const [update, doUpdate] = React.useState(false);
   const [id, setId] = React.useState();
-  console.log(id);
+  
   const [page, setpage] = React.useState(1);
   const [open3, setopen3] = React.useState(false);
   const [alertMsg, setAlertMsg] = React.useState({ open: false, message: "" });
@@ -231,11 +231,11 @@ function Form1() {
 
   const Co = ["React", "Node", "C", "C++", "Python", "Mern Stack", "AWS"];
   const [coursestring, setcoursestring] = React.useState('');
-
+  console.log(arr);
   const [changearr, setchangearr] = React.useState([]);
-  console.log(changearr);
+  
   React.useEffect(() => {
-    console.log('main useffect called')
+
     if (value == 0) {
       axios
         .get(
@@ -243,7 +243,7 @@ function Form1() {
           jwttoken()
         )
         .then((data) => {
-          console.log(data);
+         
           setArr(data.data.data);
           settotalpages(data.data.totalPages);
         })
@@ -257,7 +257,7 @@ function Form1() {
           jwttoken()
         )
         .then((data) => {
-          console.log(data);
+      
           setReject(data.data.data);
           settotalpages(data.data.totalPages);
         })
@@ -271,7 +271,7 @@ function Form1() {
           jwttoken()
         )
         .then((data) => {
-          console.log(data);
+   
           setconfirm(data.data.data);
           settotalpages(data.data.totalPages);
         })
@@ -281,10 +281,10 @@ function Form1() {
     }
   }, [update, value, page]);
   const handlecourse12 = (e) => {
-    console.log(e);
+   
     setcoursestring(e.target.value);
   };
-  console.log(coursestring);
+
   const handlesubmit = () => {
     if (id) {
       axios
@@ -379,7 +379,7 @@ function Form1() {
   const handleClickmenu1 = (event) => {
     setAnchorEl1(event.currentTarget);
   };
-console.log('coursestring:',coursestring)
+
   const handleClosemenu1 = () => {
     setAnchorEl1(null);
   };
@@ -454,7 +454,7 @@ console.log('coursestring:',coursestring)
   }, [totalPages, page]);
 
   const ingredients = React.useMemo(() => {
-    console.log("ingredients");
+   
     return (
       <Grid container spacing={2}>
         <Grid
@@ -514,13 +514,21 @@ console.log('coursestring:',coursestring)
                         )
                         .then((data) => {
                           if (type === "onGoing") {
-                            setArr(data.data);
+                            console.log("ongoing",data.data.data)
+
+                            setArr(data.data.data);
                             setorder1(order1 === 1 ? -1 : 1);
                           } else if (type === "Reject") {
-                            setReject(data.data);
+                            console.log(data)
+                            console.log("reject",data.data)
+
+                            setReject(data.data.data);
                             setorder1(order1 === 1 ? -1 : 1);
                           } else {
-                            setconfirm(data.data);
+                            console.log(data)
+                            console.log("confirm",data.data)
+
+                            setconfirm(data.data.data);
                             setorder1(order1 === 1 ? -1 : 1);
                           }
                         })
@@ -744,7 +752,7 @@ console.log('coursestring:',coursestring)
     searchname,
   ]);
   const table = React.useMemo(() => {
-    console.log("table called");
+
     return (
       <Box>
         <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
@@ -1326,7 +1334,7 @@ console.log('coursestring:',coursestring)
     );
   }, [open2]);
   const updatestudent = React.useMemo(() => {
-    console.log("update student");
+
     return (
       <Dialog
         open={open3}
@@ -1385,7 +1393,7 @@ value={coursestring}
                 )
 
                 .then((data) => {
-                  console.log(data);
+          
                   handleClick1({ vertical: "top", horizontal: "center" });
 
                   setAlertSuccess({
